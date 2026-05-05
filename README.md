@@ -45,6 +45,8 @@ Primary rule:
 - `examples/workspace-operation/repo-import-index.json`
 - `examples/workspace-operation/sync-reconciliation-conflict.json`
 - `examples/workspace-operation/redacted-diagnostic-export.json`
+- `examples/workspace-operation/release-package-evidence.json`
+- `examples/workspace-operation/security-exercise-governed.json`
 
 ## Validation
 
@@ -55,6 +57,8 @@ make validate
 ```
 
 Current validation uses `tools/validate_workspace_operation_examples.py`, a lightweight structural validator that checks operation-centered fixtures, retry/idempotency rules, artifact activation/admission consistency, pending decisions, blocking policy gate remediation, and blocked/awaiting-decision operation references.
+
+CI also runs `make validate` through `.github/workflows/validate.yml`.
 
 Full JSON Schema validation should be added by `SourceOS-Linux/sourceos-devtools` as part of the Operation Plane conformance runner.
 
@@ -83,4 +87,4 @@ Integration ownership:
 
 ## v0.1 implementation status
 
-Draft contract spine, schema scaffolding, transition guidance, example fixtures, and lightweight validation are present. Schemas and fixtures are intentionally minimal and should be tightened through conformance tests before runtime implementation depends on them as stable APIs.
+Draft contract spine, schema scaffolding, transition guidance, example fixtures, CI validation, and lightweight validation are present. Schemas and fixtures are intentionally minimal and should be tightened through conformance tests before runtime implementation depends on them as stable APIs.
