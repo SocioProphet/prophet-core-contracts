@@ -28,6 +28,7 @@ Primary rule:
 ## Current contract files
 
 - `docs/workspace-operation-plane-v0.1.md`
+- `docs/workspace-operation-transition-table-v0.1.md`
 - `schemas/workspace-operation.schema.json`
 - `schemas/operation-task-event.schema.json`
 - `schemas/artifact-admission.schema.json`
@@ -36,14 +37,30 @@ Primary rule:
 ## Current examples
 
 - `examples/workspace-operation/upload-import-happy-path.json`
+- `examples/workspace-operation/upload-import-partial-failure.json`
+- `examples/workspace-operation/canceled-operation.json`
 - `examples/workspace-operation/agent-patch-proposal.json`
 - `examples/workspace-operation/memory-ingestion-policy-blocked.json`
 - `examples/workspace-operation/terminal-command-completed.json`
+- `examples/workspace-operation/repo-import-index.json`
+- `examples/workspace-operation/sync-reconciliation-conflict.json`
 - `examples/workspace-operation/redacted-diagnostic-export.json`
+
+## Validation
+
+Run:
+
+```bash
+make validate
+```
+
+Current validation uses `tools/validate_workspace_operation_examples.py`, a lightweight structural validator that checks operation-centered fixtures, retry/idempotency rules, artifact activation/admission consistency, pending decisions, blocking policy gate remediation, and blocked/awaiting-decision operation references.
+
+Full JSON Schema validation should be added by `SourceOS-Linux/sourceos-devtools` as part of the Operation Plane conformance runner.
 
 ## Repository boundaries
 
-This repository owns canonical contract vocabulary, schemas, examples, and conformance fixtures.
+This repository owns canonical contract vocabulary, schemas, examples, transition guidance, and conformance fixtures.
 
 It does **not** own runtime services, policy execution, UI state, local sync daemons, browser behavior, terminal behavior, or agent runtime authority.
 
@@ -57,8 +74,13 @@ Integration ownership:
 - Workspace controller/UI: `SocioProphet/sociosphere`
 - Workstation contracts: `SociOS-Linux/workstation-contracts`
 - SourceOS local-first contracts: `SourceOS-Linux/sourceos-spec`
+- SourceOS sync daemon: `SourceOS-Linux/sourceos-syncd`
+- SourceOS shell: `SourceOS-Linux/sourceos-shell`
 - SourceOS local tooling: `SourceOS-Linux/sourceos-devtools`
+- SourceOS terminal surface: `SourceOS-Linux/TurtleTerm`
+- SourceOS browser surface: `SourceOS-Linux/BearBrowser`
+- SourceOS local agent machine: `SourceOS-Linux/agent-machine`
 
 ## v0.1 implementation status
 
-Draft contract spine added. Schemas and fixtures are intentionally minimal and should be tightened through conformance tests before runtime implementation depends on them as stable APIs.
+Draft contract spine, schema scaffolding, transition guidance, example fixtures, and lightweight validation are present. Schemas and fixtures are intentionally minimal and should be tightened through conformance tests before runtime implementation depends on them as stable APIs.
