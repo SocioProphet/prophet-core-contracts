@@ -1,4 +1,65 @@
 {
+  "operation": {
+    "schema_version": "0.1.0",
+    "operation_id": "op_browser_capture_001",
+    "operation_type": "browser.diagnostics.export_redacted",
+    "actor": {
+      "actor_type": "system",
+      "actor_id": "sourceos-devtools"
+    },
+    "source": {
+      "ref_type": "browser_session",
+      "ref_id": "browser_session_001"
+    },
+    "target": {
+      "ref_type": "agent_run",
+      "ref_id": "diagnostics_review_001"
+    },
+    "status": "completed",
+    "priority": "normal",
+    "trace_id": "trace_browser_capture_001",
+    "idempotency_key": "idem_browser_diag_001",
+    "trust_boundary_ids": [
+      "tb_browser_external_site_001"
+    ],
+    "task_ids": [
+      "task_diag_export_001"
+    ],
+    "artifact_ids": [
+      "artifact_browser_diag_001"
+    ],
+    "policy_gate_ids": [],
+    "decision_ids": [],
+    "created_at": "2026-05-05T00:39:55Z",
+    "updated_at": "2026-05-05T00:40:00Z",
+    "metadata": {
+      "example_name": "redacted-diagnostic-export"
+    }
+  },
+  "task": {
+    "schema_version": "0.1.0",
+    "task_id": "task_diag_export_001",
+    "operation_id": "op_browser_capture_001",
+    "task_type": "diagnostics.export_redacted",
+    "title": "Export redacted browser diagnostics",
+    "source_ref": {
+      "ref_type": "browser_session",
+      "ref_id": "browser_session_001"
+    },
+    "target_ref": {
+      "ref_type": "artifact",
+      "ref_id": "artifact_browser_diag_001"
+    },
+    "artifact_type": "diagnostic_bundle",
+    "status": "completed",
+    "stage": "redacted_export_created",
+    "progress": 1,
+    "retry_count": 0,
+    "retryable": true,
+    "auto_retry_allowed": false,
+    "idempotency_key": "idem_task_diag_export_001",
+    "final_artifact_id": "artifact_browser_diag_001"
+  },
   "diagnostic_bundle": {
     "schema_version": "0.1.0",
     "diagnostic_bundle_id": "diag_export_001",
@@ -19,7 +80,9 @@
     "contains_raw_credentials": false,
     "created_at": "2026-05-05T00:40:00Z",
     "created_by": "sourceos-devtools",
-    "evidence_refs": ["ledger://operation/op_browser_capture_001/diagnostics/diag_export_001"]
+    "evidence_refs": [
+      "ledger://operation/op_browser_capture_001/diagnostics/diag_export_001"
+    ]
   },
   "artifact": {
     "schema_version": "0.1.0",
