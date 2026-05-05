@@ -1,0 +1,185 @@
+{
+  "operation": {
+    "schema_version": "0.1.0",
+    "operation_id": "op_repo_import_001",
+    "operation_type": "repo.import.index",
+    "actor": {
+      "actor_type": "connector",
+      "actor_id": "github_connector_demo"
+    },
+    "source": {
+      "ref_type": "git_repository",
+      "ref_id": "SocioProphet/demo-repo",
+      "uri": "https://github.com/SocioProphet/demo-repo"
+    },
+    "target": {
+      "ref_type": "project_space",
+      "ref_id": "project_operation_plane"
+    },
+    "status": "completed_with_warnings",
+    "priority": "normal",
+    "trace_id": "trace_repo_import_001",
+    "idempotency_key": "idem_repo_import_001",
+    "trust_boundary_ids": [
+      "tb_github_connector_001"
+    ],
+    "task_ids": [
+      "task_repo_clone_001",
+      "task_repo_secret_scan_001",
+      "task_repo_index_001"
+    ],
+    "artifact_ids": [
+      "artifact_repo_snapshot_001",
+      "artifact_search_index_001"
+    ],
+    "policy_gate_ids": [
+      "gate_repo_secret_scan_001"
+    ],
+    "decision_ids": [],
+    "created_at": "2026-05-05T01:10:00Z",
+    "updated_at": "2026-05-05T01:10:45Z",
+    "metadata": {
+      "example_name": "repo-import-index",
+      "warning": "Secret scan produced warnings but no blocking findings."
+    }
+  },
+  "tasks": [
+    {
+      "schema_version": "0.1.0",
+      "task_id": "task_repo_clone_001",
+      "operation_id": "op_repo_import_001",
+      "task_type": "repo.clone",
+      "title": "Clone demo repository",
+      "source_ref": {
+        "ref_type": "git_repository",
+        "ref_id": "SocioProphet/demo-repo"
+      },
+      "target_ref": {
+        "ref_type": "local_device_cache",
+        "ref_id": "repo_cache_demo"
+      },
+      "artifact_type": "repo_snapshot",
+      "status": "completed",
+      "stage": "cloned",
+      "progress": 1,
+      "retry_count": 0,
+      "retryable": true,
+      "auto_retry_allowed": false,
+      "idempotency_key": "idem_task_repo_clone_001",
+      "final_artifact_id": "artifact_repo_snapshot_001"
+    },
+    {
+      "schema_version": "0.1.0",
+      "task_id": "task_repo_secret_scan_001",
+      "operation_id": "op_repo_import_001",
+      "task_type": "security.secret_scan",
+      "title": "Scan repository snapshot",
+      "source_ref": {
+        "ref_type": "artifact",
+        "ref_id": "artifact_repo_snapshot_001"
+      },
+      "target_ref": {
+        "ref_type": "policy_gate",
+        "ref_id": "gate_repo_secret_scan_001"
+      },
+      "artifact_type": "policy_gate_record",
+      "status": "completed_with_warnings",
+      "stage": "warning",
+      "progress": 1,
+      "retry_count": 0,
+      "retryable": true,
+      "auto_retry_allowed": false,
+      "idempotency_key": "idem_task_repo_secret_scan_001"
+    },
+    {
+      "schema_version": "0.1.0",
+      "task_id": "task_repo_index_001",
+      "operation_id": "op_repo_import_001",
+      "task_type": "search.index.update",
+      "title": "Index repository snapshot",
+      "source_ref": {
+        "ref_type": "artifact",
+        "ref_id": "artifact_repo_snapshot_001"
+      },
+      "target_ref": {
+        "ref_type": "search_index",
+        "ref_id": "search_index_project_operation_plane"
+      },
+      "artifact_type": "search_index_record",
+      "status": "completed",
+      "stage": "indexed",
+      "progress": 1,
+      "retry_count": 0,
+      "retryable": true,
+      "auto_retry_allowed": false,
+      "idempotency_key": "idem_task_repo_index_001",
+      "final_artifact_id": "artifact_search_index_001"
+    }
+  ],
+  "policy_gate": {
+    "schema_version": "0.1.0",
+    "gate_id": "gate_repo_secret_scan_001",
+    "operation_id": "op_repo_import_001",
+    "artifact_id": "artifact_repo_snapshot_001",
+    "gate_type": "security.secret_scan_warning",
+    "status": "warning",
+    "explanation": "Secret scan found low-confidence patterns requiring review but not blocking indexing.",
+    "responsible_actor": "workspace_owner",
+    "remediation_options": [
+      "review_scan_warning",
+      "continue_with_audit"
+    ],
+    "audit_required": true,
+    "evidence_refs": [
+      "scan://repo-demo/secret-scan/001"
+    ],
+    "evaluated_at": "2026-05-05T01:10:30Z"
+  },
+  "artifacts": [
+    {
+      "schema_version": "0.1.0",
+      "artifact_id": "artifact_repo_snapshot_001",
+      "artifact_type": "repo_snapshot",
+      "display_name": "SocioProphet/demo-repo@main",
+      "stable_identity": "workspace://artifact/artifact_repo_snapshot_001",
+      "content_hash": "sha256:demo-repo-snapshot",
+      "content_uri": "object://workspace/artifact_repo_snapshot_001/content",
+      "storage_backend": "demo-object-store",
+      "source_connector": "github",
+      "source_object_id": "SocioProphet/demo-repo",
+      "source_revision": "main@demo",
+      "target_context": {
+        "location_type": "project_space",
+        "location_id": "project_operation_plane"
+      },
+      "created_by_operation_id": "op_repo_import_001",
+      "policy_state": "warning",
+      "metadata_state": "complete",
+      "indexing_state": "complete",
+      "admission_state": "admitted",
+      "activation_state": "active",
+      "created_at": "2026-05-05T01:10:20Z"
+    },
+    {
+      "schema_version": "0.1.0",
+      "artifact_id": "artifact_search_index_001",
+      "artifact_type": "search_index_record",
+      "display_name": "Search index for SocioProphet/demo-repo",
+      "stable_identity": "workspace://artifact/artifact_search_index_001",
+      "content_hash": "sha256:demo-search-index",
+      "content_uri": "object://workspace/artifact_search_index_001/content",
+      "storage_backend": "demo-object-store",
+      "target_context": {
+        "location_type": "project_space",
+        "location_id": "project_operation_plane"
+      },
+      "created_by_operation_id": "op_repo_import_001",
+      "policy_state": "passed",
+      "metadata_state": "complete",
+      "indexing_state": "complete",
+      "admission_state": "admitted",
+      "activation_state": "active",
+      "created_at": "2026-05-05T01:10:45Z"
+    }
+  ]
+}
