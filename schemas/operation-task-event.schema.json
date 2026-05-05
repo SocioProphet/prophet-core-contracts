@@ -1,0 +1,192 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.socioprophet.org/workspace-operation/v0.1/operation-task-event.schema.json",
+  "title": "OperationTaskAndEvent",
+  "type": "object",
+  "oneOf": [
+    { "$ref": "#/$defs/OperationTask" },
+    { "$ref": "#/$defs/OperationCommand" },
+    { "$ref": "#/$defs/OperationEvent" },
+    { "$ref": "#/$defs/OperationSnapshot" },
+    { "$ref": "#/$defs/TaskSnapshot" }
+  ],
+  "$defs": {
+    "OperationTask": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema_version", "task_id", "operation_id", "task_type", "status", "stage", "retryable", "idempotency_key"],
+      "properties": {
+        "schema_version": { "const": "0.1.0" },
+        "task_id": { "type": "string", "minLength": 1 },
+        "operation_id": { "type": "string", "minLength": 1 },
+        "task_type": { "type": "string" },
+        "title": { "type": "string" },
+        "source_ref": { "$ref": "#/$defs/ref" },
+        "target_ref": { "$ref": "#/$defs/ref" },
+        "artifact_type": { "type": "string" },
+        "status": { "$ref": "#/$defs/task_status" },
+        "stage": { "type": "string" },
+        "progress": { "type": "number", "minimum": 0, "maximum": 1 },
+        "retry_count": { "type": "integer", "minimum": 0, "default": 0 },
+        "retryable": { "type": "boolean" },
+        "auto_retry_allowed": { "type": "boolean", "default": false },
+        "idempotency_key": { "type": "string", "minLength": 1 },
+        "responsible_actor": { "$ref": "#/$defs/responsible_actor" },
+        "lease": { "$ref": "#/$defs/lease" },
+        "heartbeat_at": { "type": "string", "format": "date-time" },
+        "provisional_artifact_id": { "type": "string" },
+        "final_artifact_id": { "type": "string" },
+        "error": { "$ref": "#/$defs/failure" }
+      }
+    },
+    "OperationCommand": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema_version", "command_id", "command_type", "operation_id", "actor", "issued_at", "idempotency_key"],
+      "properties": {
+        "schema_version": { "const": "0.1.0" },
+        "command_id": { "type": "string", "minLength": 1 },
+        "command_type": {
+          "type": "string",
+          "enum": [
+            "CreateOperation",
+            "PreflightOperation",
+            "StartOperation",
+            "PauseOperation",
+            "ResumeOperation",
+            "CancelOperation",
+            "RetryTask",
+            "RetryOperation",
+            "ResolveDecision",
+            "AttachArtifact",
+            "AdmitArtifact",
+            "QuarantineArtifact",
+            "ActivateArtifact",
+            "CompensateOperation",
+            "ExportDiagnostics",
+            "RequestOverride"
+          ]
+        },
+        "operation_id": { "type": "string", "minLength": 1 },
+        "task_id": { "type": "string" },
+        "actor": { "$ref": "#/$defs/actor" },
+        "issued_at": { "type": "string", "format": "date-time" },
+        "idempotency_key": { "type": "string", "minLength": 1 },
+        "payload": { "type": "object", "additionalProperties": true }
+      }
+    },
+    "OperationEvent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema_version", "event_id", "event_type", "operation_id", "actor", "occurred_at"],
+      "properties": {
+        "schema_version": { "const": "0.1.0" },
+        "event_id": { "type": "string", "minLength": 1 },
+        "event_type": {
+          "type": "string",
+          "examples": [
+            "workspace.operation.created",
+            "workspace.operation.preflight_started",
+            "workspace.operation.policy_blocked",
+            "workspace.operation.task_started",
+            "workspace.operation.task_failed",
+            "workspace.operation.artifact_admitted",
+            "workspace.operation.completed_with_warnings"
+          ]
+        },
+        "operation_id": { "type": "string", "minLength": 1 },
+        "task_id": { "type": "string" },
+        "artifact_id": { "type": "string" },
+        "actor": { "$ref": "#/$defs/actor" },
+        "occurred_at": { "type": "string", "format": "date-time" },
+        "trace_id": { "type": "string" },
+        "span_id": { "type": "string" },
+        "payload": { "type": "object", "additionalProperties": true }
+      }
+    },
+    "OperationSnapshot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema_version", "operation_id", "status", "revision", "updated_at"],
+      "properties": {
+        "schema_version": { "const": "0.1.0" },
+        "operation_id": { "type": "string" },
+        "status": { "type": "string" },
+        "revision": { "type": "integer", "minimum": 0 },
+        "updated_at": { "type": "string", "format": "date-time" },
+        "task_counts": { "type": "object", "additionalProperties": { "type": "integer", "minimum": 0 } },
+        "active_decision_ids": { "type": "array", "items": { "type": "string" } },
+        "artifact_ids": { "type": "array", "items": { "type": "string" } },
+        "failure_summary": { "type": "object", "additionalProperties": true }
+      }
+    },
+    "TaskSnapshot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema_version", "task_id", "operation_id", "status", "stage", "revision", "updated_at"],
+      "properties": {
+        "schema_version": { "const": "0.1.0" },
+        "task_id": { "type": "string" },
+        "operation_id": { "type": "string" },
+        "status": { "$ref": "#/$defs/task_status" },
+        "stage": { "type": "string" },
+        "revision": { "type": "integer", "minimum": 0 },
+        "updated_at": { "type": "string", "format": "date-time" },
+        "progress": { "type": "number", "minimum": 0, "maximum": 1 },
+        "error": { "$ref": "#/$defs/failure" }
+      }
+    },
+    "task_status": {
+      "type": "string",
+      "enum": ["queued", "preflighting", "awaiting_decision", "blocked", "running", "paused", "retrying", "canceling", "canceled", "failed", "completed", "completed_with_warnings", "stale", "compensated"]
+    },
+    "failure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["error_class", "user_message", "retryable", "responsible_actor"],
+      "properties": {
+        "error_class": { "type": "string" },
+        "error_code": { "type": "string" },
+        "user_message": { "type": "string" },
+        "technical_summary": { "type": "string" },
+        "retryable": { "type": "boolean" },
+        "safe_to_auto_retry": { "type": "boolean", "default": false },
+        "responsible_actor": { "$ref": "#/$defs/responsible_actor" },
+        "remediation_options": { "type": "array", "items": { "type": "string" } },
+        "redacted_diagnostics": { "type": "object", "additionalProperties": true }
+      }
+    },
+    "lease": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["lease_id", "holder_id", "expires_at"],
+      "properties": {
+        "lease_id": { "type": "string" },
+        "holder_id": { "type": "string" },
+        "expires_at": { "type": "string", "format": "date-time" }
+      }
+    },
+    "actor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["actor_type", "actor_id"],
+      "properties": {
+        "actor_type": { "type": "string", "enum": ["user", "agent", "system", "connector", "worker"] },
+        "actor_id": { "type": "string" }
+      }
+    },
+    "responsible_actor": {
+      "type": "string",
+      "enum": ["current_user", "workspace_owner", "tenant_admin", "external_owner", "connector_owner", "model_provider", "local_device_owner", "agent_operator", "system"]
+    },
+    "ref": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "ref_type": { "type": "string" },
+        "ref_id": { "type": "string" },
+        "uri": { "type": "string" }
+      }
+    }
+  }
+}
