@@ -1,0 +1,216 @@
+{
+  "operation": {
+    "schema_version": "0.1.0",
+    "operation_id": "op_security_exercise_001",
+    "operation_type": "security.exercise.run",
+    "actor": {
+      "actor_type": "agent",
+      "actor_id": "agent_security_eval_demo"
+    },
+    "delegated_by": {
+      "actor_type": "user",
+      "actor_id": "security_owner_demo"
+    },
+    "source": {
+      "ref_type": "security_exercise_plan",
+      "ref_id": "exercise_plan_demo_001"
+    },
+    "target": {
+      "ref_type": "project_space",
+      "ref_id": "security_lab_authorized_demo"
+    },
+    "status": "completed_with_warnings",
+    "priority": "normal",
+    "trace_id": "trace_security_exercise_001",
+    "idempotency_key": "idem_security_exercise_001",
+    "trust_boundary_ids": [
+      "tb_authorized_security_lab_001"
+    ],
+    "task_ids": [
+      "task_security_scope_check_001",
+      "task_security_exercise_run_001",
+      "task_security_evidence_export_001"
+    ],
+    "artifact_ids": [
+      "artifact_security_plan_001",
+      "artifact_security_finding_001",
+      "artifact_security_report_001"
+    ],
+    "policy_gate_ids": [
+      "gate_security_scope_001"
+    ],
+    "decision_ids": [],
+    "created_at": "2026-05-05T01:40:00Z",
+    "updated_at": "2026-05-05T01:41:00Z",
+    "metadata": {
+      "example_name": "security-exercise-governed",
+      "scope": "authorized_lab_only",
+      "safety_boundary": "defensive_purple_team_evaluation"
+    }
+  },
+  "tasks": [
+    {
+      "schema_version": "0.1.0",
+      "task_id": "task_security_scope_check_001",
+      "operation_id": "op_security_exercise_001",
+      "task_type": "security.policy_gate.test",
+      "title": "Verify exercise scope and authorization",
+      "source_ref": {
+        "ref_type": "security_exercise_plan",
+        "ref_id": "exercise_plan_demo_001"
+      },
+      "target_ref": {
+        "ref_type": "policy_gate",
+        "ref_id": "gate_security_scope_001"
+      },
+      "artifact_type": "policy_gate_record",
+      "status": "completed",
+      "stage": "scope_authorized",
+      "progress": 1,
+      "retry_count": 0,
+      "retryable": true,
+      "auto_retry_allowed": false,
+      "idempotency_key": "idem_task_security_scope_check_001"
+    },
+    {
+      "schema_version": "0.1.0",
+      "task_id": "task_security_exercise_run_001",
+      "operation_id": "op_security_exercise_001",
+      "task_type": "security.exercise.run",
+      "title": "Run authorized defensive evaluation scenario",
+      "source_ref": {
+        "ref_type": "security_exercise_plan",
+        "ref_id": "exercise_plan_demo_001"
+      },
+      "target_ref": {
+        "ref_type": "project_space",
+        "ref_id": "security_lab_authorized_demo"
+      },
+      "artifact_type": "finding_record",
+      "status": "completed_with_warnings",
+      "stage": "finding_recorded",
+      "progress": 1,
+      "retry_count": 0,
+      "retryable": false,
+      "auto_retry_allowed": false,
+      "idempotency_key": "idem_task_security_exercise_run_001",
+      "final_artifact_id": "artifact_security_finding_001"
+    },
+    {
+      "schema_version": "0.1.0",
+      "task_id": "task_security_evidence_export_001",
+      "operation_id": "op_security_exercise_001",
+      "task_type": "security.evidence.export_redacted",
+      "title": "Export redacted security exercise evidence",
+      "source_ref": {
+        "ref_type": "finding_record",
+        "ref_id": "artifact_security_finding_001"
+      },
+      "target_ref": {
+        "ref_type": "artifact",
+        "ref_id": "artifact_security_report_001"
+      },
+      "artifact_type": "redacted_exercise_report",
+      "status": "completed",
+      "stage": "redacted_report_created",
+      "progress": 1,
+      "retry_count": 0,
+      "retryable": true,
+      "auto_retry_allowed": false,
+      "idempotency_key": "idem_task_security_evidence_export_001",
+      "final_artifact_id": "artifact_security_report_001"
+    }
+  ],
+  "policy_gate": {
+    "schema_version": "0.1.0",
+    "gate_id": "gate_security_scope_001",
+    "operation_id": "op_security_exercise_001",
+    "artifact_id": "artifact_security_plan_001",
+    "gate_type": "security.exercise_scope_authorized",
+    "status": "passed",
+    "explanation": "Exercise is scoped to an authorized lab target and defensive/purple-team evaluation workflow.",
+    "responsible_actor": "security_owner_demo",
+    "remediation_options": [],
+    "audit_required": true,
+    "evidence_refs": [
+      "scope://security_lab_authorized_demo/exercise_plan_demo_001"
+    ],
+    "evaluated_at": "2026-05-05T01:40:10Z"
+  },
+  "artifacts": [
+    {
+      "schema_version": "0.1.0",
+      "artifact_id": "artifact_security_plan_001",
+      "artifact_type": "security_exercise_plan",
+      "display_name": "Authorized defensive evaluation plan",
+      "stable_identity": "workspace://artifact/artifact_security_plan_001",
+      "content_hash": "sha256:demo-security-plan",
+      "content_uri": "object://security/artifact_security_plan_001/content",
+      "storage_backend": "security-evidence-store",
+      "target_context": {
+        "location_type": "project_space",
+        "location_id": "security_lab_authorized_demo"
+      },
+      "created_by_operation_id": "op_security_exercise_001",
+      "policy_state": "passed",
+      "metadata_state": "complete",
+      "indexing_state": "restricted",
+      "admission_state": "admitted",
+      "activation_state": "active",
+      "created_at": "2026-05-05T01:40:00Z",
+      "metadata": {
+        "scope": "authorized_lab_only"
+      }
+    },
+    {
+      "schema_version": "0.1.0",
+      "artifact_id": "artifact_security_finding_001",
+      "artifact_type": "finding_record",
+      "display_name": "Defensive evaluation finding",
+      "stable_identity": "workspace://artifact/artifact_security_finding_001",
+      "content_hash": "sha256:demo-security-finding",
+      "content_uri": "object://security/artifact_security_finding_001/content",
+      "storage_backend": "security-evidence-store",
+      "target_context": {
+        "location_type": "project_space",
+        "location_id": "security_lab_authorized_demo"
+      },
+      "created_by_operation_id": "op_security_exercise_001",
+      "policy_state": "warning",
+      "metadata_state": "complete",
+      "indexing_state": "restricted",
+      "admission_state": "admitted",
+      "activation_state": "active",
+      "created_at": "2026-05-05T01:40:45Z",
+      "metadata": {
+        "severity": "medium",
+        "redaction_required_before_external_share": true
+      }
+    },
+    {
+      "schema_version": "0.1.0",
+      "artifact_id": "artifact_security_report_001",
+      "artifact_type": "redacted_exercise_report",
+      "display_name": "Redacted defensive evaluation report",
+      "stable_identity": "workspace://artifact/artifact_security_report_001",
+      "content_hash": "sha256:demo-security-report-redacted",
+      "content_uri": "object://security/artifact_security_report_001/content",
+      "storage_backend": "security-evidence-store",
+      "target_context": {
+        "location_type": "project_space",
+        "location_id": "security_lab_authorized_demo"
+      },
+      "created_by_operation_id": "op_security_exercise_001",
+      "policy_state": "passed",
+      "metadata_state": "complete",
+      "indexing_state": "restricted",
+      "admission_state": "admitted",
+      "activation_state": "active",
+      "created_at": "2026-05-05T01:41:00Z",
+      "metadata": {
+        "redaction_applied": true,
+        "authorized_scope_only": true
+      }
+    }
+  ]
+}
