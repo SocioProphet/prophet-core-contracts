@@ -1,0 +1,128 @@
+{
+  "operation": {
+    "schema_version": "0.1.0",
+    "operation_id": "op_upload_partial_001",
+    "operation_type": "upload.import",
+    "actor": {
+      "actor_type": "user",
+      "actor_id": "user_local_demo"
+    },
+    "source": {
+      "ref_type": "local_folder",
+      "ref_id": "folder_local_batch"
+    },
+    "target": {
+      "ref_type": "workspace_folder",
+      "ref_id": "workspace_docs"
+    },
+    "status": "completed_with_warnings",
+    "priority": "interactive",
+    "trace_id": "trace_upload_partial_001",
+    "idempotency_key": "idem_upload_partial_001",
+    "task_ids": [
+      "task_upload_ok_001",
+      "task_upload_failed_001"
+    ],
+    "artifact_ids": [
+      "artifact_notes_001"
+    ],
+    "policy_gate_ids": [],
+    "decision_ids": [],
+    "created_at": "2026-05-05T00:50:00Z",
+    "updated_at": "2026-05-05T00:50:15Z",
+    "metadata": {
+      "example_name": "upload-import-partial-failure",
+      "summary": "One file admitted, one corrupt archive failed."
+    }
+  },
+  "tasks": [
+    {
+      "schema_version": "0.1.0",
+      "task_id": "task_upload_ok_001",
+      "operation_id": "op_upload_partial_001",
+      "task_type": "file.upload",
+      "title": "Upload notes.md",
+      "source_ref": {
+        "ref_type": "local_file",
+        "ref_id": "file_notes_md"
+      },
+      "target_ref": {
+        "ref_type": "workspace_folder",
+        "ref_id": "workspace_docs"
+      },
+      "artifact_type": "markdown",
+      "status": "completed",
+      "stage": "admitted",
+      "progress": 1,
+      "retry_count": 0,
+      "retryable": true,
+      "auto_retry_allowed": false,
+      "idempotency_key": "idem_task_upload_ok_001",
+      "final_artifact_id": "artifact_notes_001"
+    },
+    {
+      "schema_version": "0.1.0",
+      "task_id": "task_upload_failed_001",
+      "operation_id": "op_upload_partial_001",
+      "task_type": "file.upload",
+      "title": "Upload corrupted-archive.zip",
+      "source_ref": {
+        "ref_type": "local_file",
+        "ref_id": "file_corrupt_zip"
+      },
+      "target_ref": {
+        "ref_type": "workspace_folder",
+        "ref_id": "workspace_docs"
+      },
+      "artifact_type": "archive",
+      "status": "failed",
+      "stage": "conversion.failed",
+      "progress": 1,
+      "retry_count": 0,
+      "retryable": false,
+      "auto_retry_allowed": false,
+      "idempotency_key": "idem_task_upload_failed_001",
+      "responsible_actor": "current_user",
+      "error": {
+        "error_class": "conversion_error",
+        "error_code": "archive.corrupt",
+        "user_message": "Archive could not be read and was not admitted.",
+        "technical_summary": "Demo fixture for corrupt archive handling.",
+        "retryable": false,
+        "safe_to_auto_retry": false,
+        "responsible_actor": "current_user",
+        "remediation_options": [
+          "replace_source_file",
+          "skip_file"
+        ],
+        "redacted_diagnostics": {}
+      }
+    }
+  ],
+  "artifact": {
+    "schema_version": "0.1.0",
+    "artifact_id": "artifact_notes_001",
+    "artifact_type": "markdown",
+    "display_name": "notes.md",
+    "stable_identity": "workspace://artifact/artifact_notes_001",
+    "content_hash": "sha256:demo-notes",
+    "content_uri": "object://workspace/artifact_notes_001/content",
+    "storage_backend": "demo-object-store",
+    "target_context": {
+      "location_type": "workspace_folder",
+      "location_id": "workspace_docs"
+    },
+    "current_revision": "rev_notes_001",
+    "derived_from_artifacts": [],
+    "derived_from_operations": [
+      "op_upload_partial_001"
+    ],
+    "created_by_operation_id": "op_upload_partial_001",
+    "policy_state": "passed",
+    "metadata_state": "complete",
+    "indexing_state": "pending",
+    "admission_state": "admitted",
+    "activation_state": "active",
+    "created_at": "2026-05-05T00:50:08Z"
+  }
+}
