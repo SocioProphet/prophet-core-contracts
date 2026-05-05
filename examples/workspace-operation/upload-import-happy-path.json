@@ -1,0 +1,126 @@
+{
+  "operation": {
+    "schema_version": "0.1.0",
+    "operation_id": "op_upload_001",
+    "operation_type": "upload.import",
+    "actor": {
+      "actor_type": "user",
+      "actor_id": "user_local_demo",
+      "display_name": "Local Demo User"
+    },
+    "source": {
+      "ref_type": "local_file",
+      "ref_id": "file_local_readme",
+      "uri": "file:///home/demo/README.md"
+    },
+    "target": {
+      "ref_type": "workspace_folder",
+      "ref_id": "workspace_docs"
+    },
+    "status": "completed",
+    "priority": "interactive",
+    "trace_id": "trace_upload_001",
+    "idempotency_key": "idem_upload_001",
+    "capability_profile_id": "cap_local_browser_folder_upload",
+    "trust_boundary_ids": [],
+    "task_ids": ["task_upload_001"],
+    "artifact_ids": ["artifact_readme_001"],
+    "policy_gate_ids": ["gate_upload_metadata_001"],
+    "decision_ids": [],
+    "created_at": "2026-05-05T00:00:00Z",
+    "updated_at": "2026-05-05T00:00:08Z",
+    "metadata": {
+      "example_name": "upload-import-happy-path"
+    }
+  },
+  "tasks": [
+    {
+      "schema_version": "0.1.0",
+      "task_id": "task_upload_001",
+      "operation_id": "op_upload_001",
+      "task_type": "file.upload",
+      "title": "Upload README.md",
+      "source_ref": {
+        "ref_type": "local_file",
+        "ref_id": "file_local_readme",
+        "uri": "file:///home/demo/README.md"
+      },
+      "target_ref": {
+        "ref_type": "workspace_folder",
+        "ref_id": "workspace_docs"
+      },
+      "artifact_type": "markdown",
+      "status": "completed",
+      "stage": "stored",
+      "progress": 1,
+      "retry_count": 0,
+      "retryable": true,
+      "auto_retry_allowed": false,
+      "idempotency_key": "idem_task_upload_001",
+      "final_artifact_id": "artifact_readme_001"
+    }
+  ],
+  "artifacts": [
+    {
+      "schema_version": "0.1.0",
+      "artifact_id": "artifact_readme_001",
+      "artifact_type": "markdown",
+      "display_name": "README.md",
+      "stable_identity": "workspace://artifact/artifact_readme_001",
+      "content_hash": "sha256:demo",
+      "content_uri": "object://workspace/artifact_readme_001/content",
+      "storage_backend": "demo-object-store",
+      "target_context": {
+        "location_type": "workspace_folder",
+        "location_id": "workspace_docs"
+      },
+      "current_revision": "rev_001",
+      "derived_from_artifacts": [],
+      "derived_from_operations": ["op_upload_001"],
+      "created_by_operation_id": "op_upload_001",
+      "policy_state": "passed",
+      "metadata_state": "complete",
+      "indexing_state": "pending",
+      "admission_state": "admitted",
+      "activation_state": "active",
+      "created_at": "2026-05-05T00:00:08Z",
+      "metadata": {
+        "classification": "internal"
+      }
+    }
+  ],
+  "events": [
+    {
+      "schema_version": "0.1.0",
+      "event_id": "evt_upload_created_001",
+      "event_type": "workspace.operation.created",
+      "operation_id": "op_upload_001",
+      "actor": {
+        "actor_type": "user",
+        "actor_id": "user_local_demo"
+      },
+      "occurred_at": "2026-05-05T00:00:00Z",
+      "trace_id": "trace_upload_001",
+      "payload": {
+        "operation_type": "upload.import"
+      }
+    },
+    {
+      "schema_version": "0.1.0",
+      "event_id": "evt_upload_artifact_admitted_001",
+      "event_type": "workspace.operation.artifact_admitted",
+      "operation_id": "op_upload_001",
+      "task_id": "task_upload_001",
+      "artifact_id": "artifact_readme_001",
+      "actor": {
+        "actor_type": "system",
+        "actor_id": "operation-runtime"
+      },
+      "occurred_at": "2026-05-05T00:00:08Z",
+      "trace_id": "trace_upload_001",
+      "payload": {
+        "admission_state": "admitted"
+      }
+    }
+  ]
+}
