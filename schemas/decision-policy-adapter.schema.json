@@ -1,0 +1,128 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.socioprophet.org/workspace-operation/v0.1/decision-policy-adapter.schema.json",
+  "title": "DecisionPolicyAdapter",
+  "type": "object",
+  "oneOf": [
+    { "$ref": "#/$defs/DecisionCard" },
+    { "$ref": "#/$defs/PolicyGateRecord" },
+    { "$ref": "#/$defs/TrustBoundary" },
+    { "$ref": "#/$defs/AdapterContract" },
+    { "$ref": "#/$defs/DiagnosticBundleMetadata" }
+  ],
+  "$defs": {
+    "DecisionCard": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema_version", "decision_id", "operation_id", "decision_type", "prompt", "options", "required_actor", "status"],
+      "properties": {
+        "schema_version": { "const": "0.1.0" },
+        "decision_id": { "type": "string" },
+        "operation_id": { "type": "string" },
+        "artifact_id": { "type": "string" },
+        "decision_type": { "type": "string" },
+        "prompt": { "type": "string" },
+        "options": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["option_id", "label", "consequence"],
+            "properties": {
+              "option_id": { "type": "string" },
+              "label": { "type": "string" },
+              "consequence": { "type": "string" },
+              "recommended": { "type": "boolean", "default": false }
+            }
+          }
+        },
+        "default_option": { "type": "string" },
+        "policy_context": { "type": "object", "additionalProperties": true },
+        "required_actor": { "type": "string" },
+        "status": { "type": "string", "enum": ["pending", "resolved", "expired", "canceled"] },
+        "expires_at": { "type": "string", "format": "date-time" },
+        "resolved_by": { "type": "string" },
+        "resolved_at": { "type": "string", "format": "date-time" },
+        "selected_option": { "type": "string" },
+        "audit_required": { "type": "boolean", "default": true }
+      }
+    },
+    "PolicyGateRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema_version", "gate_id", "operation_id", "gate_type", "status", "explanation", "responsible_actor"],
+      "properties": {
+        "schema_version": { "const": "0.1.0" },
+        "gate_id": { "type": "string" },
+        "operation_id": { "type": "string" },
+        "artifact_id": { "type": "string" },
+        "gate_type": { "type": "string" },
+        "status": { "type": "string", "enum": ["passed", "warning", "blocking", "requires_decision", "requires_admin", "unavailable"] },
+        "explanation": { "type": "string" },
+        "responsible_actor": { "type": "string" },
+        "remediation_options": { "type": "array", "items": { "type": "string" }, "default": [] },
+        "audit_required": { "type": "boolean", "default": true },
+        "expiry": { "type": "string", "format": "date-time" },
+        "evidence_refs": { "type": "array", "items": { "type": "string" }, "default": [] },
+        "evaluated_at": { "type": "string", "format": "date-time" }
+      }
+    },
+    "TrustBoundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema_version", "trust_boundary_id", "boundary_type", "owning_party", "risk_explanation"],
+      "properties": {
+        "schema_version": { "const": "0.1.0" },
+        "trust_boundary_id": { "type": "string" },
+        "boundary_type": { "type": "string" },
+        "owning_party": { "type": "string" },
+        "actor_context": { "type": "object", "additionalProperties": true },
+        "credential_context": { "type": "object", "additionalProperties": true },
+        "risk_explanation": { "type": "string" },
+        "user_copy": { "type": "string" },
+        "policy_rules": { "type": "array", "items": { "type": "string" }, "default": [] }
+      }
+    },
+    "AdapterContract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema_version", "operation_type", "supported_artifact_types", "idempotency_behavior", "retry_behavior", "emitted_event_types"],
+      "properties": {
+        "schema_version": { "const": "0.1.0" },
+        "operation_type": { "type": "string" },
+        "supported_artifact_types": { "type": "array", "items": { "type": "string" } },
+        "preflight_inputs": { "type": "array", "items": { "type": "string" }, "default": [] },
+        "required_capabilities": { "type": "array", "items": { "type": "string" }, "default": [] },
+        "policy_gates_invoked": { "type": "array", "items": { "type": "string" }, "default": [] },
+        "task_decomposition": { "type": "string" },
+        "idempotency_behavior": { "type": "string", "enum": ["required", "optional", "not_supported"] },
+        "retry_behavior": { "type": "string", "enum": ["idempotent", "compensatable", "unsafe", "not_supported"] },
+        "pause_resume_behavior": { "type": "string", "enum": ["supported", "not_supported", "adapter_defined"] },
+        "cancel_behavior": { "type": "string", "enum": ["supported", "compensating", "unsafe", "not_supported"] },
+        "compensation_behavior": { "type": "string", "enum": ["supported", "not_supported", "adapter_defined"] },
+        "progress_semantics": { "type": "string" },
+        "emitted_event_types": { "type": "array", "items": { "type": "string" } },
+        "diagnostic_redaction_rules": { "type": "array", "items": { "type": "string" }, "default": [] },
+        "test_fixtures": { "type": "array", "items": { "type": "string" }, "default": [] }
+      }
+    },
+    "DiagnosticBundleMetadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema_version", "diagnostic_bundle_id", "operation_id", "redaction_applied", "created_at"],
+      "properties": {
+        "schema_version": { "const": "0.1.0" },
+        "diagnostic_bundle_id": { "type": "string" },
+        "operation_id": { "type": "string" },
+        "artifact_id": { "type": "string" },
+        "redaction_applied": { "type": "boolean" },
+        "redaction_rules": { "type": "array", "items": { "type": "string" }, "default": [] },
+        "contains_raw_credentials": { "const": false },
+        "created_at": { "type": "string", "format": "date-time" },
+        "created_by": { "type": "string" },
+        "evidence_refs": { "type": "array", "items": { "type": "string" }, "default": [] }
+      }
+    }
+  }
+}
