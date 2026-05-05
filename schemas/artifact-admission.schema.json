@@ -1,0 +1,123 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.socioprophet.org/workspace-operation/v0.1/artifact-admission.schema.json",
+  "title": "ArtifactAndAdmission",
+  "type": "object",
+  "oneOf": [
+    { "$ref": "#/$defs/Artifact" },
+    { "$ref": "#/$defs/ArtifactTypeRegistryEntry" },
+    { "$ref": "#/$defs/ArtifactAdmissionGate" }
+  ],
+  "$defs": {
+    "Artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "artifact_id",
+        "artifact_type",
+        "display_name",
+        "stable_identity",
+        "admission_state",
+        "created_by_operation_id",
+        "created_at"
+      ],
+      "properties": {
+        "schema_version": { "const": "0.1.0" },
+        "artifact_id": { "type": "string", "minLength": 1 },
+        "artifact_type": { "type": "string" },
+        "display_name": { "type": "string" },
+        "stable_identity": { "type": "string" },
+        "content_hash": { "type": "string" },
+        "content_uri": { "type": "string" },
+        "storage_backend": { "type": "string" },
+        "source_connector": { "type": "string" },
+        "source_object_id": { "type": "string" },
+        "source_revision": { "type": "string" },
+        "target_context": { "$ref": "#/$defs/target_context" },
+        "current_revision": { "type": "string" },
+        "derived_from_artifacts": { "type": "array", "items": { "type": "string" }, "default": [] },
+        "derived_from_operations": { "type": "array", "items": { "type": "string" }, "default": [] },
+        "created_by_operation_id": { "type": "string" },
+        "retention_policy": { "type": "string" },
+        "encryption_profile": { "type": "string" },
+        "policy_state": { "type": "string" },
+        "metadata_state": { "type": "string" },
+        "indexing_state": { "type": "string" },
+        "admission_state": { "$ref": "#/$defs/admission_state" },
+        "activation_state": { "type": "string", "enum": ["inactive", "active", "blocked", "archived"], "default": "inactive" },
+        "created_at": { "type": "string", "format": "date-time" },
+        "metadata": { "type": "object", "additionalProperties": true }
+      }
+    },
+    "ArtifactTypeRegistryEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema_version", "artifact_type", "allowed_actions"],
+      "properties": {
+        "schema_version": { "const": "0.1.0" },
+        "artifact_type": { "type": "string" },
+        "icon": { "type": "string" },
+        "previewer": { "type": "string" },
+        "opener": { "type": "string" },
+        "diff_behavior": { "type": "string" },
+        "conversion_pipeline": { "type": "array", "items": { "type": "string" }, "default": [] },
+        "indexing_pipeline": { "type": "array", "items": { "type": "string" }, "default": [] },
+        "default_policy_gates": { "type": "array", "items": { "type": "string" }, "default": [] },
+        "required_metadata": { "type": "array", "items": { "type": "string" }, "default": [] },
+        "versioning_behavior": { "type": "string" },
+        "agent_capabilities": { "type": "array", "items": { "type": "string" }, "default": [] },
+        "allowed_actions": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "ArtifactAdmissionGate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema_version", "gate_id", "artifact_id", "gate_type", "status", "blocking", "explanation"],
+      "properties": {
+        "schema_version": { "const": "0.1.0" },
+        "gate_id": { "type": "string" },
+        "artifact_id": { "type": "string" },
+        "operation_id": { "type": "string" },
+        "gate_type": {
+          "type": "string",
+          "examples": [
+            "metadata.required",
+            "security.secret_detected",
+            "encryption.key_unavailable",
+            "quota.workspace_limit",
+            "conversion.failed",
+            "indexing.unsupported",
+            "policy.external_sharing_blocked",
+            "agent.review_required",
+            "license.unverified",
+            "provenance.unknown"
+          ]
+        },
+        "status": { "type": "string", "enum": ["passed", "warning", "blocking", "requires_decision", "requires_admin", "unavailable"] },
+        "blocking": { "type": "boolean" },
+        "explanation": { "type": "string" },
+        "responsible_actor": { "type": "string" },
+        "remediation_options": { "type": "array", "items": { "type": "string" }, "default": [] },
+        "audit_required": { "type": "boolean", "default": true },
+        "evidence_refs": { "type": "array", "items": { "type": "string" }, "default": [] },
+        "evaluated_at": { "type": "string", "format": "date-time" }
+      }
+    },
+    "admission_state": {
+      "type": "string",
+      "enum": ["not_stored", "stored", "quarantined", "pending_metadata", "pending_policy", "pending_encryption", "pending_scan", "admitted", "activated", "rejected", "archived"]
+    },
+    "target_context": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "location_type": {
+          "type": "string",
+          "enum": ["personal_scratch", "workspace_folder", "project_space", "repo_branch", "agent_run", "terminal_session", "memory_namespace", "dataset_space", "release_package", "external_connector_mount", "local_device_cache"]
+        },
+        "location_id": { "type": "string" }
+      }
+    }
+  }
+}
