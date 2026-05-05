@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.socioprophet.org/workspace-operation/v0.1/workspace-operation.schema.json",
+  "title": "WorkspaceOperation",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "operation_id",
+    "operation_type",
+    "actor",
+    "target",
+    "status",
+    "created_at",
+    "updated_at",
+    "idempotency_key"
+  ],
+  "properties": {
+    "schema_version": { "const": "0.1.0" },
+    "operation_id": { "type": "string", "minLength": 1 },
+    "operation_type": {
+      "type": "string",
+      "examples": [
+        "upload.import",
+        "agent.patch.propose",
+        "memory.ingest.start",
+        "terminal.command.run",
+        "browser.capture.create",
+        "sync.operation.reconcile"
+      ]
+    },
+    "actor": { "$ref": "#/$defs/actor" },
+    "delegated_by": { "$ref": "#/$defs/actor" },
+    "source": { "$ref": "#/$defs/ref" },
+    "target": { "$ref": "#/$defs/ref" },
+    "status": { "$ref": "#/$defs/operation_status" },
+    "priority": { "type": "string", "enum": ["background", "normal", "interactive", "urgent"], "default": "normal" },
+    "trace_id": { "type": "string" },
+    "span_id": { "type": "string" },
+    "idempotency_key": { "type": "string", "minLength": 1 },
+    "capability_profile_id": { "type": "string" },
+    "trust_boundary_ids": { "type": "array", "items": { "type": "string" }, "default": [] },
+    "task_ids": { "type": "array", "items": { "type": "string" }, "default": [] },
+    "artifact_ids": { "type": "array", "items": { "type": "string" }, "default": [] },
+    "policy_gate_ids": { "type": "array", "items": { "type": "string" }, "default": [] },
+    "decision_ids": { "type": "array", "items": { "type": "string" }, "default": [] },
+    "created_at": { "type": "string", "format": "date-time" },
+    "updated_at": { "type": "string", "format": "date-time" },
+    "metadata": { "type": "object", "additionalProperties": true }
+  },
+  "$defs": {
+    "operation_status": {
+      "type": "string",
+      "enum": [
+        "queued",
+        "preflighting",
+        "awaiting_decision",
+        "blocked",
+        "running",
+        "paused",
+        "retrying",
+        "canceling",
+        "canceled",
+        "failed",
+        "completed",
+        "completed_with_warnings",
+        "compensated"
+      ]
+    },
+    "actor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["actor_type", "actor_id"],
+      "properties": {
+        "actor_type": { "type": "string", "enum": ["user", "agent", "system", "connector", "worker"] },
+        "actor_id": { "type": "string", "minLength": 1 },
+        "display_name": { "type": "string" }
+      }
+    },
+    "ref": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["ref_type", "ref_id"],
+      "properties": {
+        "ref_type": { "type": "string" },
+        "ref_id": { "type": "string" },
+        "uri": { "type": "string" }
+      }
+    }
+  }
+}
