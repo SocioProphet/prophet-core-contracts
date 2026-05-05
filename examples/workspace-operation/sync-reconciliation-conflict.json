@@ -1,0 +1,191 @@
+{
+  "operation": {
+    "schema_version": "0.1.0",
+    "operation_id": "op_sync_reconcile_001",
+    "operation_type": "sync.operation.reconcile",
+    "actor": {
+      "actor_type": "system",
+      "actor_id": "sourceos-syncd"
+    },
+    "source": {
+      "ref_type": "local_operation_log",
+      "ref_id": "local_log_device_001"
+    },
+    "target": {
+      "ref_type": "workspace_folder",
+      "ref_id": "workspace_docs"
+    },
+    "status": "awaiting_decision",
+    "priority": "normal",
+    "trace_id": "trace_sync_reconcile_001",
+    "idempotency_key": "idem_sync_reconcile_001",
+    "capability_profile_id": "cap_sourceos_syncd_local_first",
+    "trust_boundary_ids": [
+      "tb_device_sync_001"
+    ],
+    "task_ids": [
+      "task_sync_detect_conflict_001",
+      "task_sync_hold_conflict_001"
+    ],
+    "artifact_ids": [
+      "artifact_conflict_record_001"
+    ],
+    "policy_gate_ids": [
+      "gate_sync_conflict_review_001"
+    ],
+    "decision_ids": [
+      "decision_sync_conflict_001"
+    ],
+    "created_at": "2026-05-05T01:20:00Z",
+    "updated_at": "2026-05-05T01:20:07Z",
+    "metadata": {
+      "example_name": "sync-reconciliation-conflict",
+      "local_operation_id": "local_op_abc123",
+      "remote_operation_id": "op_upload_001"
+    }
+  },
+  "tasks": [
+    {
+      "schema_version": "0.1.0",
+      "task_id": "task_sync_detect_conflict_001",
+      "operation_id": "op_sync_reconcile_001",
+      "task_type": "sync.conflict.detect",
+      "title": "Detect local/remote document conflict",
+      "source_ref": {
+        "ref_type": "local_artifact",
+        "ref_id": "local_artifact_notes"
+      },
+      "target_ref": {
+        "ref_type": "remote_artifact",
+        "ref_id": "artifact_notes_001"
+      },
+      "artifact_type": "conflict_record",
+      "status": "completed",
+      "stage": "conflict_detected",
+      "progress": 1,
+      "retry_count": 0,
+      "retryable": true,
+      "auto_retry_allowed": false,
+      "idempotency_key": "idem_task_sync_detect_conflict_001",
+      "final_artifact_id": "artifact_conflict_record_001"
+    },
+    {
+      "schema_version": "0.1.0",
+      "task_id": "task_sync_hold_conflict_001",
+      "operation_id": "op_sync_reconcile_001",
+      "task_type": "sync.conflict.hold",
+      "title": "Hold conflict pending decision",
+      "source_ref": {
+        "ref_type": "conflict_record",
+        "ref_id": "artifact_conflict_record_001"
+      },
+      "target_ref": {
+        "ref_type": "decision_card",
+        "ref_id": "decision_sync_conflict_001"
+      },
+      "artifact_type": "decision_card",
+      "status": "awaiting_decision",
+      "stage": "awaiting_user_or_agent_resolution",
+      "progress": 1,
+      "retry_count": 0,
+      "retryable": true,
+      "auto_retry_allowed": false,
+      "idempotency_key": "idem_task_sync_hold_conflict_001"
+    }
+  ],
+  "artifact": {
+    "schema_version": "0.1.0",
+    "artifact_id": "artifact_conflict_record_001",
+    "artifact_type": "sync_conflict_record",
+    "display_name": "notes.md sync conflict",
+    "stable_identity": "workspace://artifact/artifact_conflict_record_001",
+    "content_hash": "sha256:demo-sync-conflict",
+    "content_uri": "object://local/artifact_conflict_record_001/content",
+    "storage_backend": "local-operation-log",
+    "target_context": {
+      "location_type": "workspace_folder",
+      "location_id": "workspace_docs"
+    },
+    "current_revision": "conflict_rev_001",
+    "derived_from_artifacts": [
+      "local_artifact_notes",
+      "artifact_notes_001"
+    ],
+    "derived_from_operations": [
+      "op_sync_reconcile_001"
+    ],
+    "created_by_operation_id": "op_sync_reconcile_001",
+    "policy_state": "requires_decision",
+    "metadata_state": "complete",
+    "indexing_state": "not_requested",
+    "admission_state": "quarantined",
+    "activation_state": "inactive",
+    "created_at": "2026-05-05T01:20:05Z",
+    "metadata": {
+      "conflict_kind": "local_remote_revision_diverged",
+      "available_resolutions": [
+        "merge",
+        "fork",
+        "keep_local",
+        "keep_remote"
+      ]
+    }
+  },
+  "policy_gate": {
+    "schema_version": "0.1.0",
+    "gate_id": "gate_sync_conflict_review_001",
+    "operation_id": "op_sync_reconcile_001",
+    "artifact_id": "artifact_conflict_record_001",
+    "gate_type": "sync.conflict_review_required",
+    "status": "requires_decision",
+    "explanation": "Local and remote revisions diverged and require a merge, fork, keep-local, or keep-remote decision.",
+    "responsible_actor": "current_user",
+    "remediation_options": [
+      "merge",
+      "fork",
+      "keep_local",
+      "keep_remote"
+    ],
+    "audit_required": true,
+    "evidence_refs": [
+      "local_op_abc123",
+      "artifact_notes_001"
+    ],
+    "evaluated_at": "2026-05-05T01:20:06Z"
+  },
+  "decision": {
+    "schema_version": "0.1.0",
+    "decision_id": "decision_sync_conflict_001",
+    "operation_id": "op_sync_reconcile_001",
+    "artifact_id": "artifact_conflict_record_001",
+    "decision_type": "sync_conflict_resolution",
+    "prompt": "Resolve local/remote document conflict.",
+    "options": [
+      {
+        "option_id": "merge",
+        "label": "Merge revisions",
+        "consequence": "Create a merged artifact and retain both source revisions in lineage.",
+        "recommended": true
+      },
+      {
+        "option_id": "fork",
+        "label": "Fork local revision",
+        "consequence": "Keep remote artifact active and create a separate local-derived artifact."
+      },
+      {
+        "option_id": "keep_local",
+        "label": "Keep local revision",
+        "consequence": "Replace remote revision with local revision after policy admission."
+      },
+      {
+        "option_id": "keep_remote",
+        "label": "Keep remote revision",
+        "consequence": "Discard or archive local divergent revision."
+      }
+    ],
+    "default_option": "merge",
+    "required_actor": "current_user",
+    "status": "pending",
+    "audit_required": true
+  }
+}
