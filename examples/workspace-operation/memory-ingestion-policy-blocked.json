@@ -1,0 +1,97 @@
+{
+  "operation": {
+    "schema_version": "0.1.0",
+    "operation_id": "op_memory_ingest_001",
+    "operation_type": "memory.ingest.start",
+    "actor": {
+      "actor_type": "system",
+      "actor_id": "memory-mesh-ingestor"
+    },
+    "source": {
+      "ref_type": "document",
+      "ref_id": "doc_private_notes_001"
+    },
+    "target": {
+      "ref_type": "memory_namespace",
+      "ref_id": "memory_team_research"
+    },
+    "status": "blocked",
+    "priority": "normal",
+    "trace_id": "trace_memory_ingest_001",
+    "idempotency_key": "idem_memory_ingest_001",
+    "trust_boundary_ids": [],
+    "task_ids": ["task_memory_policy_001"],
+    "artifact_ids": ["artifact_memory_bundle_001"],
+    "policy_gate_ids": ["gate_memory_privacy_001"],
+    "decision_ids": ["decision_memory_visibility_001"],
+    "created_at": "2026-05-05T00:20:00Z",
+    "updated_at": "2026-05-05T00:20:05Z",
+    "metadata": {
+      "example_name": "memory-ingestion-policy-blocked"
+    }
+  },
+  "policy_gate": {
+    "schema_version": "0.1.0",
+    "gate_id": "gate_memory_privacy_001",
+    "operation_id": "op_memory_ingest_001",
+    "artifact_id": "artifact_memory_bundle_001",
+    "gate_type": "memory.privacy_visibility_review_required",
+    "status": "requires_decision",
+    "explanation": "Source document is private and requires explicit memory namespace visibility decision before activation.",
+    "responsible_actor": "workspace_owner",
+    "remediation_options": ["restrict_namespace", "request_owner_approval", "reject_ingestion"],
+    "audit_required": true,
+    "evidence_refs": ["doc_private_notes_001"],
+    "evaluated_at": "2026-05-05T00:20:05Z"
+  },
+  "decision": {
+    "schema_version": "0.1.0",
+    "decision_id": "decision_memory_visibility_001",
+    "operation_id": "op_memory_ingest_001",
+    "artifact_id": "artifact_memory_bundle_001",
+    "decision_type": "memory_visibility",
+    "prompt": "Choose visibility for private-source memory ingestion.",
+    "options": [
+      {
+        "option_id": "restrict_namespace",
+        "label": "Restrict to private namespace",
+        "consequence": "Memory is admitted only into a private namespace and hidden from agents without explicit permission.",
+        "recommended": true
+      },
+      {
+        "option_id": "reject_ingestion",
+        "label": "Reject ingestion",
+        "consequence": "Memory bundle remains rejected and no embedding/indexing occurs."
+      }
+    ],
+    "required_actor": "workspace_owner",
+    "status": "pending",
+    "audit_required": true
+  },
+  "artifact": {
+    "schema_version": "0.1.0",
+    "artifact_id": "artifact_memory_bundle_001",
+    "artifact_type": "memory_bundle",
+    "display_name": "Private notes memory bundle",
+    "stable_identity": "workspace://artifact/artifact_memory_bundle_001",
+    "content_hash": "sha256:demo-memory",
+    "content_uri": "object://workspace/artifact_memory_bundle_001/content",
+    "storage_backend": "demo-object-store",
+    "target_context": {
+      "location_type": "memory_namespace",
+      "location_id": "memory_team_research"
+    },
+    "created_by_operation_id": "op_memory_ingest_001",
+    "policy_state": "requires_decision",
+    "metadata_state": "complete",
+    "indexing_state": "blocked_until_admitted",
+    "admission_state": "pending_policy",
+    "activation_state": "inactive",
+    "created_at": "2026-05-05T00:20:05Z",
+    "metadata": {
+      "source_trust_level": "private_user_source",
+      "confidence_score": 0.78,
+      "embedding_model_version": "demo-embedding-v0"
+    }
+  }
+}
