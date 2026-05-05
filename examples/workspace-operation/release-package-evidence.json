@@ -1,0 +1,203 @@
+{
+  "operation": {
+    "schema_version": "0.1.0",
+    "operation_id": "op_release_package_001",
+    "operation_type": "release.package.prepare",
+    "actor": {
+      "actor_type": "system",
+      "actor_id": "release-worker"
+    },
+    "source": {
+      "ref_type": "git_repository",
+      "ref_id": "SourceOS-Linux/sourceos-devtools"
+    },
+    "target": {
+      "ref_type": "release_package",
+      "ref_id": "sourceos-devtools-homebrew-formula"
+    },
+    "status": "completed",
+    "priority": "normal",
+    "trace_id": "trace_release_package_001",
+    "idempotency_key": "idem_release_package_001",
+    "trust_boundary_ids": [],
+    "task_ids": [
+      "task_release_formula_001",
+      "task_release_checksum_001",
+      "task_release_evidence_001"
+    ],
+    "artifact_ids": [
+      "artifact_formula_001",
+      "artifact_checksum_001",
+      "artifact_release_evidence_001"
+    ],
+    "policy_gate_ids": [
+      "gate_release_evidence_001"
+    ],
+    "decision_ids": [],
+    "created_at": "2026-05-05T01:30:00Z",
+    "updated_at": "2026-05-05T01:30:35Z",
+    "metadata": {
+      "example_name": "release-package-evidence"
+    }
+  },
+  "tasks": [
+    {
+      "schema_version": "0.1.0",
+      "task_id": "task_release_formula_001",
+      "operation_id": "op_release_package_001",
+      "task_type": "release.formula.update",
+      "title": "Update Homebrew formula",
+      "source_ref": {
+        "ref_type": "git_repository",
+        "ref_id": "SourceOS-Linux/sourceos-devtools"
+      },
+      "target_ref": {
+        "ref_type": "release_package",
+        "ref_id": "sourceos-devtools-homebrew-formula"
+      },
+      "artifact_type": "package_formula",
+      "status": "completed",
+      "stage": "formula_updated",
+      "progress": 1,
+      "retry_count": 0,
+      "retryable": true,
+      "auto_retry_allowed": false,
+      "idempotency_key": "idem_task_release_formula_001",
+      "final_artifact_id": "artifact_formula_001"
+    },
+    {
+      "schema_version": "0.1.0",
+      "task_id": "task_release_checksum_001",
+      "operation_id": "op_release_package_001",
+      "task_type": "release.checksum.verify",
+      "title": "Verify package checksum",
+      "source_ref": {
+        "ref_type": "release_package",
+        "ref_id": "sourceos-devtools-homebrew-formula"
+      },
+      "target_ref": {
+        "ref_type": "artifact",
+        "ref_id": "artifact_checksum_001"
+      },
+      "artifact_type": "checksum_record",
+      "status": "completed",
+      "stage": "checksum_verified",
+      "progress": 1,
+      "retry_count": 0,
+      "retryable": true,
+      "auto_retry_allowed": false,
+      "idempotency_key": "idem_task_release_checksum_001",
+      "final_artifact_id": "artifact_checksum_001"
+    },
+    {
+      "schema_version": "0.1.0",
+      "task_id": "task_release_evidence_001",
+      "operation_id": "op_release_package_001",
+      "task_type": "release.evidence.attach",
+      "title": "Attach release evidence",
+      "source_ref": {
+        "ref_type": "artifact",
+        "ref_id": "artifact_checksum_001"
+      },
+      "target_ref": {
+        "ref_type": "ledger_evidence",
+        "ref_id": "artifact_release_evidence_001"
+      },
+      "artifact_type": "release_evidence",
+      "status": "completed",
+      "stage": "evidence_attached",
+      "progress": 1,
+      "retry_count": 0,
+      "retryable": true,
+      "auto_retry_allowed": false,
+      "idempotency_key": "idem_task_release_evidence_001",
+      "final_artifact_id": "artifact_release_evidence_001"
+    }
+  ],
+  "policy_gate": {
+    "schema_version": "0.1.0",
+    "gate_id": "gate_release_evidence_001",
+    "operation_id": "op_release_package_001",
+    "artifact_id": "artifact_release_evidence_001",
+    "gate_type": "release.evidence_required",
+    "status": "passed",
+    "explanation": "Release package includes source reference, checksum, build/test evidence, and rollback note.",
+    "responsible_actor": "system",
+    "remediation_options": [],
+    "audit_required": true,
+    "evidence_refs": [
+      "git://SourceOS-Linux/sourceos-devtools@demo",
+      "sha256:demo-release-package"
+    ],
+    "evaluated_at": "2026-05-05T01:30:35Z"
+  },
+  "artifacts": [
+    {
+      "schema_version": "0.1.0",
+      "artifact_id": "artifact_formula_001",
+      "artifact_type": "package_formula",
+      "display_name": "sourceos-devtools.rb",
+      "stable_identity": "workspace://artifact/artifact_formula_001",
+      "content_hash": "sha256:demo-formula",
+      "content_uri": "object://release/artifact_formula_001/content",
+      "storage_backend": "release-artifact-store",
+      "target_context": {
+        "location_type": "release_package",
+        "location_id": "sourceos-devtools-homebrew-formula"
+      },
+      "created_by_operation_id": "op_release_package_001",
+      "policy_state": "passed",
+      "metadata_state": "complete",
+      "indexing_state": "not_requested",
+      "admission_state": "admitted",
+      "activation_state": "active",
+      "created_at": "2026-05-05T01:30:12Z"
+    },
+    {
+      "schema_version": "0.1.0",
+      "artifact_id": "artifact_checksum_001",
+      "artifact_type": "checksum_record",
+      "display_name": "sourceos-devtools checksum",
+      "stable_identity": "workspace://artifact/artifact_checksum_001",
+      "content_hash": "sha256:demo-checksum-record",
+      "content_uri": "object://release/artifact_checksum_001/content",
+      "storage_backend": "release-artifact-store",
+      "target_context": {
+        "location_type": "release_package",
+        "location_id": "sourceos-devtools-homebrew-formula"
+      },
+      "created_by_operation_id": "op_release_package_001",
+      "policy_state": "passed",
+      "metadata_state": "complete",
+      "indexing_state": "not_requested",
+      "admission_state": "admitted",
+      "activation_state": "active",
+      "created_at": "2026-05-05T01:30:20Z"
+    },
+    {
+      "schema_version": "0.1.0",
+      "artifact_id": "artifact_release_evidence_001",
+      "artifact_type": "release_evidence",
+      "display_name": "sourceos-devtools release evidence",
+      "stable_identity": "workspace://artifact/artifact_release_evidence_001",
+      "content_hash": "sha256:demo-release-evidence",
+      "content_uri": "object://release/artifact_release_evidence_001/content",
+      "storage_backend": "release-artifact-store",
+      "target_context": {
+        "location_type": "release_package",
+        "location_id": "sourceos-devtools-homebrew-formula"
+      },
+      "created_by_operation_id": "op_release_package_001",
+      "policy_state": "passed",
+      "metadata_state": "complete",
+      "indexing_state": "not_requested",
+      "admission_state": "admitted",
+      "activation_state": "active",
+      "created_at": "2026-05-05T01:30:35Z",
+      "metadata": {
+        "rollback_note_present": true,
+        "source_commit_ref": "demo"
+      }
+    }
+  ]
+}
