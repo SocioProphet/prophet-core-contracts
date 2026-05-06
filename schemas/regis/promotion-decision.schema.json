@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.socioprophet.org/regis/promotion-decision.schema.json",
+  "title": "PromotionDecision",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "promotion_decision_id",
+    "candidate_ref",
+    "candidate_type",
+    "decision",
+    "reason",
+    "gate_results",
+    "policy_version",
+    "created_at",
+    "replay_hash"
+  ],
+  "additionalProperties": true,
+  "properties": {
+    "schema_version": {"type": "string"},
+    "promotion_decision_id": {"type": "string"},
+    "candidate_ref": {"type": "string"},
+    "candidate_type": {"type": "string"},
+    "decision": {"type": "string"},
+    "reason": {"type": "string"},
+    "top_score": {"type": "number"},
+    "runner_up_score": {"type": "number"},
+    "margin": {"type": "number"},
+    "perturbation_stability": {"type": "number", "minimum": 0, "maximum": 1},
+    "evidence_count": {"type": "integer", "minimum": 0},
+    "policy_version": {"type": "string"},
+    "gate_results": {"type": "array", "items": {"type": "object"}},
+    "reviewer": {"type": ["string", "null"]},
+    "created_at": {"type": "string"},
+    "replay_hash": {"type": "string"}
+  }
+}
