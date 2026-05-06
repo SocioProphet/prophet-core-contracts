@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.socioprophet.org/regis/transition-receipt-ref.schema.json",
+  "title": "TransitionReceiptRef",
+  "type": "object",
+  "required": ["receipt_id", "twin_id", "action", "timestamp", "policy_version", "previous_state_hash", "new_state_hash", "approval_band"],
+  "additionalProperties": false,
+  "properties": {
+    "receipt_id": {"type": "string", "pattern": "^tr_[a-zA-Z0-9_-]+$"},
+    "twin_id": {"type": "string", "pattern": "^hdt_[a-zA-Z0-9_-]+$"},
+    "action": {"type": "string"},
+    "actor_id": {"type": "string"},
+    "actor_type": {"type": "string", "enum": ["subject", "agent", "operator", "system"]},
+    "timestamp": {"type": "string", "format": "date-time"},
+    "policy_version": {"type": "string"},
+    "previous_state_hash": {"type": "string"},
+    "new_state_hash": {"type": "string"},
+    "approval_band": {"type": "string", "enum": ["observe", "recommend", "represent", "negotiate", "commit"]},
+    "rollback_supported": {"type": ["boolean", "null"]},
+    "rollback_method": {"type": ["string", "null"]},
+    "replay_hints": {"type": "object"}
+  }
+}
