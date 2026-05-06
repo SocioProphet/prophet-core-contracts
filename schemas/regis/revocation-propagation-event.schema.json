@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.socioprophet.org/regis/revocation-propagation-event.schema.json",
+  "title": "RevocationPropagationEvent",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "event_id",
+    "revocation_source",
+    "subject_id",
+    "projection_id",
+    "affected_refs",
+    "actions",
+    "created_at"
+  ],
+  "additionalProperties": true,
+  "properties": {
+    "schema_version": {"type": "string"},
+    "event_id": {"type": "string"},
+    "revocation_source": {"type": "string"},
+    "subject_id": {"type": "string"},
+    "projection_id": {"type": "string"},
+    "policy_id": {"type": "string"},
+    "receipt_id": {"type": "string"},
+    "affected_refs": {"type": "array", "items": {"type": "string"}},
+    "actions": {"type": "array", "items": {"type": "string"}},
+    "reason": {"type": "string"},
+    "created_at": {"type": "string"}
+  }
+}
