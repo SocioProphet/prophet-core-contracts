@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.socioprophet.org/regis/consent-scope-snapshot.schema.json",
+  "title": "ConsentScopeSnapshot",
+  "type": "object",
+  "required": ["schema_version", "policy_id", "subject_id", "recipient_id", "purpose", "expires_at", "revocation", "audit"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {"type": "string", "pattern": "^0\\.1\\.[0-9]+$"},
+    "policy_id": {"type": "string", "pattern": "^cp_[a-zA-Z0-9_-]+$"},
+    "subject_id": {"type": "string", "pattern": "^sub_[a-zA-Z0-9_-]+$"},
+    "recipient_id": {"type": "string"},
+    "purpose": {"type": "string"},
+    "allowed_recipients": {"type": "array", "items": {"type": "string"}},
+    "allowed_purposes": {"type": "array", "items": {"type": "string"}},
+    "allowed_fields_digest": {"type": "string"},
+    "forbidden_fields_digest": {"type": "string"},
+    "expires_at": {"type": "string", "format": "date-time"},
+    "retention_rule": {"type": ["string", "null"]},
+    "revocation": {"type": "object"},
+    "delegation": {"type": "object"},
+    "audit": {"type": "object"}
+  }
+}
