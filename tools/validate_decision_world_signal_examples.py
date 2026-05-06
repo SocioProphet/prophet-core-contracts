@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate decision-grade world signal examples.
+"""Validate decision-grade world signal schemas and examples.
 
 This validator is intentionally lightweight and dependency-free. It checks the
 contract-level invariants we care about before full JSON Schema validation is
@@ -13,6 +13,7 @@ from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
+SCHEMAS = ROOT / "schemas"
 EXAMPLES = ROOT / "examples" / "decision-world-signals"
 
 PROMOTION_DECISIONS = {"REJECT", "REVIEW", "INSERT_EVIDENCE_ONLY", "PROMOTE_CANONICAL"}
@@ -28,6 +29,14 @@ DECISION_TYPES = {
 }
 PROOF_STATUSES = {"PROVED", "VIOLATED", "UNKNOWN", "TIMEOUT", "PRECISION_LOSS_REVIEW_REQUIRED"}
 
+EXPECTED_SCHEMA_FILES = {
+    "feature-registry-entry": "FeatureRegistryEntry",
+    "energy-ledger-entry": "EnergyLedgerEntry",
+    "concordance-link": "ConcordanceLink",
+    "decision-ledger-entry": "DecisionLedgerEntry",
+    "proof-artifact": "ProofArtifact",
+}
+
 
 def load_json(path: Path) -> dict[str, Any]:
     with path.open("r", encoding="utf-8") as fh:
@@ -42,6 +51,34 @@ def require(path: Path, data: dict[str, Any], field: str, errors: list[str]) -> 
     if value in (None, "", []):
         errors.append(f"{path}: missing required field {field}")
     return value
+
+
+def validate_schema_files() -> list[str]:
+    errors: list[str] = []
+    if not SCHEMAS.exists():
+        return [f"missing schemas directory: {SCHEMAS}"]
+
+    for stem, title in EXPECTED_SCHEMA_FILES.items():
+        path = SCHEMAS / f"{stem}.schema.json"
+        if not path.exists():
+            errors.append(f"missing schema file: {path}")
+            continue
+        try:
+            data = load_json(path)
+        except Exception as exc:  # noqa: BLE001
+            errors.append(f"{path}: failed to parse JSON: {exc}")
+            continue
+        if data.get("$schema") != "https://json-schema.org/draft/2020-12/schema":
+            errors.append(f"{path}: $schema must be draft/2020-12")
+        if data.get("title") != title:
+            errors.append(f"{path}: title must be {title}")
+        if data.get("type") != "object":
+            errors.append(f"{path}: top-level type must be object")
+        if not isinstance(data.get("required"), list) or not data.get("required"):
+            errors.append(f"{path}: required must be a non-empty list")
+        if not isinstance(data.get("properties"), dict) or not data.get("properties"):
+            errors.append(f"{path}: properties must be a non-empty object")
+    return errors
 
 
 def validate_feature(path: Path, data: dict[str, Any]) -> list[str]:
@@ -151,15 +188,13 @@ def infer_kind(path: Path) -> str | None:
     return None
 
 
-def main() -> int:
+def validate_examples() -> tuple[int, list[str]]:
     if not EXAMPLES.exists():
-        print(f"missing examples directory: {EXAMPLES}", file=sys.stderr)
-        return 1
+        return 0, [f"missing examples directory: {EXAMPLES}"]
 
     files = sorted(EXAMPLES.glob("*.json"))
     if not files:
-        print(f"no example files found in {EXAMPLES}", file=sys.stderr)
-        return 1
+        return 0, [f"no example files found in {EXAMPLES}"]
 
     errors: list[str] = []
     seen_kinds: set[str] = set()
@@ -179,14 +214,22 @@ def main() -> int:
     missing = sorted(set(VALIDATORS) - seen_kinds)
     if missing:
         errors.append(f"missing example coverage for contract kinds: {', '.join(missing)}")
+    return len(files), errors
+
+
+def main() -> int:
+    errors = validate_schema_files()
+    file_count, example_errors = validate_examples()
+    errors.extend(example_errors)
 
     if errors:
-        print("Decision world signal example validation failed:", file=sys.stderr)
+        print("Decision world signal validation failed:", file=sys.stderr)
         for error in errors:
             print(f"- {error}", file=sys.stderr)
         return 1
 
-    print(f"Validated {len(files)} decision world signal example(s).")
+    print(f"Validated {len(EXPECTED_SCHEMA_FILES)} decision world signal schema(s).")
+    print(f"Validated {file_count} decision world signal example(s).")
     return 0
 
 
