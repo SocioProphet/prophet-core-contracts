@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.socioprophet.org/prophet/feature-registry-entry.v0.1.schema.json",
+  "title": "FeatureRegistryEntry",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "feature_id",
+    "feature_name",
+    "category",
+    "description",
+    "coverage",
+    "file_formats",
+    "provenance_requirements"
+  ],
+  "properties": {
+    "feature_id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_\\-]*(\\.[a-z0-9_\\-]+)+$",
+      "description": "Stable namespaced feature identifier."
+    },
+    "feature_name": { "type": "string", "minLength": 1 },
+    "category": { "type": "string", "minLength": 1 },
+    "description": { "type": "string", "minLength": 1 },
+    "coverage": { "type": "string", "minLength": 1 },
+    "file_formats": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "minLength": 1 },
+      "uniqueItems": true
+    },
+    "temporal_grain": { "type": ["string", "null"] },
+    "horizon": { "type": ["string", "null"] },
+    "update_cadence": { "type": ["string", "null"] },
+    "spatial_type": {
+      "type": ["string", "null"],
+      "enum": [null, "point", "grid", "polygon", "tile_raster", "tile_vector", "network", "graph", "document", "other"]
+    },
+    "resolution": { "type": ["string", "null"] },
+    "units": { "type": ["string", "null"] },
+    "nullability": { "type": ["string", "null"] },
+    "provenance_requirements": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "minLength": 1 },
+      "uniqueItems": true
+    },
+    "notes": { "type": ["string", "null"] }
+  }
+}
