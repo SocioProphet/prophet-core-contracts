@@ -1,0 +1,31 @@
+{
+  "source_artifact_id": "artifact:eutc-paper:chunk:p07_c03",
+  "doc_id": "p07_c03",
+  "extraction_run_id": "run:energy-ledger-demo-0001",
+  "policy_id": "decision-world-signal-policy@0.1.0",
+  "candidate_set_id": "candidate-set:p07_c03:0001",
+  "top_entity_id": "entity:member-record",
+  "top_score": 12.0,
+  "runnerup_entity_id": "entity:threshold",
+  "runnerup_score": 12.0,
+  "margin_delta": 0.0,
+  "perturbation_flip_rate": 0.2,
+  "promotion_decision": "REVIEW",
+  "decision_reason_codes": [
+    "LOW_MARGIN",
+    "PERTURBATION_INSTABILITY"
+  ],
+  "provenance_offsets": [
+    {
+      "artifact_id": "artifact:eutc-paper:chunk:p07_c03",
+      "start": 0,
+      "end": 950,
+      "label": "chunk-window"
+    }
+  ],
+  "score_decomposition": {
+    "ngram_overlap": 6.0,
+    "approximate_match": 6.0
+  },
+  "notes": "Low-margin fixture must remain review-gated rather than canonical-promoted."
+}
