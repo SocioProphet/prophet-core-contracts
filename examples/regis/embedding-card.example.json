@@ -1,0 +1,33 @@
+{
+  "schema_version": "0.1.0",
+  "embedding_id": "emb_projection_capability_001",
+  "subject_id": "sub_example_001",
+  "subject_type": "human_digital_twin_projection",
+  "embedding_family": "capability",
+  "model_id": "regis-example-embedding-model",
+  "model_version": "0.1.0",
+  "vector_ref": {
+    "storage_uri": "vector://regis/example/emb_projection_capability_001",
+    "digest": "sha256:vector"
+  },
+  "dimension": 384,
+  "feature_assertion_refs": ["fa_projection_capability_001"],
+  "evidence_refs": ["ev_repo_001"],
+  "training_domain": "holographme.mission_projection",
+  "inference_domain": "holographme.mission_projection",
+  "domain_gate_state": "passed",
+  "consent_scope": {
+    "policy_id": "cp_example_001",
+    "purpose": "mission_fit",
+    "recipient_id": "client_example_001"
+  },
+  "revocation_state": "active",
+  "uncertainty": 0.2,
+  "stability": 0.8,
+  "policy_state": "allowed",
+  "allowed_uses": ["mission_fit_search", "review_routing", "capability_matching"],
+  "prohibited_uses": ["unconsented_targeting", "high_impact_autonomous_decision"],
+  "promotion_state": "evidence_only",
+  "provenance_hash": "sha256:embedding-card-provenance",
+  "created_at": "2026-05-04T18:32:00Z"
+}
