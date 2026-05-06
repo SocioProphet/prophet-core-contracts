@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.socioprophet.org/regis/feature-assertion.schema.json",
+  "title": "FeatureAssertion",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "assertion_id",
+    "subject_id",
+    "subject_type",
+    "predicate",
+    "object_value",
+    "feature_family",
+    "evidence_refs",
+    "confidence",
+    "uncertainty",
+    "stability",
+    "domain_context",
+    "policy_state",
+    "created_at"
+  ],
+  "additionalProperties": true,
+  "properties": {
+    "schema_version": {"type": "string"},
+    "assertion_id": {"type": "string"},
+    "subject_id": {"type": "string"},
+    "subject_type": {"type": "string"},
+    "predicate": {"type": "string"},
+    "object_value": {},
+    "feature_family": {"type": "string"},
+    "evidence_refs": {"type": "array", "items": {"type": "string"}},
+    "confidence": {"type": "string"},
+    "uncertainty": {"type": "number", "minimum": 0, "maximum": 1},
+    "stability": {"type": "number", "minimum": 0, "maximum": 1},
+    "domain_context": {"type": "object"},
+    "projection_ref": {"type": "object"},
+    "policy_state": {"type": "string"},
+    "created_at": {"type": "string"}
+  }
+}
