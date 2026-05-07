@@ -19,5 +19,8 @@ jobs:
         with:
           python-version: '3.12'
 
+      - name: Install validation dependencies
+        run: python3 -m pip install --upgrade pip jsonschema
+
       - name: Validate contract examples
         run: make validate

@@ -21,8 +21,15 @@ No feature bypasses the Operation Plane. No agent writes side effects outside an
 - `OperationSnapshot`: materialized current operation state.
 - `TaskSnapshot`: materialized current task state.
 - `Artifact`: typed object produced, consumed, imported, generated, or transformed by an operation.
+- `ArtifactTypeRegistryEntry`: declarative artifact-type capabilities and limits.
+- `ArtifactAdmissionGate`: artifact gate verdict and remediation guidance.
 - `DecisionCard`: human or agent decision request with consequences.
 - `PolicyGateRecord`: policy evaluation result persisted with the operation.
+- `ConflictResolution`: conflict record with resolution options and selected outcome.
+- `RemediationAction`: tracked action to clear blocked/failed operation conditions.
+- `TrustBoundary`: external/internal trust seam metadata used in operation policy.
+- `CapabilityProfile`: operation and artifact capabilities granted to an actor.
+- `DiagnosticBundleMetadata`: redaction and evidence metadata for diagnostic exports.
 - `AdapterContract`: declaration for operation-type adapters.
 
 ## Operation states

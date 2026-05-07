@@ -38,6 +38,7 @@ Primary rule:
 
 - `examples/workspace-operation/upload-import-happy-path.json`
 - `examples/workspace-operation/upload-import-partial-failure.json`
+- `examples/workspace-operation/retryable-task-failure.json`
 - `examples/workspace-operation/canceled-operation.json`
 - `examples/workspace-operation/agent-patch-proposal.json`
 - `examples/workspace-operation/memory-ingestion-policy-blocked.json`

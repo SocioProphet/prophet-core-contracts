@@ -64,6 +64,11 @@ def validate_operation(path: Path, data: dict[str, Any]) -> list[str]:
             errors.append(f"{path}: retryable task {task.get('task_id')} lacks idempotency_key")
         if task.get("status") == "failed" and task.get("retryable") and not task.get("idempotency_key"):
             errors.append(f"{path}: failed retryable task {task.get('task_id')} lacks idempotency_key")
+        if task.get("status") == "failed" and int(task.get("retry_count", 0) or 0) > 0:
+            if not task.get("retryable"):
+                errors.append(f"{path}: failed task {task.get('task_id')} retried without retryable=true")
+            if not task.get("idempotency_key"):
+                errors.append(f"{path}: failed task {task.get('task_id')} retried without idempotency_key")
 
     for artifact in as_list(data.get("artifact")) + list(data.get("artifacts", [])):
         if not isinstance(artifact, dict):
@@ -75,6 +80,8 @@ def validate_operation(path: Path, data: dict[str, Any]) -> list[str]:
             errors.append(f"{path}: artifact {artifact_id} admission_state activated but activation_state not active")
         if artifact.get("activation_state") == "active" and artifact.get("admission_state") not in {"admitted", "activated"}:
             errors.append(f"{path}: artifact {artifact_id} active before admission")
+        if artifact.get("admission_state") == "quarantined" and artifact.get("indexing_state") in {"indexed", "ready"}:
+            errors.append(f"{path}: quarantined artifact {artifact_id} cannot be indexed")
 
     for decision in as_list(data.get("decision")) + list(data.get("decisions", [])):
         if not isinstance(decision, dict):
@@ -84,6 +91,9 @@ def validate_operation(path: Path, data: dict[str, Any]) -> list[str]:
             errors.append(f"{path}: decision {decision_id} not listed in operation.decision_ids")
         if decision.get("status") == "pending" and not decision.get("options"):
             errors.append(f"{path}: pending decision {decision_id} has no options")
+        for option in decision.get("options", []):
+            if isinstance(option, dict) and not option.get("consequence"):
+                errors.append(f"{path}: decision {decision_id} option {option.get('option_id')} missing consequence")
 
     for gate in as_list(data.get("policy_gate")) + list(data.get("policy_gates", [])):
         if not isinstance(gate, dict):
@@ -102,6 +112,15 @@ def validate_operation(path: Path, data: dict[str, Any]) -> list[str]:
 
     if operation.get("status") == "blocked" and not policy_gate_ids:
         errors.append(f"{path}: blocked operation lacks policy_gate_ids")
+
+    if operation.get("status") == "canceled":
+        for event in as_list(data.get("event")) + list(data.get("events", [])):
+            if not isinstance(event, dict):
+                continue
+            if event.get("event_type") == "workspace.operation.artifact_admitted":
+                payload = event.get("payload") or {}
+                if not payload.get("compensation_operation_id") and not payload.get("recovery_operation_id"):
+                    errors.append(f"{path}: canceled operation emitted artifact_admitted without compensation/recovery")
 
     return errors
 
