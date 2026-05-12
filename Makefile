@@ -10,3 +10,4 @@ validate-regis:
 
 validate-policy:
 	python3 tools/validate_policy_examples.py
+	python3 tools/validate_policy_risk_tier_examples.py
