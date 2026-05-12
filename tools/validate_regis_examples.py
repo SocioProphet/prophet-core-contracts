@@ -28,6 +28,7 @@ NEGATIVE_FIXTURES = [
     "twin-projection-feature.unsafe-reason-leak.invalid.json",
     "twin-projection-feature.raw-twin-payload.invalid.json",
     "twin-projection-feature.missing-do-not-learn.invalid.json",
+    "twin-projection-feature.do-not-learn-false.invalid.json",
     "twin-projection-feature.do-not-link-false.invalid.json",
     "twin-projection-feature.unknown-feature-family.invalid.json",
     "twin-projection-feature.unsafe-authority-band.invalid.json",
