@@ -1,0 +1,1 @@
+{"case_id":"request-bad-hash","description":"PolicyRequest.request_hash must match canonical request payload without request_hash.","target":"request","mutation":{"op":"replace","path":"/request_hash","value":"sha256:0000000000000000000000000000000000000000000000000000000000000000"},"expected_failure":"semantic_request_hash_mismatch"}
