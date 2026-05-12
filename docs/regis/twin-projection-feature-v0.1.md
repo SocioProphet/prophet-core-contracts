@@ -52,10 +52,12 @@ For v0.1 this means:
 2. Unicode strings are expected to be normalized to NFC by emitters before hashing.
 3. Object keys are sorted lexicographically by Unicode code point.
 4. No insignificant whitespace is emitted.
-5. Arrays preserve order.
-6. Booleans are serialized as `true` or `false`.
-7. Numbers must be emitted in a stable JSON representation by the emitting runtime. Cross-language emitters should use RFC 8785 / JSON Canonicalization Scheme compatible number formatting where available.
-8. `null` feature values are not allowed.
+5. Object member separators are `,` and key/value separators are `:` with no spaces.
+6. Arrays preserve order and use `,` separators with no spaces.
+7. Strings use JSON string escaping as emitted by the reference validator. Control characters, quotes, and backslashes are escaped; non-ASCII Unicode is emitted as UTF-8, not forced to `\uXXXX` escapes.
+8. Booleans are serialized as `true` or `false`.
+9. Numbers are serialized by the reference validator's JSON emitter. `NaN`, `Infinity`, and `-Infinity` are not valid JSON and must not be emitted. v0.1 does not claim cross-language numeric equivalence normalization: `1` and `1.0` are distinct canonical JSON strings and therefore distinct hashes. Emitters must not rewrite numeric representation after computing hashes.
+10. `null` feature values are not allowed.
 
 The current Python validator uses:
 
@@ -65,7 +67,7 @@ json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
 
 ## Hash fields
 
-Hashes use SHA-256 and are encoded as lowercase hexadecimal with the `sha256:` prefix.
+Hashes use SHA-256 and are encoded as lowercase hexadecimal with the `sha256:` prefix. The hex digest is exactly 64 lowercase hexadecimal characters, with no separators and no `0x` prefix.
 
 `content_hash` is:
 
@@ -89,6 +91,24 @@ content hash:
 
 ```text
 sha256:6ce6d1da895e01a578136ea68479c3c5e49aaa62c9075e55f88f77205acef3a9
+```
+
+Example string with escapable characters:
+
+```json
+"line\nquote\"slash\\snowman☃"
+```
+
+canonical JSON:
+
+```json
+"line\nquote\"slash\\snowman☃"
+```
+
+content hash:
+
+```text
+sha256:51cd07f5aa5e6c882a33d546de8d96bbda0f6584759240894f8ad5fc2c78442a
 ```
 
 Example boolean feature value:
@@ -127,6 +147,16 @@ content hash:
 sha256:1e181f0934d441445f03ff51c972ef44275b830c10a80401e53b27bf5baf327a
 ```
 
+Number representation edge cases:
+
+```text
+1    -> canonical JSON 1    -> sha256:6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b
+1.0  -> canonical JSON 1.0  -> sha256:d0ff5974b6aa52cf562bea5921840c032a860a91a3512f7fe8f768f6bbe005f6
+-0.0 -> canonical JSON -0.0 -> sha256:c26617c7ccbcaa6631b45d851b8cf56e21d2ca624bdb1193afdbd4b560702cec
+```
+
+These are deliberately distinct in v0.1 because the custom rule follows the reference validator's JSON output rather than a numeric-normalization standard.
+
 Example array feature value:
 
 ```json
@@ -143,6 +173,42 @@ content hash:
 
 ```text
 sha256:0f6f68708dea87ebe8c8eb4cfe4f893cecdbfa3ec60f0f8ecaecaa9450b07fc0
+```
+
+Example mixed array feature value:
+
+```json
+["remote_first", true, 1, {"b": 2, "a": "x"}]
+```
+
+canonical JSON:
+
+```json
+["remote_first",true,1,{"a":"x","b":2}]
+```
+
+content hash:
+
+```text
+sha256:9251425141a6a2c40f9d328cf0cbfeb7e3d350b065a82d81e4c93a434fc97a35
+```
+
+Example nested object feature value:
+
+```json
+{"z": ["b", true, 2], "a": {"k": "v", "n": 1}}
+```
+
+canonical JSON:
+
+```json
+{"a":{"k":"v","n":1},"z":["b",true,2]}
+```
+
+content hash:
+
+```text
+sha256:26e849de2476aa63d4cb5455b7905a19d8119e1c012704dfabe23ff3b9a6b83f
 ```
 
 `lineage_hash` is:
