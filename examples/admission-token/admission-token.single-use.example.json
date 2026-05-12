@@ -60,6 +60,6 @@
   "signature": {
     "algorithm": "hmac-sha256-test-v0.1",
     "key_id": "test-admission-key",
-    "value": "sha256:956adfc7e7991732788404718fe0d11dd22857c0e9b03692147d2a9cd6e8364d"
+    "value": "sha256:d58d18ba1e7dad090caabea7c17e8e4454ff4b8f1c1b2418a44598bf144ad8c2"
   }
 }
