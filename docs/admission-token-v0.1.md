@@ -16,6 +16,8 @@ A schema-valid artifact is not sufficient. Admission is a separate control objec
 
 v0.1 defines a single-use token only. Multi-use tokens are intentionally deferred because they require replay accounting, lease refresh, and broader consumption tracking.
 
+A single-use token is bound to one admitted action and one admitted resource. v0.1 assumes the consumer set for a token is effectively one side-effecting consumer for that action/resource pair. Cross-consumer single-use enforcement requires a consumed-token registry; that registry is a production Operation Plane concern and is not implemented in this contract repository.
+
 ## Producers and consumers
 
 | Object | Producer | Consumer |
@@ -49,20 +51,39 @@ Consumers must verify:
 
 1. schema validation passes;
 2. token status is `issued`;
-3. token is not expired;
-4. payload hash matches canonical token payload;
-5. signature matches the v0.1 test signing rule;
-6. requested action type matches the admitted action;
-7. requested resource matches the admitted resource;
-8. requested authority does not exceed the token authority;
-9. requested sink is allowed;
-10. requested sink does not violate `DoNotLearn` or `DoNotLink` restrictions.
+3. token is not expired beyond clock-skew allowance;
+4. token is not used before `issued_at` beyond clock-skew allowance;
+5. payload hash matches canonical token payload;
+6. signature profile and value match the v0.1 test signing rule;
+7. requested action type matches the admitted action;
+8. requested resource matches the admitted resource;
+9. requested authority does not exceed the token authority;
+10. requested sink is allowed;
+11. requested sink does not violate `DoNotLearn` or `DoNotLink` restrictions.
+
+## Clock skew
+
+v0.1 allows 60 seconds of clock skew on `issued_at` and `expires_at`.
+
+A consumer may accept a token no earlier than:
+
+```text
+issued_at - 60 seconds
+```
+
+and no later than:
+
+```text
+expires_at + 60 seconds
+```
+
+This allowance is for distributed clock drift only. It is not a lease extension mechanism.
 
 ## Signing posture
 
 v0.1 uses `hmac-sha256-test-v0.1` with `test-admission-key` as a deterministic reference signature. This is not production key management.
 
-Production successors should replace this with a real Operation Plane signing profile, such as asymmetric signatures or a managed verification service.
+Production successors must reject `*-test-*` algorithms in production verification mode, even if a test HMAC verifies. Production profiles should replace this with a real Operation Plane signing profile, such as asymmetric signatures or a managed verification service.
 
 ## Payload hash
 
@@ -90,6 +111,8 @@ The only valid construction path is:
 AdmissionToken.from_admission(...)
 ```
 
+Pickle-style reconstruction is also blocked through `__reduce__`; this prevents pickle/deepcopy from becoming a second public construction channel in the reference type.
+
 The type exposes:
 
 - `to_dict()` for schema-shaped serialization;
@@ -100,14 +123,26 @@ The type exposes:
 
 Negative fixtures cover:
 
+- schema-only failure before semantic or crypto checks;
 - expired token;
 - missing policy decision;
 - action mismatch;
 - invalid signature;
+- payload-hash tampering;
 - consumed-token replay;
+- authority ceiling violation;
 - forbidden sink under `DoNotLearn` / sink restrictions.
 
 Each fixture declares `expected_failure`, and the validator requires that specific failure code to appear.
+
+## v0.2 candidates
+
+- Production signing profile, likely asymmetric.
+- Multi-use tokens with explicit use-count and use-count-limit.
+- Quorum-signed admissions for high-authority actions.
+- Attenuated delegation tokens where token B is strictly weaker than token A.
+- Shared consumed-token registry semantics for cross-consumer replay prevention.
+- Boundary fixtures around clock-skew edges.
 
 ## Validation
 
