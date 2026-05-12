@@ -5,7 +5,8 @@ implementation for the contract shape, not a production key-management system.
 
 Design rule: consumers may verify AdmissionToken objects, but only the
 Operation Plane may construct them through ``AdmissionToken.from_admission``.
-Direct construction raises ``TypeError``.
+Direct construction raises ``TypeError``. Pickle-style reconstruction is also
+blocked so the reference type does not create a second public constructor.
 """
 
 from __future__ import annotations
@@ -14,11 +15,12 @@ import hashlib
 import hmac
 import json
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from typing import Any, Mapping, Protocol
 
 AUTHORITY_ORDER = ["observe", "recommend", "represent", "negotiate", "commit"]
 TEST_SECRET = b"admission-test-secret-v0.1"
+CLOCK_SKEW_SECONDS = 60
 
 
 class PolicyFabric(Protocol):
@@ -101,6 +103,9 @@ class AdmissionToken:
     def __init__(self, *_: Any, **__: Any) -> None:
         raise TypeError("AdmissionToken cannot be constructed directly; use AdmissionToken.from_admission")
 
+    def __reduce__(self) -> tuple[Any, ...]:
+        raise TypeError("AdmissionToken cannot be reconstructed through pickle; use Operation Plane admission")
+
     @classmethod
     def from_admission(
         cls,
@@ -169,9 +174,16 @@ class AdmissionToken:
     def verify(self, request: Mapping[str, str], *, now: datetime | None = None) -> bool:
         if self.status != "issued":
             return False
-        if (now or _now_utc()) > _parse_instant(self.expires_at):
+        check_time = now or _now_utc()
+        if check_time < _parse_instant(self.issued_at) - timedelta(seconds=CLOCK_SKEW_SECONDS):
+            return False
+        if check_time > _parse_instant(self.expires_at) + timedelta(seconds=CLOCK_SKEW_SECONDS):
             return False
         if self.payload_hash != self.compute_payload_hash():
+            return False
+        if self.signature.get("algorithm") != "hmac-sha256-test-v0.1":
+            return False
+        if self.signature.get("key_id") != "test-admission-key":
             return False
         if self.signature.get("value") != _signature_for_payload_hash(self.payload_hash):
             return False
