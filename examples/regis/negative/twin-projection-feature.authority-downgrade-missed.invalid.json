@@ -1,0 +1,17 @@
+{
+  "case_id": "authority-downgrade-missed",
+  "description": "effective_authority_band must be the greatest lower bound over upstream authority bands.",
+  "mutations": [
+    {
+      "op": "replace",
+      "path": "/consent_scope_snapshot/delegation/max_authority_band",
+      "value": "observe"
+    },
+    {
+      "op": "replace",
+      "path": "/effective_authority_band",
+      "value": "commit"
+    }
+  ],
+  "expected_failure": "semantic_effective_authority_not_glb"
+}
