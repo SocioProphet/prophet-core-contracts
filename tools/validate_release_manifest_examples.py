@@ -3,6 +3,8 @@
 
 from __future__ import annotations
 
+import copy
+import hashlib
 import json
 from pathlib import Path
 
@@ -14,13 +16,28 @@ EXAMPLES = ROOT / "examples" / "releases"
 
 MANIFEST_SCHEMA = SCHEMAS / "release-manifest.schema.json"
 PIN_SCHEMA = SCHEMAS / "pinned-prophet-core-contracts.schema.json"
-MANIFEST_EXAMPLE = EXAMPLES / "manifest.contracts-v0.1.0-rc.1.example.json"
+MANIFEST_EXAMPLE = EXAMPLES / "contracts-v0.1.0-rc.1" / "manifest.example.json"
 PIN_EXAMPLE = EXAMPLES / "pinned-prophet-core-contracts.example.json"
 
 
 def load_json(path: Path):
     with path.open("r", encoding="utf-8") as handle:
         return json.load(handle)
+
+
+def canonical_json(value) -> str:
+    return json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+
+
+def sha256_prefixed(value: str | bytes) -> str:
+    data = value if isinstance(value, bytes) else value.encode("utf-8")
+    return "sha256:" + hashlib.sha256(data).hexdigest()
+
+
+def manifest_self_hash(manifest: dict) -> str:
+    material = copy.deepcopy(manifest)
+    material.pop("manifest_sha256", None)
+    return sha256_prefixed(canonical_json(material))
 
 
 def main() -> int:
@@ -38,6 +55,13 @@ def main() -> int:
     Draft202012Validator(manifest_schema).validate(manifest)
     Draft202012Validator(pin_schema).validate(pin)
 
+    expected_manifest_hash = manifest_self_hash(manifest)
+    if manifest["manifest_sha256"] != expected_manifest_hash:
+        raise AssertionError(f"manifest_sha256 mismatch: expected {expected_manifest_hash}, got {manifest['manifest_sha256']}")
+    if pin["manifest_sha256"] != manifest["manifest_sha256"]:
+        raise AssertionError("pin manifest_sha256 must match manifest manifest_sha256")
+    if pin["manifest_path"] != manifest["manifest_path"]:
+        raise AssertionError("pin manifest_path must match manifest manifest_path")
     if pin["release_tag"] != manifest["release_tag"]:
         raise AssertionError("pin release_tag must match manifest release_tag")
     if pin["release_commit"] != manifest["release_commit"]:
@@ -62,6 +86,8 @@ def main() -> int:
         raise AssertionError("stable releases must not use rc tag suffix")
     if manifest["release_status"] == "rc" and "-rc." not in manifest["release_tag"]:
         raise AssertionError("rc releases must use rc tag suffix")
+    if manifest["signature"]["status"] == "unsigned_v0_1" and manifest["signature"]["algorithm"] != "none":
+        raise AssertionError("unsigned_v0_1 manifests must use signature algorithm 'none'")
 
     print("release manifest and downstream pin examples validated")
     return 0
