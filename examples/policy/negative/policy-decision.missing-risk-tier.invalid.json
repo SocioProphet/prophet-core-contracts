@@ -1,0 +1,1 @@
+{"case_id":"decision-missing-risk-tier","description":"PolicyDecision must carry risk_tier so downstream admission, revocation, and audit policies can reason about high-risk and critical effects.","target":"decision","mutation":{"op":"remove","path":"/risk_tier"},"expected_failure":"schema_required_risk_tier"}
