@@ -10,7 +10,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
-from jsonschema import Draft202012Validator
+from jsonschema import Draft202012Validator, ValidationError
 
 ROOT = Path(__file__).resolve().parents[1]
 SCHEMAS = ROOT / "schemas" / "regis"
@@ -107,10 +107,27 @@ def apply_mutations(document: dict[str, Any], mutations: list[dict[str, Any]]) -
     return mutated
 
 
+def schema_failure_code(error: ValidationError) -> str:
+    path = list(error.path)
+    field = path[-1] if path else None
+    if error.validator == "required":
+        missing = str(error.message).split("'")[1]
+        return f"schema_required_{missing}"
+    if error.validator == "const" and field:
+        return f"schema_const_{field}_{error.validator_value}"
+    if error.validator == "enum" and field:
+        return f"schema_enum_{field}"
+    if error.validator == "additionalProperties":
+        return "schema_additional_property_forbidden"
+    if error.validator == "type" and field:
+        return f"schema_type_{field}"
+    return f"schema_{error.validator}_{field or 'root'}"
+
+
 def validate_twin_projection_feature_semantics(example: dict[str, Any]) -> None:
     expected_content_hash = sha256_prefixed(canonical_json(example["feature_value"]))
     if example["content_hash"] != expected_content_hash:
-        raise AssertionError(f"content_hash mismatch: expected {expected_content_hash}, got {example['content_hash']}")
+        raise AssertionError("semantic_content_hash_mismatch")
 
     lineage_material = "||".join([
         example["projection_id"],
@@ -121,25 +138,25 @@ def validate_twin_projection_feature_semantics(example: dict[str, Any]) -> None:
     ])
     expected_lineage_hash = sha256_prefixed(lineage_material)
     if example["lineage_hash"] != expected_lineage_hash:
-        raise AssertionError(f"lineage_hash mismatch: expected {expected_lineage_hash}, got {example['lineage_hash']}")
+        raise AssertionError("semantic_lineage_hash_mismatch")
 
     decision_log_ref = example["projection_decision_log_ref"]
     for key in ["projection_id", "decision_log_id", "twin_id", "subject_id", "mission_id", "recipient_id", "policy_id"]:
         if example[key] != decision_log_ref[key]:
-            raise AssertionError(f"{key} mismatch between feature and projection_decision_log_ref")
+            raise AssertionError(f"semantic_decision_log_ref_{key}_mismatch")
 
     consent_scope = example["consent_scope_snapshot"]
     for key in ["policy_id", "subject_id", "recipient_id"]:
         if example[key] != consent_scope[key]:
-            raise AssertionError(f"{key} mismatch between feature and consent_scope_snapshot")
+            raise AssertionError(f"semantic_consent_scope_{key}_mismatch")
 
     mission_governance = example["mission_governance_snapshot"]
     if example["mission_id"] != mission_governance["mission_id"]:
-        raise AssertionError("mission_id mismatch between feature and mission_governance_snapshot")
+        raise AssertionError("semantic_mission_id_mismatch")
 
     if parse_instant(example["created_at"]) > parse_instant(consent_scope["expires_at"]):
         if example["revocation_state"] != "expired" or example["policy_state"] not in {"blocked", "restricted"}:
-            raise AssertionError("expired consent must emit expired + blocked/restricted, never active + allowed")
+            raise AssertionError("semantic_expired_consent_not_allowed")
 
     upstream = [consent_scope["delegation"]["max_authority_band"], mission_governance["authority_band"]]
     receipt = example.get("transition_receipt_ref")
@@ -147,10 +164,10 @@ def validate_twin_projection_feature_semantics(example: dict[str, Any]) -> None:
         upstream.append(receipt.get("approval_band"))
     expected_authority = min_authority(upstream)
     if example["effective_authority_band"] != expected_authority:
-        raise AssertionError(f"effective_authority_band must be greatest lower bound: expected {expected_authority}, got {example['effective_authority_band']}")
+        raise AssertionError("semantic_effective_authority_not_glb")
 
     if example["source_field_decision"] != "allow":
-        raise AssertionError("TwinProjectionFeature records may only be emitted for allowed source fields")
+        raise AssertionError("semantic_source_field_decision_not_allow")
 
 
 def validate_one(example_name: str, schema_name: str) -> None:
@@ -167,13 +184,21 @@ def validate_negative_fixture(fixture_name: str) -> None:
     base = load_json(EXAMPLES / "twin-projection-feature.example.json")
     fixture = load_json(NEG / fixture_name)
     mutated = apply_mutations(base, fixture["mutations"])
+    expected = fixture["expected_failure"]
+    actual = None
     try:
         Draft202012Validator(schema).validate(mutated)
         validate_twin_projection_feature_semantics(mutated)
-    except Exception as exc:
-        print(f"rejected {fixture_name}: {exc.__class__.__name__}: {exc}")
-        return
-    raise AssertionError(f"negative fixture unexpectedly passed: {fixture_name}")
+    except ValidationError as exc:
+        actual = schema_failure_code(exc)
+    except AssertionError as exc:
+        actual = str(exc)
+
+    if actual is None:
+        raise AssertionError(f"negative fixture unexpectedly passed: {fixture_name}")
+    if actual != expected:
+        raise AssertionError(f"negative fixture {fixture_name} failed for {actual}, expected {expected}")
+    print(f"rejected {fixture_name}: {actual}")
 
 
 def main() -> int:
