@@ -2,9 +2,9 @@
   "schema_version": "0.1.0",
   "repo": "SocioProphet/prophet-core-contracts",
   "release_tag": "contracts-v0.1.0-rc.1",
-  "release_commit": "0123456789abcdef0123456789abcdef01234567",
+  "release_commit": "8579e2fb6fcfaf7d1519ad4922545e932d73232b",
   "manifest_path": "releases/contracts-v0.1.0-rc.1/manifest.json",
-  "manifest_sha256": "sha256:9999999999999999999999999999999999999999999999999999999999999999",
+  "manifest_sha256": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
   "contracts_used": [
     "TwinProjectionFeature",
     "PolicyRequest",
@@ -22,7 +22,7 @@
     "tools/validate_policy_examples.py",
     "tools/validate_admission_token_examples.py"
   ],
-  "pinned_at": "2026-05-12T07:35:00Z",
-  "updated_by": "downstream-pr-placeholder",
-  "notes": "Example downstream pin. Production pins must record the actual release commit and manifest hash."
+  "pinned_at": "2026-05-12T07:05:00Z",
+  "updated_by": "downstream-conformance-pr",
+  "notes": "Example downstream pin file. Production pins must record the actual release commit and the canonical hash of the released manifest."
 }
