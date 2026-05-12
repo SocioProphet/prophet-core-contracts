@@ -25,14 +25,28 @@ Primary rule:
 
 > No feature bypasses the Operation Plane. No agent writes side effects outside an OperationContract. No artifact becomes usable without admission. No retry executes without idempotency. No failure is emitted without classification and responsible actor. No diagnostic export ships without redaction.
 
+## AdmissionToken v0.1
+
+`AdmissionToken` is the first explicit Operation Plane admission proof: a proposed action was admitted by policy and authority gates before execution, graph materialization, learning, linking, or other side effects.
+
+v0.1 is deliberately narrow:
+
+- single-use tokens only;
+- schema + example + negative fixtures;
+- test HMAC signing profile, not production key management;
+- reference Python type with factory-only construction;
+- consumer-side verification for action/resource/authority/sink restrictions.
+
 ## Current contract files
 
 - `docs/workspace-operation-plane-v0.1.md`
 - `docs/workspace-operation-transition-table-v0.1.md`
+- `docs/admission-token-v0.1.md`
 - `schemas/workspace-operation.schema.json`
 - `schemas/operation-task-event.schema.json`
 - `schemas/artifact-admission.schema.json`
 - `schemas/decision-policy-adapter.schema.json`
+- `schemas/admission-token.schema.json`
 
 ## Current examples
 
@@ -47,6 +61,8 @@ Primary rule:
 - `examples/workspace-operation/redacted-diagnostic-export.json`
 - `examples/workspace-operation/release-package-evidence.json`
 - `examples/workspace-operation/security-exercise-governed.json`
+- `examples/admission-token/admission-token.single-use.example.json`
+- `examples/admission-token/negative/*.invalid.json`
 
 ## Validation
 
@@ -56,7 +72,11 @@ Run:
 make validate
 ```
 
-Current validation uses `tools/validate_workspace_operation_examples.py`, a lightweight structural validator that checks operation-centered fixtures, retry/idempotency rules, artifact activation/admission consistency, pending decisions, blocking policy gate remediation, and blocked/awaiting-decision operation references.
+Current validation includes:
+
+- `tools/validate_workspace_operation_examples.py` for operation-centered fixtures, retry/idempotency rules, artifact activation/admission consistency, pending decisions, blocking policy gate remediation, and blocked/awaiting-decision operation references.
+- `tools/validate_regis_examples.py` for Regis Semantic Feature Plane examples.
+- `tools/validate_admission_token_examples.py` and `tools/validate_admission_token_reference.py` for AdmissionToken schema, negative fixtures, and reference Python type behavior.
 
 CI also runs `make validate` through `.github/workflows/validate.yml`.
 
