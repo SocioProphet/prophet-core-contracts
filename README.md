@@ -25,14 +25,26 @@ Primary rule:
 
 > No feature bypasses the Operation Plane. No agent writes side effects outside an OperationContract. No artifact becomes usable without admission. No retry executes without idempotency. No failure is emitted without classification and responsible actor. No diagnostic export ships without redaction.
 
+## PolicyRequest / PolicyDecision v0.1
+
+`PolicyRequest` and `PolicyDecision` define the canonical Policy Fabric input/output pair used by the Operation Plane.
+
+- `PolicyRequest` is the deterministic input bundle sent to Policy Fabric.
+- `PolicyDecision` is the immutable policy artifact referenced by `AdmissionToken`.
+- Deny, review, quarantine, and revoke are first-class immutable decisions, not silent absence.
+- Revoke is modeled as a new decision referencing a prior decision through `revokes_decision_ref`.
+
 ## Current contract files
 
 - `docs/workspace-operation-plane-v0.1.md`
 - `docs/workspace-operation-transition-table-v0.1.md`
+- `docs/policy-request-decision-v0.1.md`
 - `schemas/workspace-operation.schema.json`
 - `schemas/operation-task-event.schema.json`
 - `schemas/artifact-admission.schema.json`
 - `schemas/decision-policy-adapter.schema.json`
+- `schemas/policy-request.schema.json`
+- `schemas/policy-decision.schema.json`
 
 ## Current examples
 
@@ -47,6 +59,9 @@ Primary rule:
 - `examples/workspace-operation/redacted-diagnostic-export.json`
 - `examples/workspace-operation/release-package-evidence.json`
 - `examples/workspace-operation/security-exercise-governed.json`
+- `examples/policy/policy-request.example.json`
+- `examples/policy/policy-decision.*.example.json`
+- `examples/policy/negative/*.invalid.json`
 
 ## Validation
 
@@ -56,7 +71,11 @@ Run:
 make validate
 ```
 
-Current validation uses `tools/validate_workspace_operation_examples.py`, a lightweight structural validator that checks operation-centered fixtures, retry/idempotency rules, artifact activation/admission consistency, pending decisions, blocking policy gate remediation, and blocked/awaiting-decision operation references.
+Current validation includes:
+
+- `tools/validate_workspace_operation_examples.py` for operation-centered fixtures, retry/idempotency rules, artifact activation/admission consistency, pending decisions, blocking policy gate remediation, and blocked/awaiting-decision operation references.
+- `tools/validate_regis_examples.py` for Regis Semantic Feature Plane examples.
+- `tools/validate_policy_examples.py` for PolicyRequest and PolicyDecision schema and semantic fixtures.
 
 CI also runs `make validate` through `.github/workflows/validate.yml`.
 
