@@ -1,0 +1,65 @@
+{
+  "schema_version": "0.1.0",
+  "token_id": "adm_tpf_ingest_001",
+  "token_type": "single_use",
+  "issuer_id": "operation_plane_local_001",
+  "issued_at": "2026-05-12T04:00:00Z",
+  "expires_at": "2026-05-12T04:15:00Z",
+  "status": "issued",
+  "proposed_action_ref": {
+    "action_id": "act_regis_ingest_tpf_001",
+    "action_type": "regis.graph_delta.ingest",
+    "target_ref": "regis:graph:semantic-feature-plane",
+    "operation_ref": "op_holographme_regis_export_001"
+  },
+  "policy_decision_ref": {
+    "decision_id": "pd_regis_ingest_tpf_001",
+    "decision_result": "allow_with_constraints",
+    "policy_bundle_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "reason_codes": [
+      "purpose_bound_release",
+      "do_not_learn_required",
+      "do_not_link_required"
+    ]
+  },
+  "authority_decision_ref": {
+    "decision_id": "ad_auth_holographme_regis_001",
+    "decision_result": "allow",
+    "effective_authority_band": "recommend",
+    "actor_id": "agent_exporter_001",
+    "subject_id": "sub_example_001"
+  },
+  "sink_restrictions": {
+    "do_not_learn": true,
+    "do_not_link": true,
+    "no_raw_twin_export": true,
+    "allowed_sinks": [
+      "regis.graph_materialization"
+    ],
+    "forbidden_sinks": [
+      "model_training",
+      "embedding_generation",
+      "durable_memory",
+      "analytics_warehouse",
+      "cross_domain_identity_linking"
+    ]
+  },
+  "allowed_operation": {
+    "operation_type": "regis.graph_delta.ingest",
+    "resource_ref": "regis:graph:semantic-feature-plane",
+    "max_authority_band": "recommend",
+    "single_use": true
+  },
+  "evidence_refs": [
+    "tpf_proj_mission_fit_001_capability_claims_capability",
+    "tr_projection_001",
+    "pdl_projection_001"
+  ],
+  "nonce": "adm_nonce_001",
+  "payload_hash": "sha256:946b01b8f50fe98402343be46a253dc8912ef66cfd555fa4e36a5e407168d3ec",
+  "signature": {
+    "algorithm": "hmac-sha256-test-v0.1",
+    "key_id": "test-admission-key",
+    "value": "sha256:956adfc7e7991732788404718fe0d11dd22857c0e9b03692147d2a9cd6e8364d"
+  }
+}
