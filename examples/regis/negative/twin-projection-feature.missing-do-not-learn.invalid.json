@@ -1,0 +1,11 @@
+{
+  "case_id": "missing-do-not-learn",
+  "description": "DoNotLearn is mandatory for v0.1 projection features.",
+  "mutations": [
+    {
+      "op": "remove",
+      "path": "/do_not_learn"
+    }
+  ],
+  "expected_failure": "schema_required_do_not_learn"
+}
