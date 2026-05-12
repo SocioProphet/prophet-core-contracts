@@ -3,6 +3,8 @@
 
 from __future__ import annotations
 
+import copy
+import pickle
 from datetime import datetime, timezone
 
 from reference.admission_token import AdmissionToken
@@ -57,6 +59,14 @@ def main() -> int:
         nonce="adm_nonce_reference_001",
     )
 
+    for bypass_name, bypass in [("pickle", lambda: pickle.dumps(token)), ("deepcopy", lambda: copy.deepcopy(token))]:
+        try:
+            bypass()
+        except TypeError:
+            pass
+        else:
+            raise AssertionError(f"AdmissionToken {bypass_name} bypass unexpectedly succeeded")
+
     allowed_request = {
         "action_type": "regis.graph_delta.ingest",
         "resource_ref": "regis:graph:semantic-feature-plane",
@@ -77,9 +87,13 @@ def main() -> int:
     if token.verify(excessive_authority, now=now):
         raise AssertionError("AdmissionToken reference verify allowed excessive authority")
 
-    expired_time = datetime(2026, 5, 12, 4, 16, tzinfo=timezone.utc)
+    within_skew = datetime(2026, 5, 12, 4, 15, 30, tzinfo=timezone.utc)
+    if not token.verify(allowed_request, now=within_skew):
+        raise AssertionError("AdmissionToken reference verify rejected token inside clock-skew allowance")
+
+    expired_time = datetime(2026, 5, 12, 4, 16, 1, tzinfo=timezone.utc)
     if token.verify(allowed_request, now=expired_time):
-        raise AssertionError("AdmissionToken reference verify allowed expired token")
+        raise AssertionError("AdmissionToken reference verify allowed expired token beyond clock-skew allowance")
 
     print("AdmissionToken reference validation passed")
     return 0
