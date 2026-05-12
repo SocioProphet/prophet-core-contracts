@@ -5,11 +5,12 @@
   "description": "Canonical v0.1 immutable decision artifact emitted by Policy Fabric.",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schema_version", "decision_id", "decision_status", "policy_request_ref", "input_hash", "decision_made_at", "decision_valid_until", "issuer", "min_signatures", "granted_actions", "restrictions", "reason_codes", "canonicalization", "payload_hash", "signatures"],
+  "required": ["schema_version", "decision_id", "decision_status", "risk_tier", "policy_request_ref", "input_hash", "decision_made_at", "decision_valid_until", "issuer", "min_signatures", "granted_actions", "restrictions", "reason_codes", "canonicalization", "payload_hash", "signatures"],
   "properties": {
     "schema_version": {"type": "string", "const": "0.1.0"},
     "decision_id": {"type": "string", "pattern": "^pd_[a-zA-Z0-9_-]+$"},
     "decision_status": {"type": "string", "enum": ["allow", "allow_with_constraints", "deny", "require_review", "quarantine", "revoke"]},
+    "risk_tier": {"type": "string", "enum": ["low", "medium", "high", "critical"], "description": "Decision risk tier used by downstream admission, revocation, and audit policy. v0.2 may require revocation-index checks for high/critical decisions."},
     "policy_request_ref": {"type": "object", "additionalProperties": false, "required": ["request_id", "request_hash"], "properties": {"request_id": {"type": "string", "pattern": "^prq_[a-zA-Z0-9_-]+$"}, "request_hash": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"}}},
     "input_hash": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
     "decision_made_at": {"type": "string", "format": "date-time"},
