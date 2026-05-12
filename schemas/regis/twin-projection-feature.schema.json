@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://schemas.socioprophet.org/regis/twin-projection-feature.schema.json",
+  "$id": "https://schemas.socioprophet.org/regis/twin-projection-feature/v0.1.schema.json",
   "title": "TwinProjectionFeature",
   "description": "Canonical v0.1 contract for consent-scoped HolographMe projection features consumed by Regis. This object is a governed feature record, not raw twin state and not canonical truth.",
   "type": "object",
