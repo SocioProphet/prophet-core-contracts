@@ -1,0 +1,1 @@
+{"case_id":"decision-allow-with-constraints-empty","description":"allow_with_constraints must carry at least one restriction; plain allow covers unrestricted grants.","target":"decision","mutation":{"op":"replace","path":"/restrictions","value":[]},"expected_failure":"semantic_constrained_allow_missing_restrictions"}
