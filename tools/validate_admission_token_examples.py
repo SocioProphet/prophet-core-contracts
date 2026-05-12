@@ -7,7 +7,7 @@ import copy
 import hashlib
 import hmac
 import json
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Any
 
@@ -18,14 +18,18 @@ SCHEMA = ROOT / "schemas" / "admission-token.schema.json"
 EXAMPLES = ROOT / "examples" / "admission-token"
 NEG = EXAMPLES / "negative"
 VALIDATION_TIME = "2026-05-12T04:05:00Z"
+CLOCK_SKEW_SECONDS = 60
 TEST_SECRET = b"admission-test-secret-v0.1"
 
 NEGATIVE_FIXTURES = [
+    "admission-token.schema-missing-token-id.invalid.json",
     "admission-token.expired.invalid.json",
     "admission-token.missing-policy-decision.invalid.json",
     "admission-token.action-mismatch.invalid.json",
     "admission-token.invalid-signature.invalid.json",
+    "admission-token.payload-hash-tampered.invalid.json",
     "admission-token.consumed-replay.invalid.json",
+    "admission-token.authority-ceiling.invalid.json",
     "admission-token.forbidden-sink.invalid.json",
 ]
 
@@ -132,7 +136,10 @@ def semantic_failure_codes(token: dict[str, Any], request: dict[str, str]) -> se
         if token.get("status") != "issued":
             codes.add("semantic_token_not_issued")
 
-        if parse_instant(VALIDATION_TIME) > parse_instant(token["expires_at"]):
+        check_time = parse_instant(VALIDATION_TIME)
+        if check_time < parse_instant(token["issued_at"]) - timedelta(seconds=CLOCK_SKEW_SECONDS):
+            codes.add("semantic_token_not_yet_valid")
+        if check_time > parse_instant(token["expires_at"]) + timedelta(seconds=CLOCK_SKEW_SECONDS):
             codes.add("semantic_token_expired")
 
         expected_hash = expected_payload_hash(token)
@@ -140,6 +147,8 @@ def semantic_failure_codes(token: dict[str, Any], request: dict[str, str]) -> se
             codes.add("semantic_payload_hash_mismatch")
 
         signature = token.get("signature", {})
+        if signature.get("algorithm") != "hmac-sha256-test-v0.1" or signature.get("key_id") != "test-admission-key":
+            codes.add("semantic_signature_profile_mismatch")
         if signature.get("value") != signature_for_payload_hash(token.get("payload_hash", "")):
             codes.add("semantic_signature_mismatch")
 
