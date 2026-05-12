@@ -1,0 +1,50 @@
+{
+  "schema_version": "0.1.0",
+  "release_tag": "contracts-v0.1.0-rc.1",
+  "release_commit": "8579e2fb6fcfaf7d1519ad4922545e932d73232b",
+  "released_at": "2026-05-12T07:00:00Z",
+  "release_status": "rc",
+  "repo": "SocioProphet/prophet-core-contracts",
+  "manifest_path": "releases/contracts-v0.1.0-rc.1/manifest.json",
+  "manifest_sha256": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+  "contracts_included": [
+    {"name": "TwinProjectionFeature", "version": "0.1.0", "status": "included"},
+    {"name": "PolicyRequest", "version": "0.1.0", "status": "included"},
+    {"name": "PolicyDecision", "version": "0.1.0", "status": "included"},
+    {"name": "AdmissionToken", "version": "0.1.0", "status": "included"},
+    {"name": "Effect", "version": "0.1.0", "status": "experimental"},
+    {"name": "AuditRecord", "version": "0.1.0", "status": "experimental"}
+  ],
+  "schemas": [
+    {"path": "schemas/regis/twin-projection-feature.schema.json", "sha256": "sha256:1111111111111111111111111111111111111111111111111111111111111111"},
+    {"path": "schemas/policy-request.schema.json", "sha256": "sha256:2222222222222222222222222222222222222222222222222222222222222222"},
+    {"path": "schemas/policy-decision.schema.json", "sha256": "sha256:3333333333333333333333333333333333333333333333333333333333333333"},
+    {"path": "schemas/admission-token.schema.json", "sha256": "sha256:4444444444444444444444444444444444444444444444444444444444444444"}
+  ],
+  "validators": [
+    {"path": "tools/validate_regis_examples.py", "sha256": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"},
+    {"path": "tools/validate_policy_examples.py", "sha256": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"},
+    {"path": "tools/validate_admission_token_examples.py", "sha256": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"},
+    {"path": "tools/validate_admission_chain_examples.py", "sha256": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"}
+  ],
+  "canonicalization_profiles": [
+    "canonical_json_v0.1_utf8_nfc_sorted_keys_no_insignificant_ws",
+    "rfc8785-jcs-v0.1"
+  ],
+  "changelog_ref": "CHANGELOG.md#contracts-v010-rc1",
+  "release_notes_ref": "releases/contracts-v0.1.0-rc.1/release-notes.md",
+  "compatibility": {
+    "semver_policy": "pre-1.0-semver",
+    "breaking_change_policy": "patch = non-breaking fixes; minor = changed validator behavior or additive schema; major = production-frozen breaking changes after v1.0",
+    "tag_immutability": true
+  },
+  "validation": {
+    "make_validate_passed": true,
+    "validated_at": "2026-05-12T07:00:00Z",
+    "validator_command": "make validate"
+  },
+  "signature": {
+    "status": "unsigned_v0_1",
+    "algorithm": "none"
+  }
+}
