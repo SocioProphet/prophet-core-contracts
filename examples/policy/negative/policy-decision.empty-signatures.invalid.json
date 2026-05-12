@@ -1,0 +1,1 @@
+{"case_id":"decision-empty-signatures","description":"PolicyDecision.signatures must satisfy min_signatures.","target":"decision","mutation":{"op":"replace","path":"/signatures","value":[]},"expected_failure":"semantic_quorum_not_satisfied"}
