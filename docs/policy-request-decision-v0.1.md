@@ -55,6 +55,17 @@ v0.1 statuses:
 
 `deny`, `require_review`, `quarantine`, and `revoke` are first-class immutable decisions. Denial is not represented by absence.
 
+## Risk tier
+
+Every `PolicyDecision` must carry `risk_tier`:
+
+- `low`
+- `medium`
+- `high`
+- `critical`
+
+This field is part of v0.1 so downstream admission, revocation, and audit policies do not need a flag-day schema migration later. In v0.1, risk tier is metadata plus validation surface. In v0.2, revocation-index verification is expected to become mandatory for `high` and `critical` effects.
+
 ## Revoke semantics
 
 `revoke` is modeled as a new immutable decision that references the prior decision through `revokes_decision_ref`.
@@ -111,12 +122,13 @@ or the full contract suite:
 make validate
 ```
 
-The validator checks:
+The validators check:
 
 - request schema;
 - request hash;
 - self-contradictory requested sinks;
 - decision schema;
+- required decision risk tier;
 - decision binding to request hash;
 - decision validity window;
 - decision payload hash;
