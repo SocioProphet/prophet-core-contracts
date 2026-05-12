@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.socioprophet.org/policy/policy-decision/v0.1.schema.json",
+  "title": "PolicyDecision",
+  "description": "Canonical v0.1 immutable decision artifact emitted by Policy Fabric.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "decision_id", "decision_status", "policy_request_ref", "input_hash", "decision_made_at", "decision_valid_until", "issuer", "min_signatures", "granted_actions", "restrictions", "reason_codes", "canonicalization", "payload_hash", "signatures"],
+  "properties": {
+    "schema_version": {"type": "string", "const": "0.1.0"},
+    "decision_id": {"type": "string", "pattern": "^pd_[a-zA-Z0-9_-]+$"},
+    "decision_status": {"type": "string", "enum": ["allow", "allow_with_constraints", "deny", "require_review", "quarantine", "revoke"]},
+    "policy_request_ref": {"type": "object", "additionalProperties": false, "required": ["request_id", "request_hash"], "properties": {"request_id": {"type": "string", "pattern": "^prq_[a-zA-Z0-9_-]+$"}, "request_hash": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"}}},
+    "input_hash": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "decision_made_at": {"type": "string", "format": "date-time"},
+    "decision_valid_until": {"type": "string", "format": "date-time"},
+    "issuer": {"type": "object", "additionalProperties": false, "required": ["issuer_id", "issuer_type", "policy_engine_version"], "properties": {"issuer_id": {"type": "string", "minLength": 1}, "issuer_type": {"type": "string", "enum": ["policy_fabric", "human_policy_authority", "system"]}, "policy_engine_version": {"type": "string", "minLength": 1}}},
+    "min_signatures": {"type": "integer", "minimum": 1},
+    "granted_actions": {"type": "array", "items": {"$ref": "#/$defs/granted_action"}},
+    "restrictions": {"type": "array", "items": {"$ref": "#/$defs/restriction_tag"}, "uniqueItems": true},
+    "reason_codes": {"type": "array", "items": {"$ref": "#/$defs/reason_code"}},
+    "reason_detail": {"type": "string"},
+    "revokes_decision_ref": {"type": "string", "pattern": "^pd_[a-zA-Z0-9_-]+$"},
+    "canonicalization": {"type": "string", "const": "rfc8785-jcs-v0.1"},
+    "payload_hash": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "signatures": {"type": "array", "items": {"$ref": "#/$defs/signature"}}
+  },
+  "$defs": {
+    "granted_action": {"type": "object", "additionalProperties": false, "required": ["action_id", "action_type", "resource_ref", "max_authority_band", "allowed_sinks", "forbidden_sinks"], "properties": {"action_id": {"type": "string", "pattern": "^act_[a-zA-Z0-9_-]+$"}, "action_type": {"type": "string", "minLength": 1}, "resource_ref": {"type": "string", "minLength": 1}, "max_authority_band": {"$ref": "#/$defs/authority_band"}, "allowed_sinks": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}, "forbidden_sinks": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}}},
+    "authority_band": {"type": "string", "enum": ["observe", "recommend", "represent", "negotiate", "commit"]},
+    "restriction_tag": {"type": "string", "enum": ["DoNotLearn", "DoNotLink", "NoRawTwinExport", "ReceiptRequired"]},
+    "reason_code": {"type": "string", "enum": ["purpose_bound_release", "do_not_learn_required", "do_not_link_required", "policy_violation", "authority_exceeded", "insufficient_evidence", "rate_limited", "human_review_required", "safety_quarantine", "revoked_by_authority", "unknown"]},
+    "signature": {"type": "object", "additionalProperties": false, "required": ["algorithm", "key_id", "value"], "properties": {"algorithm": {"type": "string", "const": "hmac-sha256-test-v0.1"}, "key_id": {"type": "string", "const": "test-policy-key"}, "value": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"}}}
+  }
+}
