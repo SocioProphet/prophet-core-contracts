@@ -1,0 +1,10 @@
+{
+  "case_id": "payload-hash-tampered",
+  "description": "A token with a stale or tampered payload_hash must be rejected even before signature acceptance.",
+  "mutation": {
+    "op": "replace",
+    "path": "/payload_hash",
+    "value": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+  },
+  "expected_failure": "semantic_payload_hash_mismatch"
+}
