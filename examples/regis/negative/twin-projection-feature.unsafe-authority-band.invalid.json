@@ -1,0 +1,12 @@
+{
+  "case_id": "unsafe-authority-band",
+  "description": "Authority bands are a sealed v0.1 lattice: observe < recommend < represent < negotiate < commit.",
+  "mutations": [
+    {
+      "op": "replace",
+      "path": "/effective_authority_band",
+      "value": "admin"
+    }
+  ],
+  "expected_failure": "schema_enum_authority_band"
+}
