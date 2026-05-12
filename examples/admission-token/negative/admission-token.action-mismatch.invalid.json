@@ -1,0 +1,16 @@
+{
+  "case_id": "action-mismatch",
+  "description": "A token admitted for one operation type must not authorize a different mutation action.",
+  "mutation": {
+    "op": "replace",
+    "path": "/proposed_action_ref/action_type",
+    "value": "regis.canonical_entity.merge"
+  },
+  "request_override": {
+    "action_type": "regis.graph_delta.ingest",
+    "resource_ref": "regis:graph:semantic-feature-plane",
+    "authority_band": "recommend",
+    "sink": "regis.graph_materialization"
+  },
+  "expected_failure": "semantic_action_mismatch"
+}
