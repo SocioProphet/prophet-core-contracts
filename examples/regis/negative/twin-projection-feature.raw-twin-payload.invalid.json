@@ -15,5 +15,5 @@
       }
     }
   ],
-  "expected_failure": "schema_const_raw_twin_payload_present_or_additional_property"
+  "expected_failure": "schema_const_raw_twin_payload_present_false"
 }
