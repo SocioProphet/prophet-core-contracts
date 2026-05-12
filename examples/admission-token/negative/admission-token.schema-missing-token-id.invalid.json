@@ -1,0 +1,9 @@
+{
+  "case_id": "schema-missing-token-id",
+  "description": "Schema validation must reject malformed tokens before semantic or crypto checks run.",
+  "mutation": {
+    "op": "remove",
+    "path": "/token_id"
+  },
+  "expected_failure": "schema_required_token_id"
+}
