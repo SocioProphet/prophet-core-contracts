@@ -21,6 +21,8 @@ EXAMPLE_TO_SCHEMA = {
     "twin-projection-feature.example.json": "twin-projection-feature.schema.json",
     "twin-projection-feature.string.example.json": "twin-projection-feature.schema.json",
     "twin-projection-feature.boolean.example.json": "twin-projection-feature.schema.json",
+    "twin-projection-feature.number.example.json": "twin-projection-feature.schema.json",
+    "twin-projection-feature.array.example.json": "twin-projection-feature.schema.json",
     "embedding-card.example.json": "embedding-card.schema.json",
     "promotion-decision.evidence-only.example.json": "promotion-decision.schema.json",
 }
@@ -39,6 +41,7 @@ NEGATIVE_FIXTURES = [
     "twin-projection-feature.replay-after-revocation.invalid.json",
     "twin-projection-feature.expired-consent-allowed.invalid.json",
     "twin-projection-feature.authority-downgrade-missed.invalid.json",
+    "twin-projection-feature.null-feature-value.invalid.json",
 ]
 
 AUTHORITY_ORDER = ["observe", "recommend", "represent", "negotiate", "commit"]
