@@ -1,0 +1,12 @@
+{
+  "case_id": "unknown-feature-family",
+  "description": "feature_family is a sealed v0.1 enumeration.",
+  "mutations": [
+    {
+      "op": "replace",
+      "path": "/feature_family",
+      "value": "psychometric"
+    }
+  ],
+  "expected_failure": "schema_enum_feature_family"
+}
