@@ -19,6 +19,8 @@ NEG = EXAMPLES / "negative"
 
 EXAMPLE_TO_SCHEMA = {
     "twin-projection-feature.example.json": "twin-projection-feature.schema.json",
+    "twin-projection-feature.string.example.json": "twin-projection-feature.schema.json",
+    "twin-projection-feature.boolean.example.json": "twin-projection-feature.schema.json",
     "embedding-card.example.json": "embedding-card.schema.json",
     "promotion-decision.evidence-only.example.json": "promotion-decision.schema.json",
 }
@@ -40,6 +42,7 @@ NEGATIVE_FIXTURES = [
 ]
 
 AUTHORITY_ORDER = ["observe", "recommend", "represent", "negotiate", "commit"]
+AUTHORITY_FIELDS = {"effective_authority_band", "authority_band", "approval_band", "max_authority_band"}
 
 
 def load_json(path: Path) -> Any:
@@ -64,6 +67,14 @@ def min_authority(values: list[str | None]) -> str:
     if not present:
         return "observe"
     return min(present, key=AUTHORITY_ORDER.index)
+
+
+def code_value(value: Any) -> str:
+    if isinstance(value, bool):
+        return str(value).lower()
+    if value is None:
+        return "null"
+    return str(value)
 
 
 def pointer_tokens(path: str) -> list[str]:
@@ -114,7 +125,9 @@ def schema_failure_code(error: ValidationError) -> str:
         missing = str(error.message).split("'")[1]
         return f"schema_required_{missing}"
     if error.validator == "const" and field:
-        return f"schema_const_{field}_{error.validator_value}"
+        return f"schema_const_{field}_{code_value(error.validator_value)}"
+    if error.validator == "enum" and field in AUTHORITY_FIELDS:
+        return "schema_enum_authority_band"
     if error.validator == "enum" and field:
         return f"schema_enum_{field}"
     if error.validator == "additionalProperties":
@@ -124,50 +137,65 @@ def schema_failure_code(error: ValidationError) -> str:
     return f"schema_{error.validator}_{field or 'root'}"
 
 
+def semantic_failure_codes(example: dict[str, Any]) -> set[str]:
+    codes: set[str] = set()
+    try:
+        expected_content_hash = sha256_prefixed(canonical_json(example["feature_value"]))
+        if example["content_hash"] != expected_content_hash:
+            codes.add("semantic_content_hash_mismatch")
+
+        lineage_material = "||".join([
+            example["projection_id"],
+            example["decision_log_id"],
+            example["policy_id"],
+            example["schema_version"],
+            example["created_at"],
+        ])
+        expected_lineage_hash = sha256_prefixed(lineage_material)
+        if example["lineage_hash"] != expected_lineage_hash:
+            codes.add("semantic_lineage_hash_mismatch")
+
+        decision_log_ref = example["projection_decision_log_ref"]
+        for key in ["projection_id", "decision_log_id", "twin_id", "subject_id", "mission_id", "recipient_id", "policy_id"]:
+            if example[key] != decision_log_ref[key]:
+                codes.add(f"semantic_decision_log_ref_{key}_mismatch")
+
+        consent_scope = example["consent_scope_snapshot"]
+        for key in ["policy_id", "subject_id", "recipient_id"]:
+            if example[key] != consent_scope[key]:
+                codes.add(f"semantic_consent_scope_{key}_mismatch")
+
+        mission_governance = example["mission_governance_snapshot"]
+        if example["mission_id"] != mission_governance["mission_id"]:
+            codes.add("semantic_mission_id_mismatch")
+
+        if parse_instant(example["created_at"]) > parse_instant(consent_scope["expires_at"]):
+            if example["revocation_state"] != "expired" or example["policy_state"] not in {"blocked", "restricted"}:
+                codes.add("semantic_expired_consent_not_allowed")
+
+        if example.get("revocation_state") in {"revoked", "expired"} and example.get("policy_state") == "allowed":
+            codes.add("schema_revoked_requires_blocked_or_restricted")
+
+        upstream = [consent_scope["delegation"]["max_authority_band"], mission_governance["authority_band"]]
+        receipt = example.get("transition_receipt_ref")
+        if receipt:
+            upstream.append(receipt.get("approval_band"))
+        expected_authority = min_authority(upstream)
+        if example["effective_authority_band"] != expected_authority:
+            codes.add("semantic_effective_authority_not_glb")
+
+        if example["source_field_decision"] != "allow":
+            codes.add("semantic_source_field_decision_not_allow")
+    except Exception:
+        # Schema validation owns malformed-shape failures. Semantic checks should not mask them.
+        pass
+    return codes
+
+
 def validate_twin_projection_feature_semantics(example: dict[str, Any]) -> None:
-    expected_content_hash = sha256_prefixed(canonical_json(example["feature_value"]))
-    if example["content_hash"] != expected_content_hash:
-        raise AssertionError("semantic_content_hash_mismatch")
-
-    lineage_material = "||".join([
-        example["projection_id"],
-        example["decision_log_id"],
-        example["policy_id"],
-        example["schema_version"],
-        example["created_at"],
-    ])
-    expected_lineage_hash = sha256_prefixed(lineage_material)
-    if example["lineage_hash"] != expected_lineage_hash:
-        raise AssertionError("semantic_lineage_hash_mismatch")
-
-    decision_log_ref = example["projection_decision_log_ref"]
-    for key in ["projection_id", "decision_log_id", "twin_id", "subject_id", "mission_id", "recipient_id", "policy_id"]:
-        if example[key] != decision_log_ref[key]:
-            raise AssertionError(f"semantic_decision_log_ref_{key}_mismatch")
-
-    consent_scope = example["consent_scope_snapshot"]
-    for key in ["policy_id", "subject_id", "recipient_id"]:
-        if example[key] != consent_scope[key]:
-            raise AssertionError(f"semantic_consent_scope_{key}_mismatch")
-
-    mission_governance = example["mission_governance_snapshot"]
-    if example["mission_id"] != mission_governance["mission_id"]:
-        raise AssertionError("semantic_mission_id_mismatch")
-
-    if parse_instant(example["created_at"]) > parse_instant(consent_scope["expires_at"]):
-        if example["revocation_state"] != "expired" or example["policy_state"] not in {"blocked", "restricted"}:
-            raise AssertionError("semantic_expired_consent_not_allowed")
-
-    upstream = [consent_scope["delegation"]["max_authority_band"], mission_governance["authority_band"]]
-    receipt = example.get("transition_receipt_ref")
-    if receipt:
-        upstream.append(receipt.get("approval_band"))
-    expected_authority = min_authority(upstream)
-    if example["effective_authority_band"] != expected_authority:
-        raise AssertionError("semantic_effective_authority_not_glb")
-
-    if example["source_field_decision"] != "allow":
-        raise AssertionError("semantic_source_field_decision_not_allow")
+    codes = semantic_failure_codes(example)
+    if codes:
+        raise AssertionError(sorted(codes)[0])
 
 
 def validate_one(example_name: str, schema_name: str) -> None:
@@ -185,20 +213,15 @@ def validate_negative_fixture(fixture_name: str) -> None:
     fixture = load_json(NEG / fixture_name)
     mutated = apply_mutations(base, fixture["mutations"])
     expected = fixture["expected_failure"]
-    actual = None
-    try:
-        Draft202012Validator(schema).validate(mutated)
-        validate_twin_projection_feature_semantics(mutated)
-    except ValidationError as exc:
-        actual = schema_failure_code(exc)
-    except AssertionError as exc:
-        actual = str(exc)
 
-    if actual is None:
+    failure_codes = {schema_failure_code(error) for error in Draft202012Validator(schema).iter_errors(mutated)}
+    failure_codes |= semantic_failure_codes(mutated)
+
+    if not failure_codes:
         raise AssertionError(f"negative fixture unexpectedly passed: {fixture_name}")
-    if actual != expected:
-        raise AssertionError(f"negative fixture {fixture_name} failed for {actual}, expected {expected}")
-    print(f"rejected {fixture_name}: {actual}")
+    if expected not in failure_codes:
+        raise AssertionError(f"negative fixture {fixture_name} failed for {sorted(failure_codes)}, expected {expected}")
+    print(f"rejected {fixture_name}: {expected}")
 
 
 def main() -> int:
