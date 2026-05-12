@@ -65,9 +65,9 @@ low < medium < high < critical
 
 The ordering is contractual. Any threshold language such as `risk_tier >= high` uses this total order.
 
-This field is part of v0.1 so downstream admission, revocation, and audit policies do not need a flag-day schema migration later. In v0.1, risk tier is metadata plus validation surface. In v0.2, revocation-index verification is expected to become mandatory for `high` and `critical` effects.
+This field is part of v0.1 so downstream admission, revocation, and audit policies do not need a flag-day schema migration later. In v0.1, risk tier is metadata plus validation surface: the schema and validators enforce presence, closed enum membership, lowercase spelling, and declared ordering. v0.1 does not yet enforce threshold-dependent runtime behavior.
 
-Low and medium decisions do not trigger mandatory revocation-index verification in the expected v0.2 path, but downstream consumers may still honor revocation through tombstone propagation, periodic revalidation, or stronger local policy.
+In v0.2, revocation-index verification is expected to become mandatory for `high` and `critical` effects. Low and medium decisions do not trigger mandatory revocation-index verification in the expected v0.2 path, but downstream consumers may still honor revocation through tombstone propagation, periodic revalidation, or stronger local policy.
 
 ## Revoke semantics
 
