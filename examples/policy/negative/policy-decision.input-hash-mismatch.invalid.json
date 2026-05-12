@@ -1,0 +1,1 @@
+{"case_id":"decision-input-hash-mismatch","description":"PolicyDecision.input_hash must bind to the canonical PolicyRequest hash.","target":"decision","mutation":{"op":"replace","path":"/input_hash","value":"sha256:1111111111111111111111111111111111111111111111111111111111111111"},"expected_failure":"semantic_input_hash_mismatch"}
