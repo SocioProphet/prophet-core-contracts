@@ -16,6 +16,12 @@ It is a governed feature record. It is not raw twin state, not a canonical ident
 
 The schema declares JSON Schema Draft 2020-12.
 
+Stable schema id:
+
+```text
+https://schemas.socioprophet.org/regis/twin-projection-feature/v0.1.schema.json
+```
+
 Consumers must reject unknown major versions. v0.1 minor/patch revisions are additive only when the canonical schema marks them additive.
 
 ## Feature value contract
@@ -28,13 +34,17 @@ Consumers must reject unknown major versions. v0.1 minor/patch revisions are add
 - object
 - array
 
-`null` is intentionally excluded because null feature records can leak absence. Exporters should suppress null, missing, denied, or forbidden fields instead of emitting null features.
+`null` is intentionally excluded because null feature records can leak absence. Exporters should suppress null, missing, denied, or forbidden fields instead of emitting null features. The v0.1 validator includes a null-negative fixture to prevent accidental reintroduction.
 
 ## Canonical JSON v0.1
 
 `hash_canonicalization` is fixed to:
 
-`canonical_json_v0.1_utf8_nfc_sorted_keys_no_insignificant_ws`
+```text
+canonical_json_v0.1_utf8_nfc_sorted_keys_no_insignificant_ws
+```
+
+This is a custom v0.1 canonicalization rule, not a full RFC 8785 claim. It is intentionally close to JSON Canonicalization Scheme practice, but the reference validator defines the active v0.1 behavior. A future RFC 8785-aligned minor release may replace this rule after multi-language emitter tests exist.
 
 For v0.1 this means:
 
@@ -53,17 +63,15 @@ The current Python validator uses:
 json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
 ```
 
-This is the repo-local v0.1 validator rule. If a later multi-language emitter requires stricter canonicalization, upgrade this contract to an RFC 8785-aligned minor version and update all fixtures.
-
 ## Hash fields
+
+Hashes use SHA-256 and are encoded as lowercase hexadecimal with the `sha256:` prefix.
 
 `content_hash` is:
 
 ```text
 sha256(canonical_json(feature_value))
 ```
-
-with the `sha256:` prefix.
 
 Example string feature value:
 
@@ -99,6 +107,42 @@ content hash:
 
 ```text
 sha256:b5bea41b6c623f7c09f1bf24dcae58ebab3c0cdd90ad966bc43a45b44867e12b
+```
+
+Example number feature value:
+
+```json
+0.85
+```
+
+canonical JSON:
+
+```json
+0.85
+```
+
+content hash:
+
+```text
+sha256:1e181f0934d441445f03ff51c972ef44275b830c10a80401e53b27bf5baf327a
+```
+
+Example array feature value:
+
+```json
+["remote_first", "async_ok"]
+```
+
+canonical JSON:
+
+```json
+["remote_first","async_ok"]
+```
+
+content hash:
+
+```text
+sha256:0f6f68708dea87ebe8c8eb4cfe4f893cecdbfa3ec60f0f8ecaecaa9450b07fc0
 ```
 
 `lineage_hash` is:
@@ -168,6 +212,7 @@ The v0.1 contract encodes these controls:
 - `DoNotLink`: `do_not_link` must be `true`.
 - `NoRawTwinExport`: `raw_twin_payload_present` must be `false` and additional raw payload fields are forbidden.
 - Denied/forbidden field exclusion: `source_field_decision` must be `allow`.
+- Null/absence suppression: `feature_value` must not be `null`.
 - Revocation propagation: revoked or expired features cannot remain `allowed`.
 - Authority downgrade: effective authority must be no greater than upstream authority.
 - Hash integrity: `content_hash` and `lineage_hash` must match canonical inputs.
@@ -179,6 +224,8 @@ The v0.1 fixture set covers these `feature_value` shapes:
 - object: `examples/regis/twin-projection-feature.example.json`
 - string: `examples/regis/twin-projection-feature.string.example.json`
 - boolean: `examples/regis/twin-projection-feature.boolean.example.json`
+- number: `examples/regis/twin-projection-feature.number.example.json`
+- array: `examples/regis/twin-projection-feature.array.example.json`
 
 ## Negative fixtures
 
@@ -201,6 +248,7 @@ Current failure classes include:
 - replay after revocation while still allowed
 - expired consent while still active/allowed
 - missed authority downgrade
+- null feature value emitted
 
 ## Validation
 
