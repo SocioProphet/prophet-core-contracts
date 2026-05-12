@@ -77,7 +77,7 @@ See:
 - `examples/workspace-operation/redacted-diagnostic-export.json`
 - `examples/workspace-operation/release-package-evidence.json`
 - `examples/workspace-operation/security-exercise-governed.json`
-- `examples/releases/manifest.contracts-v0.1.0-rc.1.example.json`
+- `examples/releases/contracts-v0.1.0-rc.1/manifest.example.json`
 - `examples/releases/pinned-prophet-core-contracts.example.json`
 
 ## Validation
