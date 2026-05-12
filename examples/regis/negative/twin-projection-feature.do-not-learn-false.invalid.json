@@ -1,0 +1,12 @@
+{
+  "case_id": "do-not-learn-false",
+  "description": "DoNotLearn must be true in v0.1; learning sinks require a future explicit admitted override contract.",
+  "mutations": [
+    {
+      "op": "replace",
+      "path": "/do_not_learn",
+      "value": false
+    }
+  ],
+  "expected_failure": "schema_const_do_not_learn_true"
+}
