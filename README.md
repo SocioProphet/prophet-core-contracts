@@ -25,14 +25,44 @@ Primary rule:
 
 > No feature bypasses the Operation Plane. No agent writes side effects outside an OperationContract. No artifact becomes usable without admission. No retry executes without idempotency. No failure is emitted without classification and responsible actor. No diagnostic export ships without redaction.
 
+## Contract releases and downstream pinning
+
+Contract snapshots are released through immutable repo-level tags such as:
+
+```text
+contracts-v0.1.0
+contracts-v0.1.0-rc.1
+```
+
+Every release must include a machine-readable manifest at:
+
+```text
+releases/<tag>/manifest.json
+```
+
+Downstream repositories should pin releases using:
+
+```text
+contracts/pinned-prophet-core-contracts.json
+```
+
+See:
+
+- `docs/contract-release-and-pinning-v0.1.md`
+- `schemas/release-manifest.schema.json`
+- `schemas/pinned-prophet-core-contracts.schema.json`
+
 ## Current contract files
 
 - `docs/workspace-operation-plane-v0.1.md`
 - `docs/workspace-operation-transition-table-v0.1.md`
+- `docs/contract-release-and-pinning-v0.1.md`
 - `schemas/workspace-operation.schema.json`
 - `schemas/operation-task-event.schema.json`
 - `schemas/artifact-admission.schema.json`
 - `schemas/decision-policy-adapter.schema.json`
+- `schemas/release-manifest.schema.json`
+- `schemas/pinned-prophet-core-contracts.schema.json`
 
 ## Current examples
 
@@ -47,6 +77,8 @@ Primary rule:
 - `examples/workspace-operation/redacted-diagnostic-export.json`
 - `examples/workspace-operation/release-package-evidence.json`
 - `examples/workspace-operation/security-exercise-governed.json`
+- `examples/releases/manifest.contracts-v0.1.0-rc.1.example.json`
+- `examples/releases/pinned-prophet-core-contracts.example.json`
 
 ## Validation
 
@@ -56,7 +88,11 @@ Run:
 make validate
 ```
 
-Current validation uses `tools/validate_workspace_operation_examples.py`, a lightweight structural validator that checks operation-centered fixtures, retry/idempotency rules, artifact activation/admission consistency, pending decisions, blocking policy gate remediation, and blocked/awaiting-decision operation references.
+Current validation includes:
+
+- `tools/validate_workspace_operation_examples.py` for operation-centered fixtures, retry/idempotency rules, artifact activation/admission consistency, pending decisions, blocking policy gate remediation, and blocked/awaiting-decision operation references.
+- `tools/validate_regis_examples.py` for Regis Semantic Feature Plane examples.
+- `tools/validate_release_manifest_examples.py` for release manifests and downstream pin examples.
 
 CI also runs `make validate` through `.github/workflows/validate.yml`.
 
