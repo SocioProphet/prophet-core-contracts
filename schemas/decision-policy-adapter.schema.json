@@ -7,6 +7,9 @@
     { "$ref": "#/$defs/DecisionCard" },
     { "$ref": "#/$defs/PolicyGateRecord" },
     { "$ref": "#/$defs/TrustBoundary" },
+    { "$ref": "#/$defs/CapabilityProfile" },
+    { "$ref": "#/$defs/ConflictResolution" },
+    { "$ref": "#/$defs/RemediationAction" },
     { "$ref": "#/$defs/AdapterContract" },
     { "$ref": "#/$defs/DiagnosticBundleMetadata" }
   ],
@@ -82,6 +85,59 @@
         "risk_explanation": { "type": "string" },
         "user_copy": { "type": "string" },
         "policy_rules": { "type": "array", "items": { "type": "string" }, "default": [] }
+      }
+    },
+    "CapabilityProfile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema_version", "capability_profile_id", "subject_actor", "allowed_operation_types"],
+      "properties": {
+        "schema_version": { "const": "0.1.0" },
+        "capability_profile_id": { "type": "string" },
+        "subject_actor": { "type": "string" },
+        "allowed_operation_types": { "type": "array", "items": { "type": "string" } },
+        "denied_operation_types": { "type": "array", "items": { "type": "string" }, "default": [] },
+        "allowed_artifact_types": { "type": "array", "items": { "type": "string" }, "default": [] },
+        "trust_boundary_ids": { "type": "array", "items": { "type": "string" }, "default": [] },
+        "max_concurrency": { "type": "integer", "minimum": 1 },
+        "expires_at": { "type": "string", "format": "date-time" },
+        "issued_at": { "type": "string", "format": "date-time" }
+      }
+    },
+    "ConflictResolution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema_version", "conflict_id", "operation_id", "conflict_type", "status", "options"],
+      "properties": {
+        "schema_version": { "const": "0.1.0" },
+        "conflict_id": { "type": "string" },
+        "operation_id": { "type": "string" },
+        "task_id": { "type": "string" },
+        "artifact_id": { "type": "string" },
+        "conflict_type": { "type": "string" },
+        "status": { "type": "string", "enum": ["detected", "awaiting_decision", "resolved", "escalated"] },
+        "options": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+        "selected_option": { "type": "string" },
+        "resolved_by": { "type": "string" },
+        "resolved_at": { "type": "string", "format": "date-time" }
+      }
+    },
+    "RemediationAction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema_version", "remediation_id", "operation_id", "action_type", "responsible_actor", "status"],
+      "properties": {
+        "schema_version": { "const": "0.1.0" },
+        "remediation_id": { "type": "string" },
+        "operation_id": { "type": "string" },
+        "policy_gate_id": { "type": "string" },
+        "decision_id": { "type": "string" },
+        "action_type": { "type": "string" },
+        "responsible_actor": { "type": "string" },
+        "status": { "type": "string", "enum": ["planned", "in_progress", "completed", "failed", "canceled"] },
+        "details": { "type": "object", "additionalProperties": true },
+        "created_at": { "type": "string", "format": "date-time" },
+        "updated_at": { "type": "string", "format": "date-time" }
       }
     },
     "AdapterContract": {
