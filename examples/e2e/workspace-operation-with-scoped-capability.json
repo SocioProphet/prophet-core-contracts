@@ -1,0 +1,175 @@
+{
+  "scenario_id": "e2e_workspace_operation_prophet_membrane_happy_path",
+  "schema_version": "0.1.0",
+  "expected_result": "allowed",
+  "operation": {
+    "schema_version": "0.1.0",
+    "operation_id": "op_readonly_diagnostics_demo",
+    "operation_type": "diagnostic_export",
+    "actor": {
+      "actor_type": "agent",
+      "actor_id": "agent_workspace_operator"
+    },
+    "delegated_by": {
+      "actor_type": "user",
+      "actor_id": "user_mdheller"
+    },
+    "source": {
+      "ref_type": "workspace_root",
+      "ref_id": "workspace_root_demo"
+    },
+    "target": {
+      "ref_type": "diagnostic_bundle",
+      "ref_id": "diagnostic_bundle_demo"
+    },
+    "status": "completed",
+    "priority": "interactive",
+    "trace_id": "trace_e2e_prophet_001",
+    "idempotency_key": "idem_e2e_prophet_001",
+    "capability_profile_id": "cap_local_command_readonly_demo",
+    "task_ids": [
+      "task_readonly_diagnostics_demo"
+    ],
+    "artifact_ids": [
+      "artifact_redacted_diagnostic_bundle_demo"
+    ],
+    "policy_gate_ids": [
+      "gate_readonly_diagnostics_demo"
+    ],
+    "decision_ids": [],
+    "created_at": "2026-06-04T00:00:00Z",
+    "updated_at": "2026-06-04T00:00:10Z",
+    "metadata": {
+      "source_basis": [
+        "SRC-0006"
+      ],
+      "claim_basis": [
+        "CLM-0004"
+      ],
+      "decision_basis": [
+        "DEC-0003"
+      ]
+    }
+  },
+  "scoped_capability": {
+    "schema_version": "0.1.0",
+    "capability_id": "cap_local_command_readonly_demo",
+    "issuer": {
+      "actor_id": "user_mdheller",
+      "actor_type": "user"
+    },
+    "subject": {
+      "actor_id": "agent_workspace_operator",
+      "actor_type": "agent",
+      "role_id": "workspace_operator_readonly"
+    },
+    "resource": {
+      "resource_id": "workspace_root_demo",
+      "resource_type": "workspace_root",
+      "scope": "readonly_diagnostics"
+    },
+    "verbs": [
+      "inspect",
+      "summarize",
+      "export_diagnostics"
+    ],
+    "purpose": "Collect read-only diagnostics for a governed workspace operation.",
+    "policy_basis": {
+      "policy_ids": [
+        "policy_workspace_readonly_diagnostics_v0"
+      ],
+      "policy_version": "0.1.0",
+      "decision_id": "decision_allow_readonly_diagnostics_demo"
+    },
+    "evidence_basis": {
+      "evidence_ids": [
+        "evidence_workspace_operation_request_demo"
+      ],
+      "claim_ids": [
+        "CLM-0004"
+      ],
+      "source_ids": [
+        "SRC-0006"
+      ]
+    },
+    "valid_from": "2026-06-04T00:00:00Z",
+    "expires_at": "2026-06-05T00:00:00Z",
+    "authority_band": "execute_local",
+    "workspace_operation_binding": {
+      "required": true,
+      "operation_id": "op_readonly_diagnostics_demo",
+      "operation_type": "diagnostic_export"
+    },
+    "receipt_requirements": {
+      "emit_action_receipt": true,
+      "emit_policy_receipt": true,
+      "telemetry_plane": "developer_diagnostics",
+      "retention_class": "short_lived_diagnostic"
+    },
+    "rollback": {
+      "required": false,
+      "strategy": "no_mutation_readonly_operation",
+      "compensation_operation_type": "none"
+    },
+    "fail_closed": true
+  },
+  "task": {
+    "schema_version": "0.1.0",
+    "task_id": "task_readonly_diagnostics_demo",
+    "operation_id": "op_readonly_diagnostics_demo",
+    "task_type": "diagnostic_export",
+    "title": "Export redacted read-only diagnostic bundle",
+    "source_ref": {
+      "ref_type": "workspace_root",
+      "ref_id": "workspace_root_demo"
+    },
+    "target_ref": {
+      "ref_type": "diagnostic_bundle",
+      "ref_id": "diagnostic_bundle_demo"
+    },
+    "artifact_type": "diagnostic_bundle",
+    "status": "completed",
+    "stage": "exported_redacted_bundle",
+    "progress": 1,
+    "retry_count": 0,
+    "retryable": true,
+    "auto_retry_allowed": false,
+    "idempotency_key": "idem_task_readonly_diagnostics_demo",
+    "final_artifact_id": "artifact_redacted_diagnostic_bundle_demo"
+  },
+  "policy_gate": {
+    "gate_id": "gate_readonly_diagnostics_demo",
+    "status": "passed",
+    "decision": "allow",
+    "responsible_actor": "user_mdheller",
+    "reason_codes": [
+      "readonly_operation",
+      "scoped_capability_present"
+    ]
+  },
+  "artifact": {
+    "schema_version": "0.1.0",
+    "artifact_id": "artifact_redacted_diagnostic_bundle_demo",
+    "artifact_type": "diagnostic_bundle",
+    "display_name": "redacted-diagnostic-bundle-demo.json",
+    "stable_identity": "workspace://artifact/artifact_redacted_diagnostic_bundle_demo",
+    "content_hash": "sha256:demo-redacted-diagnostic-bundle",
+    "content_uri": "object://local/artifact_redacted_diagnostic_bundle_demo/content",
+    "storage_backend": "local-operation-log",
+    "target_context": {
+      "location_type": "workspace_root",
+      "location_id": "workspace_root_demo"
+    },
+    "created_by_operation_id": "op_readonly_diagnostics_demo",
+    "policy_state": "passed",
+    "metadata_state": "complete",
+    "indexing_state": "not_requested",
+    "admission_state": "admitted",
+    "activation_state": "active",
+    "created_at": "2026-06-04T00:00:10Z",
+    "metadata": {
+      "redacted": true,
+      "raw_secret_material_present": false
+    }
+  }
+}
