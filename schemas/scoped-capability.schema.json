@@ -1,0 +1,118 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://socioprophet.ai/contracts/scoped-capability.schema.json",
+  "title": "ScopedCapability",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "capability_id",
+    "issuer",
+    "subject",
+    "resource",
+    "verbs",
+    "purpose",
+    "policy_basis",
+    "evidence_basis",
+    "valid_from",
+    "expires_at",
+    "authority_band",
+    "workspace_operation_binding",
+    "receipt_requirements",
+    "fail_closed"
+  ],
+  "properties": {
+    "schema_version": { "type": "string", "const": "0.1.0" },
+    "capability_id": { "type": "string", "pattern": "^cap_[a-z0-9][a-z0-9_.-]*$" },
+    "issuer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["actor_id", "actor_type"],
+      "properties": {
+        "actor_id": { "type": "string", "minLength": 1 },
+        "actor_type": { "type": "string", "enum": ["user", "service", "agent", "system", "organization"] }
+      }
+    },
+    "subject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["actor_id", "actor_type"],
+      "properties": {
+        "actor_id": { "type": "string", "minLength": 1 },
+        "actor_type": { "type": "string", "enum": ["user", "service", "agent", "system", "organization"] },
+        "role_id": { "type": "string" }
+      }
+    },
+    "resource": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["resource_id", "resource_type"],
+      "properties": {
+        "resource_id": { "type": "string", "minLength": 1 },
+        "resource_type": { "type": "string", "minLength": 1 },
+        "scope": { "type": "string" }
+      }
+    },
+    "verbs": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "purpose": { "type": "string", "minLength": 1 },
+    "policy_basis": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["policy_ids"],
+      "properties": {
+        "policy_ids": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+        "policy_version": { "type": "string" },
+        "decision_id": { "type": "string" }
+      }
+    },
+    "evidence_basis": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["evidence_ids"],
+      "properties": {
+        "evidence_ids": { "type": "array", "items": { "type": "string" } },
+        "claim_ids": { "type": "array", "items": { "type": "string" } },
+        "source_ids": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "valid_from": { "type": "string", "format": "date-time" },
+    "expires_at": { "type": "string", "format": "date-time" },
+    "authority_band": { "type": "string", "enum": ["observe", "recommend", "queue", "execute_local", "execute_remote", "admin_override"] },
+    "workspace_operation_binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["required"],
+      "properties": {
+        "required": { "type": "boolean", "const": true },
+        "operation_id": { "type": "string" },
+        "operation_type": { "type": "string" }
+      }
+    },
+    "receipt_requirements": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["emit_action_receipt", "emit_policy_receipt"],
+      "properties": {
+        "emit_action_receipt": { "type": "boolean", "const": true },
+        "emit_policy_receipt": { "type": "boolean", "const": true },
+        "telemetry_plane": { "type": "string" },
+        "retention_class": { "type": "string" }
+      }
+    },
+    "rollback": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "required": { "type": "boolean" },
+        "strategy": { "type": "string" },
+        "compensation_operation_type": { "type": "string" }
+      }
+    },
+    "fail_closed": { "type": "boolean", "const": true }
+  }
+}
