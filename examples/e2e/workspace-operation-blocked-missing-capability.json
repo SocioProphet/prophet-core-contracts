@@ -1,0 +1,67 @@
+{
+  "scenario_id": "e2e_workspace_operation_prophet_membrane_missing_capability",
+  "schema_version": "0.1.0",
+  "expected_result": "blocked",
+  "expected_reason_codes": [
+    "missing_scoped_capability"
+  ],
+  "operation": {
+    "schema_version": "0.1.0",
+    "operation_id": "op_readonly_diagnostics_missing_capability_demo",
+    "operation_type": "diagnostic_export",
+    "actor": {
+      "actor_type": "agent",
+      "actor_id": "agent_workspace_operator"
+    },
+    "delegated_by": {
+      "actor_type": "user",
+      "actor_id": "user_mdheller"
+    },
+    "source": {
+      "ref_type": "workspace_root",
+      "ref_id": "workspace_root_demo"
+    },
+    "target": {
+      "ref_type": "diagnostic_bundle",
+      "ref_id": "diagnostic_bundle_demo"
+    },
+    "status": "blocked",
+    "priority": "interactive",
+    "trace_id": "trace_e2e_prophet_missing_capability",
+    "idempotency_key": "idem_e2e_prophet_missing_capability",
+    "task_ids": [],
+    "artifact_ids": [],
+    "policy_gate_ids": [
+      "gate_missing_capability_demo"
+    ],
+    "decision_ids": [],
+    "created_at": "2026-06-04T00:00:00Z",
+    "updated_at": "2026-06-04T00:00:01Z",
+    "metadata": {
+      "source_basis": [
+        "SRC-0006"
+      ],
+      "claim_basis": [
+        "CLM-0004"
+      ],
+      "decision_basis": [
+        "DEC-0003"
+      ]
+    }
+  },
+  "policy_gate": {
+    "gate_id": "gate_missing_capability_demo",
+    "status": "blocking",
+    "decision": "block",
+    "responsible_actor": "user_mdheller",
+    "reason_codes": [
+      "missing_scoped_capability"
+    ],
+    "remediation_options": [
+      {
+        "option_id": "mint_valid_scoped_capability",
+        "description": "Mint a valid scoped capability bound to the workspace operation before starting execution."
+      }
+    ]
+  }
+}
