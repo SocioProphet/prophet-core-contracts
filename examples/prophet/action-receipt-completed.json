@@ -1,0 +1,38 @@
+{
+  "schema_version": "0.1.0",
+  "receipt_id": "receipt_workspace_diagnostics_completed_demo",
+  "operation_id": "op_readonly_diagnostics_demo",
+  "capability_id": "cap_local_command_readonly_demo",
+  "actor": {
+    "actor_id": "agent_workspace_operator",
+    "actor_type": "agent"
+  },
+  "action": {
+    "verb": "export_diagnostics",
+    "resource_id": "workspace_root_demo",
+    "resource_type": "workspace_root",
+    "purpose": "Collect read-only diagnostics for a governed workspace operation."
+  },
+  "policy_decision": "allow",
+  "policy_result_id": "policy_result_readonly_diagnostics_demo",
+  "result_state": "completed",
+  "reason_codes": [
+    "scoped_capability_present",
+    "scoped_capability_valid",
+    "operation_binding_match",
+    "verb_allowed"
+  ],
+  "telemetry_plane": "developer_diagnostics",
+  "retention_class": "short_lived_diagnostic",
+  "created_at": "2026-06-04T00:00:10Z",
+  "evidence_ids": [
+    "evidence_workspace_operation_request_demo"
+  ],
+  "claim_ids": [
+    "CLM-0004"
+  ],
+  "source_ids": [
+    "SRC-0006"
+  ],
+  "receipt_hash": "sha256:receipt-workspace-diagnostics-completed-demo"
+}
