@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://socioprophet.ai/contracts/action-receipt.schema.json",
+  "title": "ActionReceipt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "receipt_id",
+    "operation_id",
+    "capability_id",
+    "actor",
+    "action",
+    "policy_decision",
+    "result_state",
+    "reason_codes",
+    "telemetry_plane",
+    "created_at",
+    "evidence_ids",
+    "receipt_hash"
+  ],
+  "properties": {
+    "schema_version": { "type": "string", "const": "0.1.0" },
+    "receipt_id": { "type": "string", "pattern": "^receipt_[a-z0-9][a-z0-9_.-]*$" },
+    "operation_id": { "type": "string", "minLength": 1 },
+    "capability_id": { "type": "string", "minLength": 1 },
+    "actor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["actor_id", "actor_type"],
+      "properties": {
+        "actor_id": { "type": "string", "minLength": 1 },
+        "actor_type": { "type": "string", "enum": ["user", "service", "agent", "system", "organization", "worker"] }
+      }
+    },
+    "action": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["verb", "resource_id", "resource_type"],
+      "properties": {
+        "verb": { "type": "string", "minLength": 1 },
+        "resource_id": { "type": "string", "minLength": 1 },
+        "resource_type": { "type": "string", "minLength": 1 },
+        "purpose": { "type": "string" }
+      }
+    },
+    "policy_decision": { "type": "string", "enum": ["allow", "block", "require_approval", "degrade", "transform"] },
+    "policy_result_id": { "type": "string" },
+    "result_state": { "type": "string", "enum": ["completed", "blocked", "failed", "completed_with_warnings", "compensated"] },
+    "reason_codes": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "minItems": 1
+    },
+    "telemetry_plane": { "type": "string", "minLength": 1 },
+    "retention_class": { "type": "string" },
+    "created_at": { "type": "string", "format": "date-time" },
+    "evidence_ids": { "type": "array", "items": { "type": "string" } },
+    "claim_ids": { "type": "array", "items": { "type": "string" } },
+    "source_ids": { "type": "array", "items": { "type": "string" } },
+    "receipt_hash": { "type": "string", "pattern": "^sha256:[a-z0-9_.-]+$" },
+    "previous_receipt_hash": { "type": "string", "pattern": "^sha256:[a-z0-9_.-]+$" },
+    "metadata": { "type": "object", "additionalProperties": true }
+  }
+}
