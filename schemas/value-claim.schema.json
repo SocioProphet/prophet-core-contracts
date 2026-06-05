@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://socioprophet.ai/contracts/value-claim.schema.json",
+  "title": "ValueClaim",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "value_claim_id",
+    "claim_id",
+    "claim_type",
+    "statement",
+    "value_driver",
+    "kpi_mappings",
+    "knowledge_quality",
+    "evidence_ids",
+    "source_ids",
+    "status",
+    "production_ready",
+    "falsification_plan",
+    "created_at"
+  ],
+  "properties": {
+    "schema_version": {"type": "string", "const": "0.1.0"},
+    "value_claim_id": {"type": "string"},
+    "claim_id": {"type": "string"},
+    "claim_type": {"type": "string", "const": "value_claim"},
+    "statement": {"type": "string"},
+    "value_driver": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["primary", "secondary"],
+      "properties": {
+        "primary": {"type": "string", "enum": ["price", "volume", "cost", "productivity", "capital", "risk_reduction", "real_option"]},
+        "secondary": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "kpi_mappings": {"type": "array", "items": {"type": "object", "additionalProperties": true}, "minItems": 1},
+    "knowledge_quality": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["coverage", "coherence", "stability", "provenance", "k"],
+      "properties": {
+        "coverage": {"type": "number"},
+        "coherence": {"type": "number"},
+        "stability": {"type": "number"},
+        "provenance": {"type": "number"},
+        "k": {"type": "number"}
+      }
+    },
+    "evidence_ids": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+    "source_ids": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+    "receipt_ids": {"type": "array", "items": {"type": "string"}},
+    "status": {"type": "string", "enum": ["draft", "supported", "contested", "falsified", "retracted", "superseded"]},
+    "production_ready": {"type": "boolean", "const": false},
+    "falsification_plan": {"type": "object", "additionalProperties": true},
+    "created_at": {"type": "string"},
+    "metadata": {"type": "object", "additionalProperties": true}
+  }
+}
