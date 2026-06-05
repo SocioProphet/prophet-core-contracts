@@ -1,0 +1,80 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://socioprophet.ai/contracts/claim-record.schema.json",
+  "title": "ClaimRecord",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "claim_id",
+    "claim_type",
+    "statement",
+    "subject_ref",
+    "perspective",
+    "evidence_ids",
+    "source_ids",
+    "status",
+    "created_at"
+  ],
+  "properties": {
+    "schema_version": { "type": "string", "const": "0.1.0" },
+    "claim_id": { "type": "string", "pattern": "^claim_[a-z0-9][a-z0-9_.-]*$" },
+    "claim_type": {
+      "type": "string",
+      "enum": [
+        "observation",
+        "classification",
+        "inference",
+        "forecast",
+        "recommendation",
+        "explanation",
+        "value_claim",
+        "hypothesis"
+      ]
+    },
+    "statement": { "type": "string", "minLength": 1 },
+    "subject_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ref_type", "ref_id"],
+      "properties": {
+        "ref_type": { "type": "string", "minLength": 1 },
+        "ref_id": { "type": "string", "minLength": 1 },
+        "uri": { "type": "string" }
+      }
+    },
+    "perspective": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["observer", "org_vertex"],
+      "properties": {
+        "observer": { "type": "string", "minLength": 1 },
+        "org_vertex": { "type": "string", "minLength": 1 },
+        "industry_context": { "type": "string" },
+        "decision_job": { "type": "string" }
+      }
+    },
+    "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+    "evidence_ids": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+    "source_ids": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+    "receipt_ids": { "type": "array", "items": { "type": "string" } },
+    "operation_ids": { "type": "array", "items": { "type": "string" } },
+    "capability_ids": { "type": "array", "items": { "type": "string" } },
+    "policy_boundary": { "type": "string" },
+    "valid_from": { "type": "string", "format": "date-time" },
+    "valid_until": { "type": "string", "format": "date-time" },
+    "status": { "type": "string", "enum": ["draft", "supported", "contested", "falsified", "retracted", "superseded"] },
+    "contradiction_status": { "type": "string", "enum": ["not_checked", "none_found", "contested", "contradicted"] },
+    "falsification_plan": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "test_id": { "type": "string" },
+        "window": { "type": "string" },
+        "outcome_refs": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "created_at": { "type": "string", "format": "date-time" },
+    "metadata": { "type": "object", "additionalProperties": true }
+  }
+}
