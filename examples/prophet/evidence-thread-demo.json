@@ -1,0 +1,23 @@
+{
+  "schema_version": "0.1.0",
+  "thread_id": "thread_workspace_readonly_diagnostics_completed_demo",
+  "claim_id": "claim_workspace_readonly_diagnostics_completed_demo",
+  "evidence_items": [
+    {
+      "evidence_id": "receipt_workspace_diagnostics_completed_demo",
+      "evidence_type": "action_receipt",
+      "supports": true
+    },
+    {
+      "evidence_id": "op_readonly_diagnostics_demo",
+      "evidence_type": "workspace_operation",
+      "supports": true
+    },
+    {
+      "evidence_id": "cap_local_command_readonly_demo",
+      "evidence_type": "scoped_capability",
+      "supports": true
+    }
+  ],
+  "created_at": "2026-06-04T00:00:10Z"
+}
