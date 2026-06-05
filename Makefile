@@ -1,6 +1,6 @@
-.PHONY: validate validate-workspace-operation validate-regis validate-scoped-capability
+.PHONY: validate validate-workspace-operation validate-regis validate-scoped-capability validate-prophet-records
 
-validate: validate-workspace-operation validate-regis validate-scoped-capability
+validate: validate-workspace-operation validate-regis validate-scoped-capability validate-prophet-records
 
 validate-workspace-operation:
 	python3 tools/validate_workspace_operation_examples.py
@@ -10,3 +10,6 @@ validate-regis:
 
 validate-scoped-capability:
 	python3 tools/validate_scoped_capability_example.py
+
+validate-prophet-records:
+	python3 tools/validate_prophet_record_examples.py
