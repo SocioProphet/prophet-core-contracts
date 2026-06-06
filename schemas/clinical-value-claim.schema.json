@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://socioprophet.ai/contracts/clinical-value-claim.schema.json",
+  "title": "ClinicalValueClaim",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "clinical_value_claim_id",
+    "source_class",
+    "readiness_state",
+    "production_ready",
+    "customer_facing_claim",
+    "patient_care_action",
+    "statement",
+    "value_domains",
+    "evidence_refs",
+    "created_at"
+  ],
+  "properties": {
+    "schema_version": { "type": "string", "const": "0.1.0" },
+    "clinical_value_claim_id": { "type": "string" },
+    "source_class": { "type": "string", "enum": ["external_competitor_claim", "benchmark_design_claim", "socioprophet_validated_claim"] },
+    "readiness_state": { "type": "string", "enum": ["planning_only", "fixture_validated", "runtime_observed", "production_ready"] },
+    "production_ready": { "type": "boolean", "const": false },
+    "customer_facing_claim": { "type": "boolean", "const": false },
+    "patient_care_action": { "type": "boolean", "const": false },
+    "statement": { "type": "string" },
+    "value_domains": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "enum": [
+          "documentation_burden",
+          "coding_accuracy",
+          "revenue_integrity",
+          "audit_defensibility",
+          "clinician_productivity",
+          "patient_engagement",
+          "workflow_integration",
+          "risk_reduction"
+        ]
+      }
+    },
+    "metric_claims": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["metric", "value", "source"],
+        "properties": {
+          "metric": { "type": "string" },
+          "value": { "type": "string" },
+          "source": { "type": "string" },
+          "validated_by_socioprophet": { "type": "boolean", "const": false }
+        }
+      }
+    },
+    "evidence_refs": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+    "blocked_from": { "type": "array", "items": { "type": "string" } },
+    "created_at": { "type": "string" }
+  }
+}
