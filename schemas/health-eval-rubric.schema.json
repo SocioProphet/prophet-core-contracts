@@ -1,0 +1,95 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://socioprophet.ai/contracts/health-eval-rubric.schema.json",
+  "title": "HealthEvalRubric",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "rubric_id",
+    "readiness_state",
+    "production_ready",
+    "patient_care_action",
+    "benchmark_boundary",
+    "themes",
+    "axes",
+    "criteria",
+    "created_at"
+  ],
+  "properties": {
+    "schema_version": { "type": "string", "const": "0.1.0" },
+    "rubric_id": { "type": "string" },
+    "readiness_state": { "type": "string", "enum": ["planning_only", "fixture_validated", "runtime_observed", "production_ready"] },
+    "production_ready": { "type": "boolean", "const": false },
+    "patient_care_action": { "type": "boolean", "const": false },
+    "benchmark_boundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["protected_examples_reproduced", "answer_keys_reproduced", "canary_reproduced"],
+      "properties": {
+        "protected_examples_reproduced": { "type": "boolean", "const": false },
+        "answer_keys_reproduced": { "type": "boolean", "const": false },
+        "canary_reproduced": { "type": "boolean", "const": false },
+        "notes": { "type": "string" }
+      }
+    },
+    "themes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "enum": [
+          "emergency_referrals",
+          "expertise_tailored_communication",
+          "responding_under_uncertainty",
+          "response_depth",
+          "health_data_tasks",
+          "global_health",
+          "context_seeking"
+        ]
+      }
+    },
+    "axes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "enum": [
+          "accuracy",
+          "communication_quality",
+          "context_seeking",
+          "context_awareness",
+          "completeness",
+          "instruction_following",
+          "reliability"
+        ]
+      }
+    },
+    "criteria": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["criterion_id", "axis", "theme", "points", "description"],
+        "properties": {
+          "criterion_id": { "type": "string" },
+          "axis": { "type": "string" },
+          "theme": { "type": "string" },
+          "points": { "type": "number" },
+          "description": { "type": "string" },
+          "requires_human_review": { "type": "boolean" }
+        }
+      }
+    },
+    "reliability_model": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "worst_of_n_required": { "type": "boolean" },
+        "minimum_n": { "type": "integer" }
+      }
+    },
+    "created_at": { "type": "string" }
+  }
+}

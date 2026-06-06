@@ -1,6 +1,6 @@
-.PHONY: validate validate-workspace-operation validate-regis validate-scoped-capability validate-prophet-records validate-value-claims
+.PHONY: validate validate-workspace-operation validate-regis validate-scoped-capability validate-prophet-records validate-value-claims validate-health-ai-contracts
 
-validate: validate-workspace-operation validate-regis validate-scoped-capability validate-prophet-records validate-value-claims
+validate: validate-workspace-operation validate-regis validate-scoped-capability validate-prophet-records validate-value-claims validate-health-ai-contracts
 
 validate-workspace-operation:
 	python3 tools/validate_workspace_operation_examples.py
@@ -16,3 +16,7 @@ validate-prophet-records:
 
 validate-value-claims:
 	python3 tools/validate_value_claim_examples.py
+
+validate-health-ai-contracts:
+	python3 tools/validate_health_ai_contracts.py
+
