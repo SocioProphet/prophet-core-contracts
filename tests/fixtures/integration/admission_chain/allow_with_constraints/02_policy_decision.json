@@ -1,0 +1,50 @@
+{
+  "canonicalization": "rfc8785-jcs-v0.1",
+  "decision_id": "pd_constraints_001",
+  "decision_made_at": "2026-06-15T00:01:00Z",
+  "decision_status": "allow_with_constraints",
+  "decision_valid_until": "2026-06-15T01:01:00Z",
+  "granted_actions": [
+    {
+      "action_id": "act_integration_001",
+      "action_type": "regis.graph_delta.ingest",
+      "allowed_sinks": [
+        "regis.graph_materialization"
+      ],
+      "forbidden_sinks": [
+        "model_training",
+        "embedding_generation"
+      ],
+      "max_authority_band": "recommend",
+      "resource_ref": "regis:graph:semantic-feature-plane"
+    }
+  ],
+  "input_hash": "sha256:c94d27b9934d3e08a52e52d7da7dabfac484efe04294e576e4f23f5b2e6e2ccc",
+  "issuer": {
+    "issuer_id": "policy_fabric_local_001",
+    "issuer_type": "policy_fabric",
+    "policy_engine_version": "policy-fabric-test-0.1.0"
+  },
+  "min_signatures": 1,
+  "payload_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "policy_request_ref": {
+    "request_hash": "sha256:c94d27b9934d3e08a52e52d7da7dabfac484efe04294e576e4f23f5b2e6e2ccc",
+    "request_id": "prq_constraints_001"
+  },
+  "reason_codes": [
+    "purpose_bound_release"
+  ],
+  "restrictions": [
+    "DoNotLearn",
+    "DoNotLink"
+  ],
+  "risk_tier": "standard",
+  "schema_version": "0.1.0",
+  "signatures": [
+    {
+      "algorithm": "hmac-sha256-test-v0.1",
+      "key_id": "test-policy-key",
+      "value": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+    }
+  ]
+}

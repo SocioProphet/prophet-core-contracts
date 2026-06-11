@@ -1,0 +1,11 @@
+{
+  "action_type": "model.training.run",
+  "admission_token_id": "adm_integration_001",
+  "attempted_at": "2026-06-15T00:03:00Z",
+  "effect_id": "eff_integration_001",
+  "outcome": "executed",
+  "requesting_actor_id": "agent_integration_001",
+  "resource_ref": "regis:graph:semantic-feature-plane",
+  "schema_version": "0.1.0",
+  "subject_actor_id": "sub_integration_001"
+}

@@ -113,24 +113,55 @@ def check_required_pr11_files(bundle: FixtureBundle) -> InvariantResult:
     return InvariantResult("fixture_missing_required_file", 0, True, None)
 
 
+_RESTRICTION_MAP: dict[str, str] = {
+    "DoNotLearn": "do_not_learn",
+    "DoNotLink": "do_not_link",
+    "NoRawTwinExport": "no_raw_twin_export",
+}
+
+
 def check_policy_decision_input_hash(bundle: FixtureBundle) -> InvariantResult:
     iid = "policy_decision_input_hash_mismatch"
-    return _skeleton(iid, 1) if _requires(bundle, "policy_request", "policy_decision") else _na(iid, 1)
+    if not _requires(bundle, "policy_request", "policy_decision"):
+        return _na(iid, 1)
+    expected = bundle.policy_decision.get("policy_request_ref", {}).get("request_hash")
+    actual = bundle.policy_decision.get("input_hash")
+    if expected and actual and expected != actual:
+        return InvariantResult(iid, 1, False, f"input_hash {actual!r} != policy_request_ref.request_hash {expected!r}")
+    return InvariantResult(iid, 1, True, None)
 
 
 def check_policy_decision_request_id(bundle: FixtureBundle) -> InvariantResult:
     iid = "policy_decision_request_id_mismatch"
-    return _skeleton(iid, 2) if _requires(bundle, "policy_request", "policy_decision") else _na(iid, 2)
+    if not _requires(bundle, "policy_request", "policy_decision"):
+        return _na(iid, 2)
+    pr_id = bundle.policy_request.get("request_id")
+    pd_ref_id = bundle.policy_decision.get("policy_request_ref", {}).get("request_id")
+    if pr_id and pd_ref_id and pr_id != pd_ref_id:
+        return InvariantResult(iid, 2, False, f"policy_decision.policy_request_ref.request_id {pd_ref_id!r} != policy_request.request_id {pr_id!r}")
+    return InvariantResult(iid, 2, True, None)
 
 
 def check_admission_token_decision_id(bundle: FixtureBundle) -> InvariantResult:
     iid = "admission_token_decision_id_mismatch"
-    return _skeleton(iid, 3) if _requires(bundle, "admission_token", "policy_decision") else _na(iid, 3)
+    if not _requires(bundle, "admission_token", "policy_decision"):
+        return _na(iid, 3)
+    pd_id = bundle.policy_decision.get("decision_id")
+    at_ref_id = bundle.admission_token.get("policy_decision_ref", {}).get("decision_id")
+    if pd_id and at_ref_id and pd_id != at_ref_id:
+        return InvariantResult(iid, 3, False, f"admission_token.policy_decision_ref.decision_id {at_ref_id!r} != policy_decision.decision_id {pd_id!r}")
+    return InvariantResult(iid, 3, True, None)
 
 
 def check_admission_token_request_id(bundle: FixtureBundle) -> InvariantResult:
     iid = "admission_token_request_id_mismatch"
-    return _skeleton(iid, 4) if _requires(bundle, "admission_token", "policy_request") else _na(iid, 4)
+    if not _requires(bundle, "admission_token", "policy_request"):
+        return _na(iid, 4)
+    action_id = bundle.admission_token.get("proposed_action_ref", {}).get("action_id")
+    pr_action_ids = {a.get("action_id") for a in bundle.policy_request.get("requested_actions", [])}
+    if action_id and pr_action_ids and action_id not in pr_action_ids:
+        return InvariantResult(iid, 4, False, f"admission_token.proposed_action_ref.action_id {action_id!r} not in policy_request.requested_actions")
+    return InvariantResult(iid, 4, True, None)
 
 
 def check_admission_token_risk_tier(bundle: FixtureBundle) -> InvariantResult:
@@ -140,67 +171,148 @@ def check_admission_token_risk_tier(bundle: FixtureBundle) -> InvariantResult:
 
 def check_admission_token_restrictions_superset(bundle: FixtureBundle) -> InvariantResult:
     iid = "admission_token_restrictions_not_superset"
-    return _skeleton(iid, 6) if _requires(bundle, "admission_token", "policy_decision") else _na(iid, 6)
+    if not _requires(bundle, "admission_token", "policy_decision"):
+        return _na(iid, 6)
+    pd_restrictions = bundle.policy_decision.get("restrictions", [])
+    sink = bundle.admission_token.get("sink_restrictions", {})
+    missing = [r for r in pd_restrictions if not sink.get(_RESTRICTION_MAP.get(r, ""), False)]
+    if missing:
+        return InvariantResult(iid, 6, False, f"policy_decision restrictions not in token.sink_restrictions: {missing}")
+    return InvariantResult(iid, 6, True, None)
 
 
 def check_admission_token_ttl(bundle: FixtureBundle) -> InvariantResult:
     iid = "admission_token_ttl_widening"
-    return _skeleton(iid, 7) if _requires(bundle, "admission_token", "policy_decision") else _na(iid, 7)
+    if not _requires(bundle, "admission_token", "policy_decision"):
+        return _na(iid, 7)
+    expires_at = bundle.admission_token.get("expires_at")
+    valid_until = bundle.policy_decision.get("decision_valid_until")
+    if expires_at and valid_until and expires_at > valid_until:
+        return InvariantResult(iid, 7, False, f"token.expires_at {expires_at!r} > decision.decision_valid_until {valid_until!r}")
+    return InvariantResult(iid, 7, True, None)
 
 
 def check_admission_token_action_granted(bundle: FixtureBundle) -> InvariantResult:
     iid = "admission_token_action_not_in_granted_actions"
-    return _skeleton(iid, 8) if _requires(bundle, "admission_token", "policy_decision") else _na(iid, 8)
+    if not _requires(bundle, "admission_token", "policy_decision"):
+        return _na(iid, 8)
+    op = bundle.admission_token.get("allowed_operation", {})
+    op_type = op.get("operation_type")
+    op_resource = op.get("resource_ref")
+    granted = bundle.policy_decision.get("granted_actions", [])
+    match = any(g.get("action_type") == op_type and g.get("resource_ref") == op_resource for g in granted)
+    if op_type and op_resource and not match:
+        return InvariantResult(iid, 8, False, f"token.allowed_operation ({op_type!r}, {op_resource!r}) not in policy_decision.granted_actions")
+    return InvariantResult(iid, 8, True, None)
 
 
 def check_effect_token_id(bundle: FixtureBundle) -> InvariantResult:
     iid = "effect_token_id_mismatch"
-    return _skeleton(iid, 9) if _requires(bundle, "effect", "admission_token") else _na(iid, 9)
+    if not _requires(bundle, "effect", "admission_token"):
+        return _na(iid, 9)
+    token_id = bundle.admission_token.get("token_id")
+    eff_token_id = bundle.effect.get("admission_token_id")
+    if token_id and eff_token_id and token_id != eff_token_id:
+        return InvariantResult(iid, 9, False, f"effect.admission_token_id {eff_token_id!r} != admission_token.token_id {token_id!r}")
+    return InvariantResult(iid, 9, True, None)
 
 
 def check_effect_action_in_token(bundle: FixtureBundle) -> InvariantResult:
     iid = "effect_action_not_in_token"
-    return _skeleton(iid, 10) if _requires(bundle, "effect", "admission_token") else _na(iid, 10)
+    if not _requires(bundle, "effect", "admission_token"):
+        return _na(iid, 10)
+    allowed_type = bundle.admission_token.get("allowed_operation", {}).get("operation_type")
+    eff_type = bundle.effect.get("action_type")
+    if allowed_type and eff_type and eff_type != allowed_type:
+        return InvariantResult(iid, 10, False, f"effect.action_type {eff_type!r} != token.allowed_operation.operation_type {allowed_type!r}")
+    return InvariantResult(iid, 10, True, None)
 
 
 def check_effect_resource_in_token(bundle: FixtureBundle) -> InvariantResult:
     iid = "effect_resource_not_in_token"
-    return _skeleton(iid, 11) if _requires(bundle, "effect", "admission_token") else _na(iid, 11)
+    if not _requires(bundle, "effect", "admission_token"):
+        return _na(iid, 11)
+    allowed_resource = bundle.admission_token.get("allowed_operation", {}).get("resource_ref")
+    eff_resource = bundle.effect.get("resource_ref")
+    if allowed_resource and eff_resource and eff_resource != allowed_resource:
+        return InvariantResult(iid, 11, False, f"effect.resource_ref {eff_resource!r} != token.allowed_operation.resource_ref {allowed_resource!r}")
+    return InvariantResult(iid, 11, True, None)
 
 
 def check_effect_actor_binding(bundle: FixtureBundle) -> InvariantResult:
     iid = "effect_requesting_actor_mismatch"
-    return _skeleton(iid, 12) if _requires(bundle, "effect", "admission_token") else _na(iid, 12)
+    if not _requires(bundle, "effect", "admission_token"):
+        return _na(iid, 12)
+    token_actor = bundle.admission_token.get("authority_decision_ref", {}).get("actor_id")
+    eff_actor = bundle.effect.get("requesting_actor_id")
+    if token_actor and eff_actor and eff_actor != token_actor:
+        return InvariantResult(iid, 12, False, f"effect.requesting_actor_id {eff_actor!r} != token.authority_decision_ref.actor_id {token_actor!r}")
+    return InvariantResult(iid, 12, True, None)
 
 
 def check_effect_subject_binding(bundle: FixtureBundle) -> InvariantResult:
     iid = "effect_subject_actor_mismatch"
-    return _skeleton(iid, 13) if _requires(bundle, "effect", "admission_token") else _na(iid, 13)
+    if not _requires(bundle, "effect", "admission_token"):
+        return _na(iid, 13)
+    token_subject = bundle.admission_token.get("authority_decision_ref", {}).get("subject_id")
+    eff_subject = bundle.effect.get("subject_actor_id")
+    if token_subject and eff_subject and eff_subject != token_subject:
+        return InvariantResult(iid, 13, False, f"effect.subject_actor_id {eff_subject!r} != token.authority_decision_ref.subject_id {token_subject!r}")
+    return InvariantResult(iid, 13, True, None)
 
 
 def check_audit_request_ref(bundle: FixtureBundle) -> InvariantResult:
     iid = "audit_record_request_ref_id_mismatch"
-    return _skeleton(iid, 14) if bundle.audit_record is not None else _na(iid, 14)
+    if bundle.audit_record is None or bundle.policy_request is None:
+        return _na(iid, 14)
+    ar_id = bundle.audit_record.get("policy_request_ref", {}).get("request_id")
+    pr_id = bundle.policy_request.get("request_id")
+    if ar_id and pr_id and ar_id != pr_id:
+        return InvariantResult(iid, 14, False, f"audit_record.policy_request_ref.request_id {ar_id!r} != policy_request.request_id {pr_id!r}")
+    return InvariantResult(iid, 14, True, None)
 
 
 def check_audit_request_ref_version(bundle: FixtureBundle) -> InvariantResult:
     iid = "audit_record_request_ref_missing_schema_version"
-    return _skeleton(iid, 15) if bundle.audit_record is not None else _na(iid, 15)
+    if bundle.audit_record is None:
+        return _na(iid, 15)
+    ref = bundle.audit_record.get("policy_request_ref", {})
+    if ref and "schema_version" not in ref:
+        return InvariantResult(iid, 15, False, "audit_record.policy_request_ref missing schema_version")
+    return InvariantResult(iid, 15, True, None)
 
 
 def check_audit_decision_ref(bundle: FixtureBundle) -> InvariantResult:
     iid = "audit_record_decision_ref_id_mismatch"
-    return _skeleton(iid, 16) if bundle.audit_record is not None else _na(iid, 16)
+    if bundle.audit_record is None or bundle.policy_decision is None:
+        return _na(iid, 16)
+    ar_id = bundle.audit_record.get("policy_decision_ref", {}).get("decision_id")
+    pd_id = bundle.policy_decision.get("decision_id")
+    if ar_id and pd_id and ar_id != pd_id:
+        return InvariantResult(iid, 16, False, f"audit_record.policy_decision_ref.decision_id {ar_id!r} != policy_decision.decision_id {pd_id!r}")
+    return InvariantResult(iid, 16, True, None)
 
 
 def check_audit_token_ref(bundle: FixtureBundle) -> InvariantResult:
     iid = "audit_record_token_ref_id_mismatch"
-    return _skeleton(iid, 17) if bundle.audit_record is not None else _na(iid, 17)
+    if bundle.audit_record is None or bundle.admission_token is None:
+        return _na(iid, 17)
+    ar_id = bundle.audit_record.get("admission_token_ref", {}).get("token_id")
+    at_id = bundle.admission_token.get("token_id")
+    if ar_id and at_id and ar_id != at_id:
+        return InvariantResult(iid, 17, False, f"audit_record.admission_token_ref.token_id {ar_id!r} != admission_token.token_id {at_id!r}")
+    return InvariantResult(iid, 17, True, None)
 
 
 def check_audit_effect_ref(bundle: FixtureBundle) -> InvariantResult:
     iid = "audit_record_effect_ref_id_mismatch"
-    return _skeleton(iid, 18) if bundle.audit_record is not None else _na(iid, 18)
+    if bundle.audit_record is None or bundle.effect is None:
+        return _na(iid, 18)
+    ar_id = bundle.audit_record.get("effect_ref", {}).get("effect_id")
+    eff_id = bundle.effect.get("effect_id")
+    if ar_id and eff_id and ar_id != eff_id:
+        return InvariantResult(iid, 18, False, f"audit_record.effect_ref.effect_id {ar_id!r} != effect.effect_id {eff_id!r}")
+    return InvariantResult(iid, 18, True, None)
 
 
 def check_audit_verification_risk_tier(bundle: FixtureBundle) -> InvariantResult:
@@ -214,9 +326,15 @@ def check_audit_verification_restrictions(bundle: FixtureBundle) -> InvariantRes
 
 
 def check_audit_outcome_consistency(bundle: FixtureBundle) -> InvariantResult:
-    """Rejected admissions imply not_attempted; accepted admissions imply attempted outcomes."""
+    """Rejected admissions may not produce executed or partial outcomes."""
     iid = "audit_record_admission_execution_inconsistency"
-    return _skeleton(iid, 21) if bundle.audit_record is not None else _na(iid, 21)
+    if bundle.audit_record is None:
+        return _na(iid, 21)
+    admission = bundle.audit_record.get("admission_outcome")
+    execution = bundle.audit_record.get("execution_outcome")
+    if admission == "rejected" and execution in ("executed", "partial"):
+        return InvariantResult(iid, 21, False, f"admission_outcome=rejected but execution_outcome={execution!r}")
+    return InvariantResult(iid, 21, True, None)
 
 
 def check_audit_prior_hash_chain(bundle: FixtureBundle) -> InvariantResult:

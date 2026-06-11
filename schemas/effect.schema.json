@@ -1,0 +1,63 @@
+{
+  "$id": "https://prophet-core-contracts.socioprophet.ai/schemas/effect/0.1.0",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Effect v0.1 stub \u2014 static record-shape for admission chain integration fixtures.",
+  "properties": {
+    "action_type": {
+      "type": "string"
+    },
+    "admission_token_id": {
+      "type": "string"
+    },
+    "attempted_at": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "effect_id": {
+      "type": "string"
+    },
+    "error_ref": {
+      "type": "string"
+    },
+    "outcome": {
+      "enum": [
+        "executed",
+        "failed",
+        "not_attempted",
+        "rolled_back",
+        "partial"
+      ],
+      "type": "string"
+    },
+    "requesting_actor_id": {
+      "type": "string"
+    },
+    "resource_ref": {
+      "type": "string"
+    },
+    "rollback_of_effect_ref": {
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "0.1.0",
+      "type": "string"
+    },
+    "subject_actor_id": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "schema_version",
+    "effect_id",
+    "admission_token_id",
+    "action_type",
+    "resource_ref",
+    "requesting_actor_id",
+    "subject_actor_id",
+    "attempted_at",
+    "outcome"
+  ],
+  "title": "Effect",
+  "type": "object"
+}

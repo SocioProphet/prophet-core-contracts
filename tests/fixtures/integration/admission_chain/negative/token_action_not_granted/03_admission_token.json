@@ -1,0 +1,53 @@
+{
+  "allowed_operation": {
+    "max_authority_band": "recommend",
+    "operation_type": "model.training.run",
+    "resource_ref": "regis:graph:semantic-feature-plane",
+    "single_use": true
+  },
+  "authority_decision_ref": {
+    "actor_id": "agent_integration_001",
+    "decision_id": "ad_integration_001",
+    "decision_result": "allow",
+    "effective_authority_band": "recommend",
+    "subject_id": "sub_integration_001"
+  },
+  "evidence_refs": [
+    "ev_integration_001"
+  ],
+  "expires_at": "2026-06-15T00:32:00Z",
+  "issued_at": "2026-06-15T00:02:00Z",
+  "issuer_id": "operation_plane_local_001",
+  "nonce": "nonce_integration_001",
+  "payload_hash": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+  "policy_decision_ref": {
+    "decision_id": "pd_integration_001",
+    "decision_result": "allow",
+    "policy_bundle_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  },
+  "proposed_action_ref": {
+    "action_id": "act_integration_001",
+    "action_type": "model.training.run",
+    "operation_ref": "op_integration_chain_001",
+    "target_ref": "regis:graph:semantic-feature-plane"
+  },
+  "schema_version": "0.1.0",
+  "signature": {
+    "algorithm": "hmac-sha256-test-v0.1",
+    "key_id": "test-admission-key",
+    "value": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+  },
+  "sink_restrictions": {
+    "allowed_sinks": [
+      "regis.graph_materialization"
+    ],
+    "do_not_learn": true,
+    "forbidden_sinks": [
+      "model_training",
+      "embedding_generation"
+    ]
+  },
+  "status": "issued",
+  "token_id": "adm_integration_001",
+  "token_type": "single_use"
+}
