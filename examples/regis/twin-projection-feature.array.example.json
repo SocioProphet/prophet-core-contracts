@@ -1,6 +1,6 @@
 {
   "schema_version": "0.1.0",
-  "feature_id": "tpf_proj_mission_fit_001_capability_claims_capability",
+  "feature_id": "tpf_proj_mission_fit_001_preferences_work_modes",
   "projection_id": "proj_mission_fit_001",
   "decision_log_id": "pdl_projection_001",
   "twin_id": "hdt_example_001",
@@ -8,19 +8,13 @@
   "mission_id": "mission_agentic_data_platform_001",
   "recipient_id": "client_example_001",
   "policy_id": "cp_example_001",
-  "feature_family": "capability",
-  "feature_name": "capability_claims.capability",
-  "feature_value": {
-    "capability_claims": [
-      {
-        "capability": "Agentic systems design"
-      }
-    ]
-  },
+  "feature_family": "preference",
+  "feature_name": "preferences.work_modes",
+  "feature_value": ["remote_first", "async_ok"],
   "feature_confidence": "medium",
-  "source_field_path": "capability_claims.capability",
+  "source_field_path": "preferences.work_modes",
   "source_field_decision": "allow",
-  "source_field_reason": "allowed_by_consent_policy",
+  "source_field_reason": "field_minimized",
   "denial_reason_visibility": "safe_reason_only",
   "domain_context": {
     "domain_id": "holographme.mission_projection",
@@ -33,39 +27,22 @@
     "subject_id": "sub_example_001",
     "recipient_id": "client_example_001",
     "purpose": "mission_fit",
-    "allowed_recipients": [
-      "client_example_001"
-    ],
-    "allowed_purposes": [
-      "mission_fit"
-    ],
+    "allowed_recipients": ["client_example_001"],
+    "allowed_purposes": ["mission_fit"],
     "allowed_fields_digest": "sha256:b5a2c96250612366ea272ffac6d9744aaf4b45cdb4b11d0d63af2ea24a917cbd",
     "forbidden_fields_digest": "sha256:d6bc95e2274abff8aa38c1907993e76ab70792d6f34fbe36ca6b5b27dd195d21",
     "expires_at": "2026-06-01T00:00:00Z",
     "retention_rule": "mission_scope_only",
-    "revocation": {
-      "revocable": true,
-      "method": "subject_request",
-      "contact": "subject_portal"
-    },
-    "delegation": {
-      "agents_allowed": true,
-      "max_authority_band": "recommend"
-    },
-    "audit": {
-      "log_access": true,
-      "emit_receipts": true,
-      "notify_subject": true
-    }
+    "revocation": {"revocable": true, "method": "subject_request", "contact": "subject_portal"},
+    "delegation": {"agents_allowed": true, "max_authority_band": "recommend"},
+    "audit": {"log_access": true, "emit_receipts": true, "notify_subject": true}
   },
   "mission_governance_snapshot": {
     "mission_id": "mission_agentic_data_platform_001",
     "authority_band": "recommend",
     "audit_required": true,
     "human_approval_required": true,
-    "conformance_tags": [
-      "mission_fit"
-    ]
+    "conformance_tags": ["mission_fit"]
   },
   "transition_receipt_ref": {
     "receipt_id": "tr_projection_001",
@@ -80,9 +57,7 @@
     "approval_band": "recommend",
     "rollback_supported": true,
     "rollback_method": "expire_projection_and_revoke_access",
-    "replay_hints": {
-      "runtime_version": "holographme-projection-runtime-0.1.0"
-    }
+    "replay_hints": {"runtime_version": "holographme-projection-runtime-0.1.0"}
   },
   "projection_decision_log_ref": {
     "schema_version": "0.1.0",
@@ -105,7 +80,7 @@
   "raw_twin_payload_present": false,
   "hash_algorithm": "sha256",
   "hash_canonicalization": "canonical_json_v0.1_utf8_nfc_sorted_keys_no_insignificant_ws",
-  "content_hash": "sha256:e7e316dbbaa2a1648dccdb01eb6c5f35f9f854007048014b71202777e41f56d7",
+  "content_hash": "sha256:0f6f68708dea87ebe8c8eb4cfe4f893cecdbfa3ec60f0f8ecaecaa9450b07fc0",
   "lineage_hash": "sha256:27230052d7f1f34714d4c06f4d1ff2dff4544a23dd93331f9c001539cd4f44b4",
   "created_at": "2026-05-04T18:31:00Z"
 }

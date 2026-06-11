@@ -1,0 +1,12 @@
+{
+  "case_id": "unsafe-reason-leak",
+  "description": "source_field_reason is a closed safe vocabulary; free text can leak denied content.",
+  "mutations": [
+    {
+      "op": "replace",
+      "path": "/source_field_reason",
+      "value": "denied: contained SSN-like pattern"
+    }
+  ],
+  "expected_failure": "schema_enum_source_field_reason"
+}

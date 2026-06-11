@@ -1,0 +1,12 @@
+{
+  "case_id": "bad-lineage-hash",
+  "description": "lineage_hash must bind projection_id, decision_log_id, policy_id, schema_version, and created_at.",
+  "mutations": [
+    {
+      "op": "replace",
+      "path": "/lineage_hash",
+      "value": "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+    }
+  ],
+  "expected_failure": "semantic_lineage_hash_mismatch"
+}

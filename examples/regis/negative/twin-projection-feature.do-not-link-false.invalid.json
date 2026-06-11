@@ -1,0 +1,12 @@
+{
+  "case_id": "do-not-link-false",
+  "description": "DoNotLink must be true in v0.1; similarity or cross-domain linking cannot be silently enabled.",
+  "mutations": [
+    {
+      "op": "replace",
+      "path": "/do_not_link",
+      "value": false
+    }
+  ],
+  "expected_failure": "schema_const_do_not_link_true"
+}

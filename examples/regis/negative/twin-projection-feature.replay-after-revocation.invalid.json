@@ -1,0 +1,17 @@
+{
+  "case_id": "replay-after-revocation",
+  "description": "A downstream replay after consent revocation must not remain allowed.",
+  "mutations": [
+    {
+      "op": "replace",
+      "path": "/revocation_state",
+      "value": "revoked"
+    },
+    {
+      "op": "replace",
+      "path": "/policy_state",
+      "value": "allowed"
+    }
+  ],
+  "expected_failure": "schema_revoked_requires_blocked_or_restricted"
+}

@@ -1,0 +1,27 @@
+{
+  "case_id": "expired-consent-allowed",
+  "description": "A feature created after consent expiry must be expired and blocked/restricted, never active and allowed.",
+  "mutations": [
+    {
+      "op": "replace",
+      "path": "/created_at",
+      "value": "2026-07-01T00:00:00Z"
+    },
+    {
+      "op": "replace",
+      "path": "/lineage_hash",
+      "value": "sha256:49601cab807dd787d00aa9e5a0d943948d0e156c275a8bdfc7200467a0fbe725"
+    },
+    {
+      "op": "replace",
+      "path": "/revocation_state",
+      "value": "active"
+    },
+    {
+      "op": "replace",
+      "path": "/policy_state",
+      "value": "allowed"
+    }
+  ],
+  "expected_failure": "semantic_expired_consent_not_allowed"
+}
