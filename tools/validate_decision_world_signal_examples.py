@@ -15,6 +15,7 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 SCHEMAS = ROOT / "schemas"
 EXAMPLES = ROOT / "examples" / "decision-world-signals"
+NEGATIVE_EXAMPLES = EXAMPLES / "negative"
 
 PROMOTION_DECISIONS = {"REJECT", "REVIEW", "INSERT_EVIDENCE_ONLY", "PROMOTE_CANONICAL"}
 CONCORDANCE_STATUSES = {"ACTIVE", "PENDING_REVIEW", "REJECTED", "SUPERSEDED"}
@@ -217,10 +218,38 @@ def validate_examples() -> tuple[int, list[str]]:
     return len(files), errors
 
 
+def validate_negative_examples() -> tuple[int, list[str]]:
+    """Each file in negative/ must produce at least one validation error."""
+    if not NEGATIVE_EXAMPLES.exists():
+        return 0, [f"missing negative examples directory: {NEGATIVE_EXAMPLES}"]
+
+    files = sorted(NEGATIVE_EXAMPLES.glob("*.json"))
+    if not files:
+        return 0, [f"no negative example files found in {NEGATIVE_EXAMPLES}"]
+
+    errors: list[str] = []
+    for path in files:
+        kind = infer_kind(path)
+        if not kind:
+            errors.append(f"{path}: filename does not identify a known contract kind")
+            continue
+        try:
+            data = load_json(path)
+        except Exception as exc:  # noqa: BLE001
+            errors.append(f"{path}: failed to parse JSON: {exc}")
+            continue
+        violation_errors = VALIDATORS[kind](path, data)
+        if not violation_errors:
+            errors.append(f"{path}: negative fixture must fail validation but produced no errors")
+    return len(files), errors
+
+
 def main() -> int:
     errors = validate_schema_files()
     file_count, example_errors = validate_examples()
     errors.extend(example_errors)
+    neg_count, negative_errors = validate_negative_examples()
+    errors.extend(negative_errors)
 
     if errors:
         print("Decision world signal validation failed:", file=sys.stderr)
@@ -230,6 +259,7 @@ def main() -> int:
 
     print(f"Validated {len(EXPECTED_SCHEMA_FILES)} decision world signal schema(s).")
     print(f"Validated {file_count} decision world signal example(s).")
+    print(f"Validated {neg_count} negative fixture(s) — all correctly rejected.")
     return 0
 
 
