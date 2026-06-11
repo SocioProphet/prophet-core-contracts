@@ -5,7 +5,11 @@ from __future__ import annotations
 
 import copy
 import pickle
+import sys
+import os
 from datetime import datetime, timezone
+
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from reference.admission_token import AdmissionToken
 
