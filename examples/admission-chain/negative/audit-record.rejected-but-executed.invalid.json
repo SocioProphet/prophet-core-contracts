@@ -1,0 +1,56 @@
+{
+  "schema_version": "0.1.0",
+  "audit_record_id": "ar_neg_004",
+  "record_type": "admission_audit",
+  "created_at": "2026-06-01T00:00:00Z",
+  "emitter": {
+    "emitter_id": "op_plane_local_001",
+    "emitter_type": "operation_plane",
+    "service_ref": "services/operation-plane"
+  },
+  "policy_request_ref": {
+    "request_id": "prq_regis_ingest_001",
+    "schema_version": "0.1.0"
+  },
+  "policy_decision_ref": {
+    "decision_id": "pd_regis_ingest_001",
+    "schema_version": "0.1.0"
+  },
+  "admission_token_ref": {
+    "token_id": "adm_reference_001",
+    "schema_version": "0.1.0"
+  },
+  "effect_ref": {
+    "effect_id": "eff_001"
+  },
+  "verification_result": {
+    "accepted": true,
+    "failure_codes": [],
+    "checks_performed": [
+      {
+        "check": "schema",
+        "performed": true,
+        "result": "passed"
+      }
+    ],
+    "revocation_check": {
+      "check_type": "deferred_v0_2"
+    }
+  },
+  "admission_outcome": "rejected",
+  "execution_outcome": "executed",
+  "actor_refs": [
+    "agent_001"
+  ],
+  "evidence_refs": [],
+  "genesis_record": true,
+  "record_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "signatures": [
+    {
+      "algorithm": "hmac-sha256-test-v0.1",
+      "key_id": "test-audit-key",
+      "value": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+    }
+  ],
+  "expected_failure": "rejected admission_outcome cannot have executed execution_outcome"
+}
