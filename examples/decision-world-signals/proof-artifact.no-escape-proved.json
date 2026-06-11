@@ -1,0 +1,32 @@
+{
+  "claim_name": "no_escape",
+  "claim_version": "0.1.0",
+  "input_hashes": [
+    "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+  ],
+  "analyzer": {
+    "name": "prophet-static-proof-demo",
+    "version": "0.1.0",
+    "engine_hash": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+  },
+  "analysis_domains": [
+    "scope_lattice",
+    "escape_analysis"
+  ],
+  "budget": {
+    "max_iterations": 100,
+    "max_time_ms": 5000,
+    "max_states": 10000
+  },
+  "precision_notes": "Fixture demonstrates a proved no-escape claim under bounded static analysis assumptions.",
+  "result_status": "PROVED",
+  "witness": {
+    "scoped_value": "capability:hsm-key-handle-demo",
+    "allowed_scope": "agent:issuer",
+    "observed_external_edges": 0
+  },
+  "replay_instructions": "Re-run analyzer version 0.1.0 over the referenced input hash with the stated domains and budget.",
+  "signature": null,
+  "provenance_hook": "ledger:proof-demo-0001",
+  "notes": "Example proof artifact for a no-escape claim."
+}

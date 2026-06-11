@@ -1,0 +1,18 @@
+{
+  "source_system": "crm",
+  "source_native_id": "C1055598",
+  "source_record_id": "crm:C1055598",
+  "canonical_entity_id": "ceid:tesco-plc",
+  "resolver_run_id": "rid:acr-demo-0001",
+  "policy_id": "acr-core@0.1.0",
+  "confidence": 0.99,
+  "status": "ACTIVE",
+  "decision_ledger_id": "did:acr-demo-match-0001",
+  "valid_from": "2026-05-06T00:00:00Z",
+  "valid_to": null,
+  "reason_codes": [
+    "STRONG_IDENTIFIER_MATCH",
+    "NAME_ADDRESS_CORROBORATION"
+  ],
+  "notes": "Example active crosswalk from a source record to a canonical entity."
+}

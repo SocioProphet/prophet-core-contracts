@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.socioprophet.org/prophet/proof-artifact.v0.1.schema.json",
+  "title": "ProofArtifact",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "claim_name",
+    "claim_version",
+    "input_hashes",
+    "analyzer",
+    "analysis_domains",
+    "budget",
+    "precision_notes",
+    "result_status",
+    "replay_instructions"
+  ],
+  "properties": {
+    "claim_name": { "type": "string", "minLength": 1 },
+    "claim_version": { "type": "string", "minLength": 1 },
+    "input_hashes": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "minLength": 1 },
+      "uniqueItems": true
+    },
+    "analyzer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "version"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "version": { "type": "string", "minLength": 1 },
+        "engine_hash": { "type": ["string", "null"] }
+      }
+    },
+    "analysis_domains": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "minLength": 1 },
+      "uniqueItems": true
+    },
+    "budget": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "max_iterations": { "type": ["integer", "null"], "minimum": 0 },
+        "max_time_ms": { "type": ["integer", "null"], "minimum": 0 },
+        "max_states": { "type": ["integer", "null"], "minimum": 0 }
+      }
+    },
+    "precision_notes": { "type": "string" },
+    "result_status": {
+      "type": "string",
+      "enum": ["PROVED", "VIOLATED", "UNKNOWN", "TIMEOUT", "PRECISION_LOSS_REVIEW_REQUIRED"]
+    },
+    "witness": true,
+    "violation_evidence": true,
+    "replay_instructions": { "type": "string", "minLength": 1 },
+    "signature": { "type": ["string", "null"] },
+    "provenance_hook": { "type": ["string", "null"] },
+    "notes": { "type": ["string", "null"] }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "result_status": { "const": "PROVED" } } },
+      "then": { "required": ["witness"] }
+    },
+    {
+      "if": { "properties": { "result_status": { "const": "VIOLATED" } } },
+      "then": { "required": ["violation_evidence"] }
+    }
+  ]
+}
