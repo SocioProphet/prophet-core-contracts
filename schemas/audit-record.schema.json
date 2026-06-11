@@ -1,0 +1,315 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.socioprophet.org/policy/audit-record/v0.1.schema.json",
+  "title": "AuditRecord",
+  "description": "Durable append-only record binding PolicyRequest\u2192PolicyDecision\u2192AdmissionToken\u2192Effect\u2192Outcome for the Operation Plane admission spine.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "audit_record_id",
+    "record_type",
+    "created_at",
+    "emitter",
+    "policy_request_ref",
+    "policy_decision_ref",
+    "admission_token_ref",
+    "effect_ref",
+    "verification_result",
+    "admission_outcome",
+    "execution_outcome",
+    "actor_refs",
+    "evidence_refs",
+    "genesis_record",
+    "record_hash",
+    "signatures"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "0.1.0"
+    },
+    "audit_record_id": {
+      "type": "string",
+      "pattern": "^ar_[a-zA-Z0-9_-]+$"
+    },
+    "record_type": {
+      "type": "string",
+      "enum": [
+        "admission_audit",
+        "rollback_audit"
+      ]
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "emitter": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "emitter_id",
+        "emitter_type",
+        "service_ref"
+      ],
+      "properties": {
+        "emitter_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "emitter_type": {
+          "type": "string",
+          "enum": [
+            "operation_plane",
+            "agentplane",
+            "regis_materializer",
+            "system"
+          ]
+        },
+        "service_ref": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "policy_request_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "request_id",
+        "schema_version"
+      ],
+      "properties": {
+        "request_id": {
+          "type": "string",
+          "pattern": "^prq_[a-zA-Z0-9_-]+$"
+        },
+        "schema_version": {
+          "type": "string",
+          "const": "0.1.0"
+        }
+      }
+    },
+    "policy_decision_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "decision_id",
+        "schema_version"
+      ],
+      "properties": {
+        "decision_id": {
+          "type": "string",
+          "pattern": "^pd_[a-zA-Z0-9_-]+$"
+        },
+        "schema_version": {
+          "type": "string",
+          "const": "0.1.0"
+        }
+      }
+    },
+    "admission_token_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "token_id",
+        "schema_version"
+      ],
+      "properties": {
+        "token_id": {
+          "type": "string",
+          "pattern": "^adm_[a-zA-Z0-9_-]+$"
+        },
+        "schema_version": {
+          "type": "string",
+          "const": "0.1.0"
+        }
+      }
+    },
+    "effect_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "effect_id"
+      ],
+      "properties": {
+        "effect_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "effect_type": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "prior_audit_record_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "audit_record_id"
+      ],
+      "properties": {
+        "audit_record_id": {
+          "type": "string",
+          "pattern": "^ar_[a-zA-Z0-9_-]+$"
+        }
+      }
+    },
+    "verification_result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "accepted",
+        "failure_codes",
+        "checks_performed"
+      ],
+      "properties": {
+        "accepted": {
+          "type": "boolean"
+        },
+        "failure_codes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "checks_performed": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "check",
+              "performed",
+              "result"
+            ],
+            "properties": {
+              "check": {
+                "type": "string",
+                "minLength": 1
+              },
+              "performed": {
+                "type": "boolean"
+              },
+              "result": {
+                "type": "string",
+                "enum": [
+                  "passed",
+                  "failed",
+                  "not_checked",
+                  "deferred_v0_2"
+                ]
+              }
+            }
+          }
+        },
+        "revocation_check": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "check_type"
+          ],
+          "properties": {
+            "check_type": {
+              "type": "string",
+              "enum": [
+                "performed",
+                "deferred_v0_2"
+              ]
+            },
+            "revoked": {
+              "type": "boolean"
+            }
+          }
+        }
+      }
+    },
+    "admission_outcome": {
+      "type": "string",
+      "enum": [
+        "accepted",
+        "rejected"
+      ]
+    },
+    "execution_outcome": {
+      "type": "string",
+      "enum": [
+        "not_attempted",
+        "executed",
+        "failed",
+        "rolled_back",
+        "partial"
+      ]
+    },
+    "actor_refs": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 1
+    },
+    "evidence_refs": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "genesis_record": {
+      "type": "boolean"
+    },
+    "hash_chain_prev": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "record_hash": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "signatures": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "algorithm",
+          "key_id",
+          "value"
+        ],
+        "properties": {
+          "algorithm": {
+            "type": "string",
+            "const": "hmac-sha256-test-v0.1"
+          },
+          "key_id": {
+            "type": "string",
+            "const": "test-audit-key"
+          },
+          "value": {
+            "type": "string",
+            "pattern": "^sha256:[a-f0-9]{64}$"
+          }
+        }
+      }
+    }
+  },
+  "if": {
+    "properties": {
+      "genesis_record": {
+        "const": true
+      }
+    }
+  },
+  "then": {
+    "properties": {
+      "hash_chain_prev": false
+    }
+  },
+  "else": {
+    "required": [
+      "hash_chain_prev"
+    ]
+  }
+}
