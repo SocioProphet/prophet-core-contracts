@@ -1,0 +1,48 @@
+{
+  "schema_version": "0.1.0",
+  "request_id": "prq_regis_ingest_tpf_001",
+  "requesting_actor": {
+    "actor_id": "agent_exporter_001",
+    "actor_type": "agent"
+  },
+  "subject_actor": {
+    "actor_id": "sub_example_001",
+    "actor_type": "human",
+    "subject_id": "sub_example_001"
+  },
+  "purpose": "mission_fit_projection_ingest",
+  "request_made_at": "2026-05-12T04:10:00Z",
+  "requested_actions": [
+    {
+      "action_id": "act_regis_ingest_tpf_001",
+      "action_type": "regis.graph_delta.ingest",
+      "resource_ref": "regis:graph:semantic-feature-plane",
+      "requested_authority_band": "recommend",
+      "requested_sinks": [
+        "regis.graph_materialization"
+      ],
+      "requested_forbidden_sinks": [
+        "model_training",
+        "embedding_generation",
+        "durable_memory",
+        "analytics_warehouse",
+        "cross_domain_identity_linking"
+      ]
+    }
+  ],
+  "requested_restrictions": [
+    "DoNotLearn",
+    "DoNotLink",
+    "NoRawTwinExport"
+  ],
+  "context_refs": [
+    "mission_agentic_data_platform_001"
+  ],
+  "evidence_refs": [
+    "tpf_proj_mission_fit_001_capability_claims_capability",
+    "tr_projection_001",
+    "pdl_projection_001"
+  ],
+  "canonicalization": "rfc8785-jcs-v0.1",
+  "request_hash": "sha256:5fe821fdd6971bbc436f7e410c5d8705392517bb3ee58e06bd4ecc327f0a73c9"
+}

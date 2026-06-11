@@ -1,0 +1,1 @@
+{"case_id":"request-missing-request-id","description":"Schema validation must reject a PolicyRequest missing request_id.","target":"request","mutation":{"op":"remove","path":"/request_id"},"expected_failure":"schema_required_request_id"}

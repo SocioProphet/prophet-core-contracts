@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.socioprophet.org/policy/policy-request/v0.1.schema.json",
+  "title": "PolicyRequest",
+  "description": "Canonical v0.1 request bundle sent to Policy Fabric for deterministic policy evaluation.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "request_id", "requesting_actor", "subject_actor", "purpose", "request_made_at", "requested_actions", "requested_restrictions", "canonicalization", "request_hash"],
+  "properties": {
+    "schema_version": {"type": "string", "const": "0.1.0"},
+    "request_id": {"type": "string", "pattern": "^prq_[a-zA-Z0-9_-]+$"},
+    "requesting_actor": {"$ref": "#/$defs/actor_ref"},
+    "subject_actor": {"$ref": "#/$defs/actor_ref"},
+    "purpose": {"type": "string", "minLength": 1},
+    "request_made_at": {"type": "string", "format": "date-time"},
+    "requested_actions": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/requested_action"}},
+    "requested_restrictions": {"type": "array", "items": {"$ref": "#/$defs/restriction_tag"}, "uniqueItems": true},
+    "context_refs": {"type": "array", "items": {"type": "string"}, "default": []},
+    "evidence_refs": {"type": "array", "items": {"type": "string"}, "default": []},
+    "canonicalization": {"type": "string", "const": "rfc8785-jcs-v0.1"},
+    "request_hash": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"}
+  },
+  "$defs": {
+    "actor_ref": {"type": "object", "additionalProperties": false, "required": ["actor_id", "actor_type"], "properties": {"actor_id": {"type": "string", "minLength": 1}, "actor_type": {"type": "string", "enum": ["human", "agent", "system", "service"]}, "subject_id": {"type": "string", "pattern": "^sub_[a-zA-Z0-9_-]+$"}}},
+    "requested_action": {"type": "object", "additionalProperties": false, "required": ["action_id", "action_type", "resource_ref", "requested_authority_band", "requested_sinks", "requested_forbidden_sinks"], "properties": {"action_id": {"type": "string", "pattern": "^act_[a-zA-Z0-9_-]+$"}, "action_type": {"type": "string", "minLength": 1}, "resource_ref": {"type": "string", "minLength": 1}, "requested_authority_band": {"$ref": "#/$defs/authority_band"}, "requested_sinks": {"type": "array", "minItems": 1, "items": {"type": "string"}, "uniqueItems": true}, "requested_forbidden_sinks": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}}},
+    "authority_band": {"type": "string", "enum": ["observe", "recommend", "represent", "negotiate", "commit"]},
+    "restriction_tag": {"type": "string", "enum": ["DoNotLearn", "DoNotLink", "NoRawTwinExport", "ReceiptRequired"]}
+  }
+}

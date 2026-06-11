@@ -1,0 +1,1 @@
+{"case_id":"decision-risk-tier-invalid-value","description":"risk_tier is a closed enum; unknown severity labels are rejected.","target":"decision","mutation":{"op":"replace","path":"/risk_tier","value":"severe"},"expected_failure":"schema_enum_risk_tier"}
