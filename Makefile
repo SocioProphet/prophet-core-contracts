@@ -1,6 +1,6 @@
-.PHONY: validate validate-workspace-operation validate-regis validate-scoped-capability validate-prophet-records validate-value-claims validate-health-ai-contracts validate-decision-world-signals validate-admission-token validate-policy validate-integration
+.PHONY: validate validate-workspace-operation validate-regis validate-scoped-capability validate-prophet-records validate-value-claims validate-health-ai-contracts validate-decision-world-signals validate-admission-token validate-policy validate-integration validate-release-manifest
 
-validate: validate-workspace-operation validate-regis validate-scoped-capability validate-prophet-records validate-value-claims validate-health-ai-contracts validate-decision-world-signals validate-admission-token validate-policy validate-integration
+validate: validate-workspace-operation validate-regis validate-scoped-capability validate-prophet-records validate-value-claims validate-health-ai-contracts validate-decision-world-signals validate-admission-token validate-policy validate-integration validate-release-manifest
 
 validate-workspace-operation:
 	python3 tools/validate_workspace_operation_examples.py
@@ -33,4 +33,7 @@ validate-policy:
 
 validate-integration:
 	python3 tools/validate_admission_chain_examples.py
+
+validate-release-manifest:
+	python3 tools/validate_release_manifest_examples.py
 
