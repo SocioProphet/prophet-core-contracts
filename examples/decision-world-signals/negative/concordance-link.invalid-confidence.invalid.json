@@ -1,0 +1,12 @@
+{
+  "source_system": "crm",
+  "source_native_id": "C9999999",
+  "source_record_id": "crm:C9999999",
+  "canonical_entity_id": "ceid:test-entity",
+  "resolver_run_id": "rid:neg-conf-0001",
+  "policy_id": "acr-core@0.1.0",
+  "confidence": 1.5,
+  "status": "ACTIVE",
+  "decision_ledger_id": "did:neg-conf-0001",
+  "notes": "NEGATIVE: confidence (1.5) exceeds allowed range [0, 1] \u2014 must fail validation."
+}
