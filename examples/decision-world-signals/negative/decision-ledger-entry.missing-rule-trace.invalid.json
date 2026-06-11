@@ -1,0 +1,16 @@
+{
+  "decision_id": "did:neg-rule-trace-0001",
+  "decision_type": "FEATURE_PROMOTION",
+  "policy_id": "decision-world-signal-policy@0.1.0",
+  "input_artifact_hashes": [
+    "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  ],
+  "candidate_ids": [
+    "gaia.weather.15_minute_forecast"
+  ],
+  "confidence": 1.0,
+  "responsible_actor": "actor:contract-reviewer",
+  "created_at": "2026-06-01T00:00:00Z",
+  "replay_instructions": "Re-validate.",
+  "notes": "NEGATIVE: rule_trace is missing \u2014 must fail validation."
+}
