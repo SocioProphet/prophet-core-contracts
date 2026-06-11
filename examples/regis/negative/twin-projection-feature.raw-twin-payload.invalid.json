@@ -1,0 +1,19 @@
+{
+  "case_id": "raw-twin-payload",
+  "description": "Regis receives projection features, never raw HolographMe twin state.",
+  "mutations": [
+    {
+      "op": "replace",
+      "path": "/raw_twin_payload_present",
+      "value": true
+    },
+    {
+      "op": "add",
+      "path": "/raw_twin_payload",
+      "value": {
+        "private_notes": "raw twin state must never enter Regis"
+      }
+    }
+  ],
+  "expected_failure": "schema_const_raw_twin_payload_present_false"
+}

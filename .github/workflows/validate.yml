@@ -6,6 +6,9 @@ on:
     branches:
       - main
 
+permissions:
+  contents: read
+
 jobs:
   workspace-operation-contracts:
     name: Workspace Operation contracts

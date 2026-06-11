@@ -1,0 +1,1 @@
+{"case_id":"decision-payload-tamper","description":"PolicyDecision.payload_hash must match canonical decision payload excluding payload_hash and signatures.","target":"decision","mutation":{"op":"replace","path":"/payload_hash","value":"sha256:2222222222222222222222222222222222222222222222222222222222222222"},"expected_failure":"semantic_payload_hash_mismatch"}

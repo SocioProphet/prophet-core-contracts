@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.socioprophet.org/prophet/decision-ledger-entry.v0.1.schema.json",
+  "title": "DecisionLedgerEntry",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "decision_id",
+    "decision_type",
+    "policy_id",
+    "input_artifact_hashes",
+    "candidate_ids",
+    "rule_trace",
+    "confidence",
+    "responsible_actor",
+    "created_at",
+    "replay_instructions"
+  ],
+  "properties": {
+    "decision_id": { "type": "string", "minLength": 1 },
+    "decision_type": {
+      "type": "string",
+      "enum": [
+        "MATCH",
+        "MERGE",
+        "SPLIT",
+        "ATTRIBUTE_SURVIVORSHIP",
+        "FEATURE_PROMOTION",
+        "ACTION_ADMISSION",
+        "POLICY_BLOCK"
+      ]
+    },
+    "policy_id": { "type": "string", "minLength": 1 },
+    "input_artifact_hashes": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "minLength": 1 },
+      "uniqueItems": true
+    },
+    "candidate_ids": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "uniqueItems": true
+    },
+    "selected_id": { "type": ["string", "null"] },
+    "selected_value": true,
+    "rule_trace": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["rule_id", "outcome"],
+        "properties": {
+          "rule_id": { "type": "string", "minLength": 1 },
+          "outcome": { "type": "string", "minLength": 1 },
+          "detail": { "type": ["string", "null"] }
+        }
+      }
+    },
+    "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+    "responsible_actor": { "type": "string", "minLength": 1 },
+    "created_at": { "type": "string", "format": "date-time" },
+    "replay_instructions": { "type": "string", "minLength": 1 },
+    "notes": { "type": ["string", "null"] }
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "schema_version": "0.1.0",
+  "release_tag": "contracts-v0.1.0-rc.1",
+  "release_commit": "0123456789abcdef0123456789abcdef01234567",
+  "released_at": "2026-05-12T07:30:00Z",
+  "release_status": "rc",
+  "repo": "SocioProphet/prophet-core-contracts",
+  "contracts_included": [
+    {"name": "TwinProjectionFeature", "version": "0.1.0", "status": "included"},
+    {"name": "PolicyRequest", "version": "0.1.0", "status": "included"},
+    {"name": "PolicyDecision", "version": "0.1.0", "status": "included"},
+    {"name": "AdmissionToken", "version": "0.1.0", "status": "included"},
+    {"name": "Effect", "version": "0.1.0", "status": "experimental"},
+    {"name": "AuditRecord", "version": "0.1.0", "status": "experimental"}
+  ],
+  "schemas": [
+    {"path": "schemas/regis/twin-projection-feature.schema.json", "sha256": "sha256:1111111111111111111111111111111111111111111111111111111111111111"},
+    {"path": "schemas/policy-request.schema.json", "sha256": "sha256:2222222222222222222222222222222222222222222222222222222222222222"},
+    {"path": "schemas/policy-decision.schema.json", "sha256": "sha256:3333333333333333333333333333333333333333333333333333333333333333"},
+    {"path": "schemas/admission-token.schema.json", "sha256": "sha256:4444444444444444444444444444444444444444444444444444444444444444"}
+  ],
+  "validators": [
+    {"path": "tools/validate_regis_examples.py", "sha256": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"},
+    {"path": "tools/validate_policy_examples.py", "sha256": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"},
+    {"path": "tools/validate_admission_token_examples.py", "sha256": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"}
+  ],
+  "canonicalization_profiles": [
+    "canonical_json_v0.1_utf8_nfc_sorted_keys_no_insignificant_ws",
+    "rfc8785-jcs-v0.1"
+  ],
+  "changelog_ref": "CHANGELOG.md#010-draft",
+  "compatibility": {
+    "semver_policy": "pre-1.0-semver",
+    "breaking_change_policy": "before 1.0, minor versions may include breaking changes; patch versions must not break validators or existing conformant fixtures",
+    "tag_immutability": true
+  },
+  "validation": {
+    "make_validate_passed": true,
+    "validated_at": "2026-05-12T07:25:00Z",
+    "validator_command": "make validate"
+  }
+}

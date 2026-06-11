@@ -1,0 +1,1 @@
+{"case_id":"request-self-contradictory","description":"A request cannot ask for and forbid the same sink.","target":"request","mutation":{"op":"add","path":"/requested_actions/0/requested_forbidden_sinks/-","value":"regis.graph_materialization"},"expected_failure":"semantic_request_self_contradictory_sink"}

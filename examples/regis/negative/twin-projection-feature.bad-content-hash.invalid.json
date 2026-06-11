@@ -1,0 +1,12 @@
+{
+  "case_id": "bad-content-hash",
+  "description": "content_hash must be sha256(canonical_json(feature_value)).",
+  "mutations": [
+    {
+      "op": "replace",
+      "path": "/content_hash",
+      "value": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+    }
+  ],
+  "expected_failure": "semantic_content_hash_mismatch"
+}

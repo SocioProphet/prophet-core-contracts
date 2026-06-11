@@ -1,0 +1,12 @@
+{
+  "case_id": "denied-field-emitted",
+  "description": "A field denied by the projection decision log must never become a TwinProjectionFeature.",
+  "mutations": [
+    {
+      "op": "replace",
+      "path": "/source_field_decision",
+      "value": "deny"
+    }
+  ],
+  "expected_failure": "schema_const_source_field_decision_allow"
+}

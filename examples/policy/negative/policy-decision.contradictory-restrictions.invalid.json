@@ -1,0 +1,1 @@
+{"case_id":"decision-contradictory-restrictions","description":"A decision cannot impose DoNotLearn and simultaneously allow a learning sink.","target":"decision","mutation":{"op":"add","path":"/granted_actions/0/allowed_sinks/-","value":"model_training"},"expected_failure":"semantic_contradictory_restrictions"}

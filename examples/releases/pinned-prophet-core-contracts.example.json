@@ -1,0 +1,28 @@
+{
+  "schema_version": "0.1.0",
+  "repo": "SocioProphet/prophet-core-contracts",
+  "release_tag": "contracts-v0.1.0-rc.1",
+  "release_commit": "8579e2fb6fcfaf7d1519ad4922545e932d73232b",
+  "manifest_path": "releases/contracts-v0.1.0-rc.1/manifest.json",
+  "manifest_sha256": "sha256:781146a844f25df76992d1c63d9111c9c21ac4817bde7d00cd1a7d89b2d4687f",
+  "contracts_used": [
+    "TwinProjectionFeature",
+    "PolicyRequest",
+    "PolicyDecision",
+    "AdmissionToken"
+  ],
+  "schema_paths": [
+    "schemas/regis/twin-projection-feature.schema.json",
+    "schemas/policy-request.schema.json",
+    "schemas/policy-decision.schema.json",
+    "schemas/admission-token.schema.json"
+  ],
+  "validator_paths": [
+    "tools/validate_regis_examples.py",
+    "tools/validate_policy_examples.py",
+    "tools/validate_admission_token_examples.py"
+  ],
+  "pinned_at": "2026-05-12T07:05:00Z",
+  "updated_by": "downstream-conformance-pr",
+  "notes": "Example downstream pin file. Production pins must record the actual release commit and the canonical hash of the released manifest."
+}

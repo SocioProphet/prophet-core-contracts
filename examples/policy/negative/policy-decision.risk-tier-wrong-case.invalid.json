@@ -1,0 +1,1 @@
+{"case_id":"decision-risk-tier-wrong-case","description":"risk_tier is a closed lowercase enum; uppercase aliases are rejected.","target":"decision","mutation":{"op":"replace","path":"/risk_tier","value":"HIGH"},"expected_failure":"schema_enum_risk_tier"}

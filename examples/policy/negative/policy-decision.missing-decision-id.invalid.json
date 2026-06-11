@@ -1,0 +1,1 @@
+{"case_id":"decision-missing-decision-id","description":"Schema validation must reject a PolicyDecision missing decision_id.","target":"decision","mutation":{"op":"remove","path":"/decision_id"},"expected_failure":"schema_required_decision_id"}

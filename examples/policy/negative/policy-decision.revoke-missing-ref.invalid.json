@@ -1,0 +1,1 @@
+{"case_id":"decision-revoke-missing-ref","description":"A revoke decision must reference the prior immutable decision it revokes.","target":"decision","base_example":"policy-decision.revoke.example.json","mutation":{"op":"remove","path":"/revokes_decision_ref"},"expected_failure":"semantic_revoke_missing_ref"}

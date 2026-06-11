@@ -1,0 +1,1 @@
+{"case_id":"decision-non-grant-no-reason","description":"Non-grant decisions must carry at least one reason_code.","target":"decision","base_example":"policy-decision.deny.example.json","mutation":{"op":"replace","path":"/reason_codes","value":[]},"expected_failure":"semantic_non_grant_missing_reason_code"}

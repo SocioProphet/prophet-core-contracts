@@ -1,0 +1,12 @@
+{
+  "case_id": "null-feature-value",
+  "description": "Null feature values are prohibited because they can leak absence; exporters must suppress missing, denied, forbidden, or null fields.",
+  "mutations": [
+    {
+      "op": "replace",
+      "path": "/feature_value",
+      "value": null
+    }
+  ],
+  "expected_failure": "schema_type_feature_value"
+}

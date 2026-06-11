@@ -1,0 +1,22 @@
+{
+  "feature_id": "gaia.weather.15_minute_forecast",
+  "feature_name": "15-minute forecast",
+  "category": "enhanced_forecast",
+  "description": "Short-horizon weather forecast emitted at 15-minute temporal grain for governed world-signal use.",
+  "coverage": "Worldwide where upstream provider coverage is available",
+  "file_formats": ["JSON"],
+  "temporal_grain": "15min",
+  "horizon": "next_7_hours",
+  "update_cadence": "provider_defined",
+  "spatial_type": "point",
+  "resolution": null,
+  "units": null,
+  "nullability": "missing values require explicit reason codes",
+  "provenance_requirements": [
+    "source_manifest",
+    "feature_registry_version",
+    "retrieval_timestamp",
+    "license_or_terms_evidence"
+  ],
+  "notes": "Example fixture for schema and contract validation."
+}

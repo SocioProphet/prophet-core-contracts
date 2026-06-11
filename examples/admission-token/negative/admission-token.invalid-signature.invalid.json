@@ -1,0 +1,10 @@
+{
+  "case_id": "invalid-signature",
+  "description": "A token with a forged or stale signature must be rejected.",
+  "mutation": {
+    "op": "replace",
+    "path": "/signature/value",
+    "value": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+  },
+  "expected_failure": "semantic_signature_mismatch"
+}

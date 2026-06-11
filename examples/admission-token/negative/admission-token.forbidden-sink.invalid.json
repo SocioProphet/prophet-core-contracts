@@ -1,0 +1,11 @@
+{
+  "case_id": "forbidden-sink",
+  "description": "A token carrying DoNotLearn restrictions must not authorize learning or embedding sinks.",
+  "request_override": {
+    "action_type": "regis.graph_delta.ingest",
+    "resource_ref": "regis:graph:semantic-feature-plane",
+    "authority_band": "recommend",
+    "sink": "embedding_generation"
+  },
+  "expected_failure": "semantic_forbidden_sink"
+}

@@ -1,0 +1,1 @@
+{"case_id":"decision-invalid-signature","description":"PolicyDecision signatures must match the payload_hash.","target":"decision","mutation":{"op":"replace","path":"/signatures/0/value","value":"sha256:0000000000000000000000000000000000000000000000000000000000000000"},"expected_failure":"semantic_signature_mismatch"}
