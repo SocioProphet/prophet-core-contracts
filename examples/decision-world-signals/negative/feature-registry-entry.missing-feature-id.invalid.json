@@ -1,0 +1,13 @@
+{
+  "feature_name": "15-minute forecast",
+  "category": "enhanced_forecast",
+  "description": "Short-horizon weather forecast.",
+  "coverage": "Worldwide",
+  "file_formats": [
+    "JSON"
+  ],
+  "provenance_requirements": [
+    "source_manifest"
+  ],
+  "notes": "NEGATIVE: feature_id is missing \u2014 must fail validation."
+}
