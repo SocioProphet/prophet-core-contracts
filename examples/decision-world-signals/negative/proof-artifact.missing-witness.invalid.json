@@ -1,0 +1,23 @@
+{
+  "claim_name": "no_escape",
+  "claim_version": "0.1.0",
+  "input_hashes": [
+    "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+  ],
+  "analyzer": {
+    "name": "prophet-static-proof-demo",
+    "version": "0.1.0"
+  },
+  "analysis_domains": [
+    "scope_lattice"
+  ],
+  "budget": {
+    "max_iterations": 100,
+    "max_time_ms": 5000,
+    "max_states": 10000
+  },
+  "precision_notes": "Fixture intentionally omits witness despite PROVED result.",
+  "result_status": "PROVED",
+  "replay_instructions": "Re-run analyzer.",
+  "notes": "NEGATIVE: result_status is PROVED but witness is absent \u2014 must fail validation."
+}
