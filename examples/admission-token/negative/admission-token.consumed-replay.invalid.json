@@ -1,0 +1,10 @@
+{
+  "case_id": "consumed-replay",
+  "description": "Single-use tokens cannot be replayed after consumption.",
+  "mutation": {
+    "op": "replace",
+    "path": "/status",
+    "value": "consumed"
+  },
+  "expected_failure": "semantic_token_not_issued"
+}

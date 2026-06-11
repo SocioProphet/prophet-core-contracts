@@ -1,0 +1,111 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.socioprophet.org/workspace-operation/admission-token/v0.1.schema.json",
+  "title": "AdmissionToken",
+  "description": "Operation Plane v0.1 admission proof that a proposed action was admitted by policy and authority gates before execution or graph materialization.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "token_id",
+    "token_type",
+    "issuer_id",
+    "issued_at",
+    "expires_at",
+    "status",
+    "proposed_action_ref",
+    "policy_decision_ref",
+    "authority_decision_ref",
+    "sink_restrictions",
+    "allowed_operation",
+    "evidence_refs",
+    "nonce",
+    "payload_hash",
+    "signature"
+  ],
+  "properties": {
+    "schema_version": {"type": "string", "const": "0.1.0"},
+    "token_id": {"type": "string", "pattern": "^adm_[a-zA-Z0-9_-]+$"},
+    "token_type": {"type": "string", "const": "single_use"},
+    "issuer_id": {"type": "string", "minLength": 1},
+    "issued_at": {"type": "string", "format": "date-time"},
+    "expires_at": {"type": "string", "format": "date-time"},
+    "status": {"type": "string", "enum": ["issued", "consumed", "revoked", "expired"]},
+    "proposed_action_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["action_id", "action_type", "target_ref", "operation_ref"],
+      "properties": {
+        "action_id": {"type": "string", "pattern": "^act_[a-zA-Z0-9_-]+$"},
+        "action_type": {"type": "string", "minLength": 1},
+        "target_ref": {"type": "string", "minLength": 1},
+        "operation_ref": {"type": "string", "minLength": 1}
+      }
+    },
+    "policy_decision_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["decision_id", "decision_result", "policy_bundle_hash", "reason_codes"],
+      "properties": {
+        "decision_id": {"type": "string", "pattern": "^pd_[a-zA-Z0-9_-]+$"},
+        "decision_result": {"type": "string", "enum": ["allow", "allow_with_constraints"]},
+        "policy_bundle_hash": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+        "reason_codes": {"type": "array", "items": {"type": "string"}, "minItems": 1}
+      }
+    },
+    "authority_decision_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["decision_id", "decision_result", "effective_authority_band", "actor_id", "subject_id"],
+      "properties": {
+        "decision_id": {"type": "string", "pattern": "^ad_[a-zA-Z0-9_-]+$"},
+        "decision_result": {"type": "string", "const": "allow"},
+        "effective_authority_band": {"$ref": "#/$defs/authority_band"},
+        "actor_id": {"type": "string", "minLength": 1},
+        "subject_id": {"type": "string", "pattern": "^sub_[a-zA-Z0-9_-]+$"}
+      }
+    },
+    "sink_restrictions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["do_not_learn", "do_not_link", "no_raw_twin_export", "allowed_sinks", "forbidden_sinks"],
+      "properties": {
+        "do_not_learn": {"type": "boolean", "const": true},
+        "do_not_link": {"type": "boolean", "const": true},
+        "no_raw_twin_export": {"type": "boolean", "const": true},
+        "allowed_sinks": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+        "forbidden_sinks": {"type": "array", "items": {"type": "string"}, "minItems": 1}
+      }
+    },
+    "allowed_operation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["operation_type", "resource_ref", "max_authority_band", "single_use"],
+      "properties": {
+        "operation_type": {"type": "string", "minLength": 1},
+        "resource_ref": {"type": "string", "minLength": 1},
+        "max_authority_band": {"$ref": "#/$defs/authority_band"},
+        "single_use": {"type": "boolean", "const": true}
+      }
+    },
+    "evidence_refs": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+    "nonce": {"type": "string", "minLength": 1},
+    "payload_hash": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "signature": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["algorithm", "key_id", "value"],
+      "properties": {
+        "algorithm": {"type": "string", "const": "hmac-sha256-test-v0.1"},
+        "key_id": {"type": "string", "const": "test-admission-key"},
+        "value": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"}
+      }
+    }
+  },
+  "$defs": {
+    "authority_band": {
+      "type": "string",
+      "enum": ["observe", "recommend", "represent", "negotiate", "commit"]
+    }
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "case_id": "missing-policy-decision",
+  "description": "Admission requires a policy decision reference.",
+  "mutation": {
+    "op": "remove",
+    "path": "/policy_decision_ref"
+  },
+  "expected_failure": "schema_required_policy_decision_ref"
+}

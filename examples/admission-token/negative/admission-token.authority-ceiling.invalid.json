@@ -1,0 +1,11 @@
+{
+  "case_id": "authority-ceiling",
+  "description": "A request authority above the token max_authority_band must be rejected.",
+  "request_override": {
+    "action_type": "regis.graph_delta.ingest",
+    "resource_ref": "regis:graph:semantic-feature-plane",
+    "authority_band": "commit",
+    "sink": "regis.graph_materialization"
+  },
+  "expected_failure": "semantic_authority_exceeds_token"
+}
