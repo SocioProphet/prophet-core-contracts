@@ -1,0 +1,18 @@
+{
+  "source_artifact_id": "artifact:test:chunk:neg-001",
+  "doc_id": "neg-001",
+  "extraction_run_id": "run:neg-margin-0001",
+  "policy_id": "decision-world-signal-policy@0.1.0",
+  "candidate_set_id": "candidate-set:neg-001:0001",
+  "top_entity_id": "entity:alpha",
+  "top_score": 10.0,
+  "runnerup_entity_id": "entity:beta",
+  "runnerup_score": 7.0,
+  "margin_delta": 99.0,
+  "perturbation_flip_rate": 0.1,
+  "promotion_decision": "PROMOTE_CANONICAL",
+  "decision_reason_codes": [
+    "CLEAR_WINNER"
+  ],
+  "notes": "NEGATIVE: margin_delta (99.0) does not equal top_score - runnerup_score (3.0) \u2014 must fail validation."
+}
