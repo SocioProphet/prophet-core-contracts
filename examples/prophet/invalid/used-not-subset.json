@@ -1,0 +1,13 @@
+{
+  "schema_version": "0.1.0",
+  "execution_receipt_id": "exec_invalid_used_not_subset_demo",
+  "agent": { "name": "Investigation Agent", "version": "1.0.2", "category": "investigation" },
+  "input": { "type": "event", "ref": "event_1" },
+  "executed_at": "2026-07-31T13:38:49Z",
+  "decision": { "verdict": "allow", "authority_band": "recommend" },
+  "capabilities_held": ["cap_read_events_demo"],
+  "capabilities_used": ["cap_read_events_demo", "cap_escalate_demo"],
+  "verdict": { "state": "verified" },
+  "proof_artifact": { "sha256": "sha256:deadbeef", "replayable": true },
+  "receipt_hash": "sha256:exec-invalid-used-not-subset-demo"
+}

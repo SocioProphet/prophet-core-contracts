@@ -1,6 +1,6 @@
-.PHONY: validate validate-workspace-operation validate-regis validate-scoped-capability validate-prophet-records validate-value-claims validate-health-ai-contracts validate-decision-world-signals validate-admission-token validate-policy validate-integration validate-audit-record validate-release-manifest
+.PHONY: validate validate-workspace-operation validate-regis validate-scoped-capability validate-prophet-records validate-value-claims validate-health-ai-contracts validate-decision-world-signals validate-admission-token validate-policy validate-integration validate-audit-record validate-release-manifest validate-execution-receipt
 
-validate: validate-workspace-operation validate-regis validate-scoped-capability validate-prophet-records validate-value-claims validate-health-ai-contracts validate-decision-world-signals validate-admission-token validate-policy validate-integration validate-audit-record validate-release-manifest
+validate: validate-workspace-operation validate-regis validate-scoped-capability validate-prophet-records validate-value-claims validate-health-ai-contracts validate-decision-world-signals validate-admission-token validate-policy validate-integration validate-audit-record validate-release-manifest validate-execution-receipt
 
 validate-workspace-operation:
 	python3 tools/validate_workspace_operation_examples.py
@@ -40,3 +40,5 @@ validate-audit-record:
 validate-release-manifest:
 	python3 tools/validate_release_manifest_examples.py
 
+validate-execution-receipt:
+	python3 tools/validate_execution_receipt_examples.py

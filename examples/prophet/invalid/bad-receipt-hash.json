@@ -1,0 +1,13 @@
+{
+  "schema_version": "0.1.0",
+  "execution_receipt_id": "exec_invalid_bad_receipt_hash_demo",
+  "agent": { "name": "Email Analyzer Agent", "version": "1.0.1", "category": "email_security" },
+  "input": { "type": "reported_phish", "ref": "phish_9" },
+  "executed_at": "2026-07-31T03:12:53Z",
+  "decision": { "verdict": "allow", "authority_band": "recommend" },
+  "capabilities_held": ["cap_read_mailbox_demo"],
+  "capabilities_used": ["cap_read_mailbox_demo"],
+  "verdict": { "state": "verified" },
+  "proof_artifact": { "sha256": "sha256:93aa0e4f", "replayable": true },
+  "receipt_hash": "not-a-sha256-hash"
+}

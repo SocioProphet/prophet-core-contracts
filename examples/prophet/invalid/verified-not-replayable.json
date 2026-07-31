@@ -1,0 +1,13 @@
+{
+  "schema_version": "0.1.0",
+  "execution_receipt_id": "exec_invalid_verified_not_replayable_demo",
+  "agent": { "name": "Event Hide Comment Agent", "version": "1.0.0", "category": "email_security" },
+  "input": { "type": "event", "ref": "event_2" },
+  "executed_at": "2026-07-31T14:20:07Z",
+  "decision": { "verdict": "allow", "authority_band": "execute_local" },
+  "capabilities_held": ["cap_write_comment_demo"],
+  "capabilities_used": ["cap_write_comment_demo"],
+  "verdict": { "state": "verified" },
+  "proof_artifact": { "sha256": "sha256:cafef00d", "replayable": false },
+  "receipt_hash": "sha256:exec-invalid-verified-not-replayable-demo"
+}
