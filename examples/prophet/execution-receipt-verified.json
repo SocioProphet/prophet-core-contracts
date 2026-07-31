@@ -1,0 +1,48 @@
+{
+  "schema_version": "0.1.0",
+  "execution_receipt_id": "exec_hybrid_investigation_wiz_verified_demo",
+  "agent": {
+    "name": "Hybrid Investigation Agent",
+    "version": "1.1.0",
+    "category": "investigation"
+  },
+  "input": {
+    "type": "external_alert",
+    "ref": "alert_wiz_372688"
+  },
+  "executed_at": "2026-07-31T15:09:04Z",
+  "decision": {
+    "verdict": "allow",
+    "policy_id": "policy_warrant_v4",
+    "authority_band": "recommend",
+    "latency_ms": 12
+  },
+  "capabilities_held": [
+    "cap_read_alerts_demo",
+    "cap_read_baseline_demo",
+    "cap_read_reputation_demo",
+    "cap_write_comment_demo"
+  ],
+  "capabilities_used": [
+    "cap_read_alerts_demo",
+    "cap_read_baseline_demo",
+    "cap_read_reputation_demo"
+  ],
+  "verdict": {
+    "state": "verified",
+    "epistemic_level": "bounded"
+  },
+  "proof_artifact": {
+    "sha256": "sha256:4f8b0c11a2e7d9f0113c1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d",
+    "signed_by": "warden",
+    "replayable": true
+  },
+  "action_receipt_ref": "receipt_hybrid_investigation_wiz_demo",
+  "blast": {
+    "target_node": "code://rust/src/lib.rs#analyze",
+    "reachable_count": 7,
+    "hops": 3
+  },
+  "created_at": "2026-07-31T15:09:05Z",
+  "receipt_hash": "sha256:exec-hybrid-investigation-wiz-verified-demo"
+}

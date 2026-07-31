@@ -1,0 +1,13 @@
+{
+  "schema_version": "0.1.0",
+  "execution_receipt_id": "exec_invalid_block_not_denied_demo",
+  "agent": { "name": "Investigation Agent", "version": "1.0.2", "category": "investigation" },
+  "input": { "type": "event", "ref": "event_3" },
+  "executed_at": "2026-07-31T13:38:49Z",
+  "decision": { "verdict": "block", "authority_band": "observe" },
+  "capabilities_held": ["cap_read_events_demo"],
+  "capabilities_used": [],
+  "verdict": { "state": "verified" },
+  "proof_artifact": { "sha256": "sha256:0badf00d", "replayable": true },
+  "receipt_hash": "sha256:exec-invalid-block-not-denied-demo"
+}

@@ -68,10 +68,14 @@ Primary rule:
 - `schemas/operation-task-event.schema.json`
 - `schemas/artifact-admission.schema.json`
 - `schemas/decision-policy-adapter.schema.json`
+- `schemas/execution-receipt.schema.json`
 
 ## Current examples
 
 - `examples/prophet/scoped-capability-local-command.json`
+- `examples/prophet/execution-receipt-verified.json`
+- `examples/prophet/execution-receipt-approval-required.json`
+- `examples/prophet/execution-receipt-denied.json`
 - `examples/workspace-operation/upload-import-happy-path.json`
 - `examples/workspace-operation/upload-import-partial-failure.json`
 - `examples/workspace-operation/retryable-task-failure.json`
