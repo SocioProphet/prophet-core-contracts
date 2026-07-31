@@ -65,7 +65,7 @@
           "description": "Autonomy ceiling exercised for this run. Reuses ScopedCapability.authority_band. This is the L0..L5 autonomy axis and is NOT epistemic_level.",
           "enum": ["observe", "recommend", "queue", "execute_local", "execute_remote", "admin_override"]
         },
-        "latency_ms": { "type": "number", "minimum": 0 }
+        "latency_ms": { "type": "integer", "minimum": 0 }
       }
     },
     "capabilities_held": {
