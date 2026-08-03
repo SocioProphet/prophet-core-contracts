@@ -1,0 +1,11 @@
+{
+  "schema_version": "0.1.0",
+  "entry_id": "ledger_artc_0",
+  "epoch": 0,
+  "algo": "sha256",
+  "state_hash": "5ae53447eb016cae05034ed0490ebdcc7933623c866a2192c3f0366c0ac86ef5",
+  "prior_digest": null,
+  "digest": "887bdf987980469e04a8300b6428c9d21549ff3ed82477e674c7b7a806a4f919",
+  "claim_mode": "fixture_validated",
+  "timestamp": "2026-08-03T00:00:00Z"
+}

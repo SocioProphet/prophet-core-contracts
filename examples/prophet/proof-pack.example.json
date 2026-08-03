@@ -1,0 +1,41 @@
+{
+  "schema_version": "0.1.0",
+  "proof_pack_id": "proofpack_artc",
+  "subject_ref": {
+    "ref_type": "compiled_artifact",
+    "ref_id": "artC",
+    "uri": "meshrush://artifact/artC"
+  },
+  "claim_mode": "fixture_validated",
+  "epistemic_level": "bounded",
+  "ledger": {
+    "algo": "sha256",
+    "head": "887bdf987980469e04a8300b6428c9d21549ff3ed82477e674c7b7a806a4f919"
+  },
+  "checks": [
+    {
+      "name": "symmetry",
+      "value": 1e-06,
+      "threshold": 0.001,
+      "passed": true
+    }
+  ],
+  "witnesses": [
+    {
+      "type": "validator",
+      "hash": "60c5590f72eef292f9545afc28bf63ca91d2016a0a288f90f9a32f89d3fffcaf",
+      "sig": "did:key:z6Mkexample"
+    }
+  ],
+  "evidence_refs": [
+    "evidence://run/42"
+  ],
+  "signatures": [
+    "did:key:z6Mkexample"
+  ],
+  "provenance": {
+    "producer": "meshrush.sp-attest",
+    "policy_fingerprint": "sha256:pol"
+  },
+  "created_at": "2026-08-03T00:00:00Z"
+}
